@@ -1,0 +1,105 @@
+.bd-placeholder-img {
+  font-size: 1.125rem;
+  text-anchor: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@media (min-width: 768px) {
+  .bd-placeholder-img-lg {
+    font-size: 3.5rem;
+  }
+}
+
+.showPasswordToggle {
+  cursor: pointer;
+  transition: all;
+}
+
+.showPasswordToggle:hover {
+  transform: scale(1.2);
+}
+
+.add{
+  cursor: pointer;
+  color:#3AAFA9
+  }
+
+.remove{
+  cursor: pointer;
+  color:#3AAFA9
+  }
+
+.question_types {
+    display: grid;
+    grid-template-columns: max-content 1fr; /* Adjust column width as needed */
+    gap: 10px; /* Adjust the gap between rows */
+}
+
+
+  .info-tooltip {
+    position: relative;
+  }
+
+  .info-tooltip .info-icon {
+    margin-right: 5px;
+  }
+
+  .info-tooltip .info-text {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding: 5px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .col-md-6 {
+    padding: 10px;
+  }
+
+  .info-tooltip:hover .info-text {
+    display: block;
+  }
+
+  .file-drop-area {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    width: 100%;
+    height: 120px; /* Set the desired height */
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 120px; /* Set the line-height to center the text */
+    cursor: pointer;
+  }
+
+  .file-drop-text {
+    color: #777;
+  }
+
+  .file-drop-area input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    opacity: 0;
+  }
+
+.file-drop-area {
+/* ... existing styles ... */
+border-color: #ccc;
+}
+
+.file-drop-area.file-drop-active {
+background-color: #f8f9fa; /* Change the background color to gray when the file is dragged over */
+border-color: #6c757d; /* Change the border color to a darker shade of gray */
+}

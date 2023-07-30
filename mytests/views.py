@@ -1,0 +1,96 @@
+import json
+
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+
+from createtests.models import UserTest
+from django.contrib import messages
+
+
+
+
+def search_tests(request):
+    if request.method == 'POST':
+        search_str = json.loads(request.body).get('searchText')
+        user_tests = UserTest.objects.filter(
+            header__istartswith=search_str, owner=request.user) | UserTest.objects.filter(
+            notes__istartswith=search_str, owner=request.user) | UserTest.objects.filter(
+            num_questions__icontains=search_str, owner=request.user) | UserTest.objects.filter(
+            created_at__icontains=search_str, owner=request.user)
+        data = user_tests.values()
+        return JsonResponse(list(data), safe=False)
+
+# Create your views here.
+@login_required(login_url='/authentication/login')
+def my_tests(request):
+    user_tests = UserTest.objects.filter(owner=request.user)
+    paginator = Paginator(user_tests, 5)
+    page_number = request.GET.get('page')
+    page_obj = Paginator.get_page(paginator, page_number)
+    context = {
+        'user_tests': user_tests,
+        'page_obj': page_obj,
+    }
+    return render(request, 'mytests/index.html', context)
+
+
+
+@login_required(login_url='/authentication/login')
+def edit_pt(request, id):
+    user_tests = UserTest.objects.get(pk=id)
+    context = {
+        'user_tests': user_tests,
+        'values': user_tests,
+    }
+    if request.method == 'GET':
+        return render(request, 'mytests/edit_pt.html', context)
+    if request.method == 'POST':
+        header = request.POST['header']
+
+        if not header:
+            messages.error(request, 'Header is required')
+            return render(request, 'mytests/edit_pt.html', context)
+        subtitle = request.POST['subtitle']
+        institution = request.POST['institution']
+        add_header_info = request.POST['add_header_info']
+        grades = request.POST['grades']
+        num_questions = request.POST['num_questions']
+        tag = request.POST['tag']
+        footer = request.POST['footer']
+        # Need to create better question support structure in the HTML
+        questions = {
+            "q1": {
+                "answers": ["aa", "bb", "cc", "dd"],
+                "correct_answer": 1,
+                "explanation": "The answer is aa because it is nice."
+            },
+            "q2": {
+                "answers": ["ee", "ff", "gg", "hh"],
+                "correct_answer": 2,
+                "explanation": "The answer is gg because it is awesome."
+            }
+        }
+        user_tests.header = header
+        user_tests.subtitle = subtitle
+        user_tests.institution = institution
+        user_tests.add_header_info = add_header_info
+        user_tests.grades = grades
+        user_tests.num_questions = num_questions
+        user_tests.notes = tag
+        user_tests.footer = footer
+        user_tests.questions = questions
+
+        user_tests.save()
+        messages.success(request, f'Practice test {header} updated successfully')
+
+        return redirect('my-tests')
+
+
+def delete_pt(request, id):
+    user_test = UserTest.objects.get(pk=id)
+    header = user_test.header
+    user_test.delete()
+    messages.success(request, f'Test {header} removed')
+    return redirect('my-tests')

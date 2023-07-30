@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<h1>Create an exam </h1>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .centered-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .centered-container button {
+      margin: 10px;
+    }
+  </style>
+
+  <div class="centered-container">
+        <a href="{% url 'quick-test'  %}" class="btn btn-info">Quick Exam </a>
+        <a href="{% url 'advanced-test'  %}" class="btn btn-primary">Advanced Exam</a>
+  </div>
+
+{% endblock content %}
