@@ -1,6 +1,7 @@
 import json
 import pdb
 
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.contrib import messages
@@ -12,10 +13,11 @@ from .models import UserTest
 
 # Create your views here.
 
+@login_required(login_url='/authentication/login')
 def choose_create_speed(request):
     return render(request, 'createtests/choose-create-speed.html')
 
-
+@login_required(login_url='/authentication/login')
 def quick_test(request):
     context = {
         'values': request.POST
@@ -104,6 +106,7 @@ def quick_test(request):
         return render(request, 'createtests/choose-create-speed.html')
 
 
+@login_required(login_url='/authentication/login')
 def advanced_test(request):
     context = {
         'values': request.POST
