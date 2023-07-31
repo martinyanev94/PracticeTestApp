@@ -135,10 +135,3 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
-# email stuff
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'darantak11@gmail.com'
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'darantak11@gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_PASSWORD = "O1tolaringinolog!"
