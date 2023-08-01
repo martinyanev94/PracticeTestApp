@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.contrib import messages
 
 from .chat_gpt import gpt_engine, generate_header, generate_subtitle, \
-    generate_header_info, generate_footer_info, generate_questions
+    generate_footer_info, generate_questions
 from .models import UserTest
 
 
@@ -30,7 +30,6 @@ def quick_test(request):
         teaching_material = request.POST['teaching_material']
 
         header = generate_header(teaching_material)
-        print(f"HEADER: {header}")
 
         if not header or header.isspace():
             messages.error(request, 'Header is required')
@@ -43,13 +42,10 @@ def quick_test(request):
             return render(request, 'createtests/quick-test.html', context)
 
         subtitle = generate_subtitle(header)
-        print(f"SUBTITLE: {subtitle}")
         institution = " "
         tag = request.POST['tag']
-        print(f"TAG: {tag}")
 
-        add_header_info = generate_header_info(teaching_material)
-        print(f"HEADER INFO: {add_header_info}")
+        add_header_info = " "
 
         grades = {
             "grades": [
@@ -94,7 +90,19 @@ def quick_test(request):
         # Will use the generate_questions function
         question_data = generate_questions(teaching_material, question_types)
         footer = generate_footer_info(header)
-        print(f"FOOTER: {footer}")
+
+        print(request.user)
+        print(header)
+        print(subtitle)
+        print(institution)
+        print(add_header_info)
+        print(grades)
+        print("/")
+        print(question_types)
+        print("/")
+        print(question_data)
+        print(footer)
+        print(tag)
 
 
         user_test = UserTest.objects.create(owner=request.user, header=header, subtitle=subtitle,
@@ -177,8 +185,20 @@ def advanced_test(request):
 
         # Will be question_data = generate_questions(request.POST['teaching_materail']) in->text out->json
         question_data = generate_questions(teaching_material, question_types)
-        print(question_data)
         footer = request.POST['footer']
+
+        print(request.user)
+        print(header)
+        print(subtitle)
+        print(institution)
+        print(add_header_info)
+        print(grades)
+        print("/")
+        print(question_types)
+        print("/")
+        print(question_data)
+        print(footer)
+        print(tag)
 
         user_test = UserTest.objects.create(owner=request.user, header=header, subtitle=subtitle,
                                             institution=institution,

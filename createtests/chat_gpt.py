@@ -40,22 +40,40 @@ def gpt_engine(prompt, n=1, max_tokens=200):
                     response['usage']['completion_tokens'] / 1000 * model['completion_cost']
     return response_text
 
+def gpt_headers(prompt, n=1, max_tokens=200):
+    global total_tokens
+    gpt_35_turbo = {"type": "gpt-3.5-turbo", "prompt_cost": 0.0015, "completion_cost": 0.002}
+    gpt_35_turbo_16k = {"type": "gpt-3.5-turbo-16k", "prompt_cost": 0.003, "completion_cost": 0.004}
+    model = gpt_35_turbo
+    response = openai.ChatCompletion.create(
+        model=model['type'],
+        n=n,
+        max_tokens=max_tokens,
+        temperature=0.7,
+        messages=[
+            {"role": "user", "content": f"{preparation_prompt}"},
+            {"role": "assistant", "content": "Ok"},
+            {"role": "user", "content": f" {prompt}"}
+        ]
+    )
+    print(response)
+    total_tokens += response['usage']['total_tokens']
+    response_text = [response["choices"][0]["message"]["content"]]
+
+    return response_text
+
+
 
 def generate_header(teaching_material):
-    return gpt_engine(f"I am a building a practice test. "
+    return gpt_headers(f"I am a building a practice test. "
                       f"Based on the text below create a header "
-                      f"for this practice test: \n {teaching_material[:500]}")[0]
+                      f"for this practice test. Write the header only without any additional words: \n {teaching_material[:500]}")[0]
 
 
 def generate_subtitle(header):
-    return gpt_engine(f"Based on the following practice test title, create a subtitle: \n {header}")[0]
+    return gpt_headers(f"Based on the following practice test title, create a subtitle. Write the subtitle only "
+                       f"without any additional words: \n {header}")[0]
 
-
-def generate_header_info(teaching_material):
-    # 2100 tokens
-    return gpt_engine(f"I am a building a practice test. "
-                      f"Based on the following teaching material, "
-                      f"describe the practice test in one sentence: \n {teaching_material[:1000]}", max_tokens=500)[0]
 
 
 def generate_footer_info(header):
@@ -85,7 +103,6 @@ def generate_questions(teaching_material, number_of_questions):
     final_questions_list = []
 
     for cut in text_cuts:
-        print(cut)
         if mcq_record >= mcq_cut or mcq_record != 0:
             final_questions_list.extend(gpt_engine(multi_choice_prompt(cut), mcq_cut))
             mcq_record = mcq_record - mcq_cut
@@ -106,7 +123,6 @@ def generate_questions(teaching_material, number_of_questions):
         elif oaq_record < oaq_cut and oaq_record != 0:
             final_questions_list.extend(gpt_engine(open_answer_prompt(cut), oaq_record))
             oaq_record = 0
-    print(final_questions_list)
     json_questions_list = {}
     for final_question in range(len(final_questions_list)):
         lines = final_questions_list[final_question]["question"].splitlines()
@@ -118,7 +134,6 @@ def generate_questions(teaching_material, number_of_questions):
     b = time.time()
     print(f"TIME: {b-a}")
     print(total_tokens)
-    print(json_questions_list)
     return json_questions_list
 
 

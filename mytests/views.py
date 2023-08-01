@@ -55,29 +55,25 @@ def edit_pt(request, id):
         subtitle = request.POST['subtitle']
         institution = request.POST['institution']
         add_header_info = request.POST['add_header_info']
+        #####
+
         grades = request.POST['grades']
-        num_questions = request.POST['num_questions']
-        tag = request.POST['tag']
+
+        #####
+        questions = request.POST['questions']
+
+
+        tag = request.POST['notes']
         footer = request.POST['footer']
         # Need to create better question support structure in the HTML
-        questions = {
-            "q1": {
-                "answers": ["aa", "bb", "cc", "dd"],
-                "correct_answer": 1,
-                "explanation": "The answer is aa because it is nice."
-            },
-            "q2": {
-                "answers": ["ee", "ff", "gg", "hh"],
-                "correct_answer": 2,
-                "explanation": "The answer is gg because it is awesome."
-            }
-        }
+
+
+
         user_tests.header = header
         user_tests.subtitle = subtitle
         user_tests.institution = institution
         user_tests.add_header_info = add_header_info
         user_tests.grades = grades
-        user_tests.num_questions = num_questions
         user_tests.notes = tag
         user_tests.footer = footer
         user_tests.questions = questions
