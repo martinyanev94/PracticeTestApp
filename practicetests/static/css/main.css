@@ -18,6 +18,12 @@
   transition: all;
 }
 
+.showPasswordToggle2 {
+  cursor: pointer;
+  transition: all;
+}
+
+
 .showPasswordToggle:hover {
   transform: scale(1.2);
 }
