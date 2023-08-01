@@ -1,105 +1,88 @@
 {% extends 'base.html' %} {% block content %}
 
-
 <div class="container mt-4">
   <div class="row">
     <h2>My Tests</h2>
   </div>
 
-    <div class="col-md-2">
-      <a
-        href="{% url 'delete-test' user_tests.id %}"
-        class="btn btn-danger btn-sm"
-        >Delete</a
-      >
-    </div>
+  <div class="col-md-2">
+    <a href="{% url 'delete-test' user_tests.id %}" class="btn btn-danger btn-sm">Delete</a>
   </div>
+</div>
 
-  <div class="card">
-    <div class="card-body">
-      <form action="{% url 'edit-test' user_tests.id %}" method="post">
-        {% include 'partials/_messages.html'%} {% csrf_token %}
-         <div class="form-group">
-          <label for="">Your exam title</label>
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            name="header"
-            value="{{values.header}}"
-          />
-        </div>
-        <div class="form-group">
-          <label for="">Your exam subtitle</label>
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            name="subtitle"
-            value="{{values.subtitle}}"
-          />
-        </div>
-        <div class="form-group">
-          <label for="">Exam tag</label>
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            name="notes"
-            value="{{values.notes}}"
-          />
-        </div>
-        <div class="form-group">
-          <label for="">Institution</label>
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            name="institution"
-            value="{{values.institution}}"
-          />
-        </div>
-        <div class="form-group">
-          <label for="">Additional Info</label>
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            name="add_header_info"
-            value="{{values.add_header_info}}"
-          />
-        </div>
-
-         <div class="form-group">
-          <label for="">Footer</label>
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            name="footer"
-            value="{{values.footer}}"
-          />
-        </div>
-        <div class="form-group">
-          <label for="">Grade</label>
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            name="grades"
-            value="{{values.grades}}"
-          />
-        </div>
-        <div class="form-group">
-          <label for="">Questions</label>
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            name="questions"
-            value="{{values.questions}}"
-          />
-        </div>
-
+<div class="card">
+  <div class="card-body">
+    <form action="{% url 'edit-test' user_tests.id %}" method="post">
+      {% include 'partials/_messages.html'%}
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="">Your exam title</label>
+        <input type="text" class="form-control form-control-sm" name="header" value="{{ values.header }}" />
+      </div>
+      <div class="form-group">
+        <label for="">Your exam subtitle</label>
+        <input type="text" class="form-control form-control-sm" name="subtitle" value="{{ values.subtitle }}" />
+      </div>
+      <div class="form-group">
+        <label for="">Exam tag</label>
+        <input type="text" class="form-control form-control-sm" name="notes" value="{{ values.notes }}" />
+      </div>
+      <div class="form-group">
+        <label for="">Institution</label>
+        <input type="text" class="form-control form-control-sm" name="institution" value="{{ values.institution }}" />
+      </div>
+      <div class="form-group">
+        <label for="">Additional Info</label>
         <input
-          type="submit"
-          value="Save"
-          class="btn btn-primary btn-primary-sm"
+          type="text"
+          class="form-control form-control-sm"
+          name="add_header_info"
+          value="{{ values.add_header_info }}"
         />
-      </form>
-    </div>
+      </div>
+
+      <!-- Dynamically generate fields for each question -->
+      {% for question_id, question_data in values.questions.items %}
+      <div class="form-group">
+        <label for="">Question {{ forloop.counter }}</label>
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          name="questions_{{ question_id }}_question"
+          value="{{ question_data.question }}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="">Answers</label>
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          name="questions_{{ question_id }}_answers"
+          value="{{ question_data.answers|join:', ' }}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="">Explanation</label>
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          name="questions_{{ question_id }}_explanation"
+          value="{{ question_data.explanation }}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="">Correct Answer</label>
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          name="questions_{{ question_id }}_correct_answer"
+          value="{{ question_data.correct_answer|join:', ' }}"
+        />
+      </div>
+      {% endfor %}
+
+      <input type="submit" value="Save" class="btn btn-primary btn-primary-sm" />
+    </form>
   </div>
 </div>
 

@@ -52,23 +52,16 @@ def edit_pt(request, id):
         if not header:
             messages.error(request, 'Header is required')
             return render(request, 'mytests/edit_pt.html', context)
+
         subtitle = request.POST['subtitle']
         institution = request.POST['institution']
         add_header_info = request.POST['add_header_info']
-        #####
 
         grades = request.POST['grades']
-
-        #####
-        questions = request.POST['questions']
-
-
         tag = request.POST['notes']
         footer = request.POST['footer']
-        # Need to create better question support structure in the HTML
 
-
-
+        # Update main fields
         user_tests.header = header
         user_tests.subtitle = subtitle
         user_tests.institution = institution
@@ -76,12 +69,27 @@ def edit_pt(request, id):
         user_tests.grades = grades
         user_tests.notes = tag
         user_tests.footer = footer
+
+        # Update question fields
+        questions = {}
+        for key, value in request.POST.items():
+            if key.startswith('questions_'):
+                parts = key.split('_')
+                question_id = parts[1]
+                field_name = parts[2]
+
+                if question_id not in questions:
+                    questions[question_id] = {}
+
+                questions[question_id][field_name] = value
+
         user_tests.questions = questions
 
         user_tests.save()
         messages.success(request, f'Practice test {header} updated successfully')
 
         return redirect('my-tests')
+
 
 
 def delete_pt(request, id):
