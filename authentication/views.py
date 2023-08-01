@@ -7,23 +7,15 @@ from django.views import View
 import json
 from django.http import JsonResponse
 from django.contrib.auth.models import User
-import json
-from django.http import JsonResponse
-from django.contrib.auth.models import User
 from validate_email import validate_email
 from django.contrib import messages
 from django.core.mail import EmailMessage
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
-from django.core.mail import send_mail
+from django.utils.encoding import force_bytes, force_str
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from django.template.loader import render_to_string
 from .utils import account_activation_token
 from django.urls import reverse
 from django.contrib import auth
-import ssl
-import certifi
 
 
 # Create your views here.
@@ -54,7 +46,8 @@ class UsernameValidationView(View):
 smtp_server = 'smtp.gmail.com'
 smtp_port = 587
 username = 'mpyanev@gmail.com'
-password = 'zzntmppswidndcyv'
+# password = 'zzntmppswidndcyv'
+password = 'arggrupobdqxwpez'
 sender_email = 'mpyanev@gmail.com'
 
 
@@ -91,7 +84,6 @@ def send_activation_email(user, request):
     # Add HTML/plain-text parts to MIMEMultipart message
     # The email client will try to render the last part first
     message.attach(part1)
-
     try:
         with smtplib.SMTP(smtp_server, smtp_port) as server:
             server.ehlo()
@@ -121,11 +113,6 @@ class RegistrationView(View):
             'fieldValues': request.POST
         }
 
-        if User.objects.filter(username=username).exists():
-            messages.error(request, 'Username already exists')
-
-        if not email or email.isspace():
-            messages.error(request, 'Please provide an email address')
 
         if not User.objects.filter(username=username).exists():
 
