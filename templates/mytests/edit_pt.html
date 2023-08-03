@@ -41,49 +41,89 @@
         />
       </div>
 
-      <!-- Dynamically generate fields for each question -->
-      {% for question_id, question_data in values.questions.items %}
-      <div class="form-group">
-        <label for="">Question {{ forloop.counter }}</label>
-        <input
-          type="text"
-          class="form-control form-control-sm"
-          name="questions_{{ question_id }}_question"
-          value="{{ question_data.question }}"
-        />
-      </div>
-      <div class="form-group">
-        <label for="">Answers</label>
-        <input
-          type="text"
-          class="form-control form-control-sm"
-          name="questions_{{ question_id }}_answers"
-          value="{{ question_data.answers|join:', ' }}"
-        />
-      </div>
-      <div class="form-group">
-        <label for="">Explanation</label>
-        <input
-          type="text"
-          class="form-control form-control-sm"
-          name="questions_{{ question_id }}_explanation"
-          value="{{ question_data.explanation }}"
-        />
-      </div>
-      <div class="form-group">
-        <label for="">Correct Answer</label>
-        <input
-          type="text"
-          class="form-control form-control-sm"
-          name="questions_{{ question_id }}_correct_answer"
-          value="{{ question_data.correct_answer|join:', ' }}"
-        />
+ <!-- Remove the previous "Answers" input field -->
+{% for question_id, question_data in values.questions.items %}
+<div class="form-group">
+  <label for="">Question {{ forloop.counter }}</label>
+  <input
+    type="text"
+    class="form-control form-control-sm"
+    name="questions_{{ question_id }}_question"
+    value="{{ question_data.question }}"
+  />
+</div>
+
+<!-- Loop to generate separate input fields for each answer -->
+{% for answer in question_data.answers %}
+<div class="form-group">
+  <label for="">Option {{ forloop.counter }}</label>
+  <input
+    type="text"
+    class="form-control form-control-sm"
+    name="questions_{{ question_id }}_answers_{{ forloop.counter }}"
+    value="{{ answer }}"
+  />
+</div>
+{% endfor %}
+
+    {% if question_data.correct_answer %}
+<div class="form-group">
+  <label for="">Correct Answer</label>
+  <input
+    type="text"
+    class="form-control form-control-sm"
+    name="questions_{{ question_id }}_correct_answer"
+    value="{{ question_data.correct_answer|join:', ' }}"
+  />
+</div>
+      {% endif %}
+
+<div class="form-group">
+  <label for="">Explanation</label>
+  <input
+    type="text"
+    class="form-control form-control-sm"
+    name="questions_{{ question_id }}_explanation"
+    value="{{ question_data.explanation }}"
+  />
+</div>
+
+
+
+
+{% endfor %}
+      {% for grade_info in values.grades %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="">Grade {{ forloop.counter }}</label>
+            <input type="text" class="form-control form-control-sm" name="grade_{{ forloop.counter }}_grade" value="{{ grade_info.grade }}" />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="">Percentage {{ forloop.counter }}</label>
+            <input type="text" class="form-control form-control-sm" name="grade_{{ forloop.counter }}_percentage" value="{{ grade_info.percentage }}"
+              pattern="[0-9]{1,3}"
+              title="Please enter a number between 0 and 100"
+              oninput="checkPercentageValidity(this);"
+            />
+          </div>
+        </div>
       </div>
       {% endfor %}
+                  <div class="form-group">
+        <label for="">Test Footer</label>
+        <input type="text" class="form-control form-control-sm" name="footer" value="{{ values.footer }}" />
+      </div>
+
 
       <input type="submit" value="Save" class="btn btn-primary btn-primary-sm" />
     </form>
   </div>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
 </div>
 
 {% endblock %}

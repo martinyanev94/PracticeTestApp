@@ -46,8 +46,8 @@ class UsernameValidationView(View):
 smtp_server = 'smtp.gmail.com'
 smtp_port = 587
 username = 'mpyanev@gmail.com'
-# password = 'zzntmppswidndcyv'
-password = 'arggrupobdqxwpez'
+password = 'zzntmppswidndcyv'
+# password = 'arggrupobdqxwpez'
 sender_email = 'mpyanev@gmail.com'
 
 

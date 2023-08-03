@@ -57,9 +57,21 @@ def edit_pt(request, id):
         institution = request.POST['institution']
         add_header_info = request.POST['add_header_info']
 
-        grades = request.POST['grades']
         tag = request.POST['notes']
         footer = request.POST['footer']
+        grades = []
+        print(user_tests.grades)
+        for i in range(1, 20):  # Assuming there are four grades (you can adjust the range based on your actual data)
+            grade_key = f'grade_{i}_grade'
+            percentage_key = f'grade_{i}_percentage'
+            grade = request.POST.get(grade_key)
+            percentage = request.POST.get(percentage_key)
+
+            if grade and percentage:
+                grades.append({
+                    'grade': grade,
+                    'percentage': int(percentage),  # Convert percentage to an integer if required
+                })
 
         # Update main fields
         user_tests.header = header
@@ -69,6 +81,7 @@ def edit_pt(request, id):
         user_tests.grades = grades
         user_tests.notes = tag
         user_tests.footer = footer
+
 
         # Update question fields
         questions = {}
@@ -81,7 +94,13 @@ def edit_pt(request, id):
                 if question_id not in questions:
                     questions[question_id] = {}
 
-                questions[question_id][field_name] = value
+                # If it's an answer field, create a list and append the values
+                if field_name == 'answers':
+                    if 'answers' not in questions[question_id]:
+                        questions[question_id]['answers'] = []
+                    questions[question_id]['answers'].append(value)
+                else:
+                    questions[question_id][field_name] = value
 
         user_tests.questions = questions
 
@@ -89,6 +108,7 @@ def edit_pt(request, id):
         messages.success(request, f'Practice test {header} updated successfully')
 
         return redirect('my-tests')
+
 
 
 

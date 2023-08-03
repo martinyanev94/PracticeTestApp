@@ -47,8 +47,7 @@ def quick_test(request):
 
         add_header_info = " "
 
-        grades = {
-            "grades": [
+        grades = [
                 {
                     "percentage": 49,
                     "grade": "F"
@@ -66,7 +65,8 @@ def quick_test(request):
                     "grade": "A"
                 }
             ]
-        }
+
+
         # Questions Data
         mcq = request.POST['mcq']
         if mcq != "":
