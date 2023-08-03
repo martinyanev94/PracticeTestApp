@@ -30,7 +30,6 @@
       <tr>
         <th>Header</th>
         <th>Notes</th>
-        <th>Questions</th>
           <th>Date</th>
 
         <th></th>
@@ -40,9 +39,13 @@
     <tbody>
       {% for user_tests in page_obj%}
       <tr>
-        <td>{{user_tests.header}}</td>
+          <td>
+                    <a
+            href="{% url 'home-view' user_tests.id  %}"
+            >{{user_tests.header}}</a
+          >
+          </td>
         <td>{{user_tests.notes}}</td>
-        <td>{{user_tests.num_questions}}</td>
           <td>{{user_tests.created_at}}</td>
 
         <td>

@@ -103,21 +103,21 @@ def generate_questions(teaching_material, number_of_questions):
     final_questions_list = []
 
     for cut in text_cuts:
-        if mcq_record >= mcq_cut or mcq_record != 0:
+        if mcq_record >= mcq_cut and mcq_cut != 0:
             final_questions_list.extend(gpt_engine(multi_choice_prompt(cut), mcq_cut))
             mcq_record = mcq_record - mcq_cut
         elif mcq_record < mcq_cut and mcq_record != 0:
             final_questions_list.extend(gpt_engine(multi_choice_prompt(cut), mcq_record))
             mcq_record = 0
 
-        if msq_record >= msq_cut and msq_record != 0:
+        if msq_record >= msq_cut and msq_cut != 0:
             final_questions_list.extend(gpt_engine(multi_selection_prompt(cut), msq_cut))
             msq_record = msq_record - msq_cut
         elif msq_record < msq_cut and msq_record != 0:
             final_questions_list.extend(gpt_engine(multi_selection_prompt(cut), msq_record))
             msq_record = 0
 
-        if oaq_record >= oaq_cut and oaq_record != 0:
+        if oaq_record >= oaq_cut and oaq_cut != 0:
             final_questions_list.extend(gpt_engine(open_answer_prompt(cut), oaq_cut))
             oaq_record = oaq_record - oaq_cut
         elif oaq_record < oaq_cut and oaq_record != 0:

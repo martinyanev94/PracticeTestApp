@@ -87,6 +87,15 @@ def quick_test(request):
             oaq = 0
         question_types = {"mcq": mcq, "msq": msq, "oaq": oaq}
 
+        total_questions = msq + msq + oaq
+        if total_questions > 120:
+            messages.error(request, 'Total Questions more than 120')
+            return render(request, 'createtests/quick-test.html', context)
+
+        if total_questions < 1:
+            messages.error(request, 'Total questions are 0. Please add more questions')
+            return render(request, 'createtests/quick-test.html', context)
+
         # Will use the generate_questions function
         question_data = generate_questions(teaching_material, question_types)
         footer = generate_footer_info(header)
@@ -179,8 +188,13 @@ def advanced_test(request):
             oaq = 0
         question_types = {"mcq": mcq, "msq": msq, "oaq": oaq}
 
-        if msq + msq + oaq > 120:
+        total_questions = mcq + msq + oaq
+        if total_questions > 120:
             messages.error(request, 'Total Questions more than 120')
+            return render(request, 'createtests/advanced-test.html', context)
+
+        if total_questions < 1:
+            messages.error(request, 'Total questions are 0. Please add more questions')
             return render(request, 'createtests/advanced-test.html', context)
 
         # Will be question_data = generate_questions(request.POST['teaching_materail']) in->text out->json

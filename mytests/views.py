@@ -17,7 +17,6 @@ def search_tests(request):
         user_tests = UserTest.objects.filter(
             header__istartswith=search_str, owner=request.user) | UserTest.objects.filter(
             notes__istartswith=search_str, owner=request.user) | UserTest.objects.filter(
-            num_questions__icontains=search_str, owner=request.user) | UserTest.objects.filter(
             created_at__icontains=search_str, owner=request.user)
         data = user_tests.values()
         return JsonResponse(list(data), safe=False)
@@ -34,6 +33,20 @@ def my_tests(request):
         'page_obj': page_obj,
     }
     return render(request, 'mytests/index.html', context)
+
+
+
+@login_required(login_url='/authentication/login')
+def home_view(request, id):
+    user_tests = UserTest.objects.get(pk=id)
+    context = {
+        'user_tests': user_tests,
+        'values': user_tests,
+    }
+    if request.method == 'GET':
+        return render(request, 'mytests/home-view.html', context)
+    if request.method == 'POST':
+        header = request.POST['header']
 
 
 

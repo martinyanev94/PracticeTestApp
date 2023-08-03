@@ -1,0 +1,108 @@
+{% extends 'base.html' %} {% block content %}
+<style>
+    .form-control-scroll {
+        height: 70vh;
+        border: 1px solid #ccc;
+        padding: 10px;
+        overflow: auto; /* Add scrollbar when content overflows */
+    }
+
+
+</style>
+<div class="container mt-4">
+  <div class="row">
+    <h2>My Tests</h2>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <form action="{% url 'edit-test' user_tests.id %}" method="post">
+      {% include 'partials/_messages.html'%}
+      {% csrf_token %}
+      <div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="">Student view</label>
+<div class="form-control-scroll" id="student-view" name="student-view">
+    <div style="font-weight: bold; text-align: center;">
+        {{values.header}}
+    </div>
+        <div style="text-align: center;">
+        {{values.subtitle}}
+    </div>
+      {% for question_id, question_data in values.questions.items %}
+<div class="form-group">
+    <br>
+  <span for="" style="font-weight: bold;">Question {{ forloop.counter }}:</span>
+    {{ question_data.question }}<br>
+
+{% for answer in question_data.answers %}
+
+  {{ forloop.counter }}. {{ answer }}<br>
+
+{% endfor %}
+
+</div>
+{% endfor %}
+
+</div>
+      </div>
+    </div>
+
+
+
+<div class="col-md-6">
+      <div class="form-group">
+        <label for="">Student view</label>
+<div class="form-control-scroll" id="teacher-view" name="teacher-view">
+    <div style="font-weight: bold; text-align: center;">
+        {{values.header}}
+    </div>
+        <div style="text-align: center;">
+        {{values.subtitle}}
+    </div>
+      {% for question_id, question_data in values.questions.items %}
+<div class="form-group">
+    <br>
+  <span for="" style="font-weight: bold;">Question {{ forloop.counter }}:</span>
+    {{ question_data.question }}<br>
+
+{% for answer in question_data.answers %}
+
+  {{ forloop.counter }}. {{ answer }}<br>
+
+{% endfor %}
+
+{% if question_data.correct_answer %}<br>
+<div class="form-group">
+  <label for="">Correct Answer: {{ question_data.correct_answer|join:', ' }}</label>
+</div>
+      {% endif %}
+
+<div class="form-group">
+  <label for="">Explanation: {{ question_data.explanation }}</label>
+</div>
+
+</div>
+{% endfor %}
+
+
+</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+      <input type="submit" value="Save" class="btn btn-primary btn-primary-sm" />
+    </form>
+  </div>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
+</div>
+
+{% endblock %}
