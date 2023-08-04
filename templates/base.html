@@ -17,21 +17,28 @@
   </head>
   <body>
 
-<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" >Test Box</a>
+<header class="navbar navbar-light sticky-top bg-light flex-md-nowrap p-0 shadow">
   <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search" aria-label="Search">
+
   <div class="navbar-nav">
+    <form class="search">
+      <div class="search__wrapper">
+        <input class="search__field" type="text" placeholder="Search for..." aria-label="Search">
+        <button type="submit" class="search__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </button>
+      </div>
+    </form>
     <div class="nav-item text-nowrap">
-        <li class="nav-item text-nowrap mt-3 ml-2">
+        <li class="nav-item text-nowrap">
           <form action="{% url  'logout' %}" method="POST">
             {% csrf_token %}
             <input
-              class="text text-capitalize"
+              class="text text-capitalize log-out"
               type="submit"
-              value="Sign out"
+              value="Log out"
             />
           </form>
         </li>
@@ -43,10 +50,10 @@
 
 
 <div class="container-fluid">
-  <div class="row">
+  <div class="row center-pos">
   {% include 'partials/_sidebar.html' %}
 
-    <main class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <main class="main-box">
       {% block content %} {% endblock %}
     </main>
   </div>
