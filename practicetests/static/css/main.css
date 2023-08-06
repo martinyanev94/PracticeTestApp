@@ -435,3 +435,78 @@ button:focus {
   opacity: 1;
   visibility: visible !important;
 }
+
+
+/* Accordion Questions */
+.accordion-content {
+  display: none;
+}
+.active .accordion-content {
+  display: block;
+}
+
+.accordion-header {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 5px 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  transition: 0.4s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  margin-bottom: 5px;
+}
+.accordion-header:before {
+  content: '\002B';
+  color: #777;
+  float: right;
+  margin-left: 5px;
+  font-size: 30px;
+}
+.accordion-header.active:before {
+  content: "\2212";
+  color: #777;
+  float: right;
+  margin-left: 5px;
+  font-size: 30px;
+}
+
+.accordion-header.active, .accordion-header:hover {
+  background-color: #ccc; 
+}
+
+.accordion-content {
+  padding: 25px;
+  display: none;
+  background-color: white;
+  overflow: hidden;
+}
+.question:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.question {
+  margin-top: 35px;
+  padding-top: 25px;
+  border-top: 1px dashed #a3a7ac;
+}
+.question label {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.question-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.question-header h2 {
+  font-weight: 600;
+}
