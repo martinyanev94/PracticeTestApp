@@ -7,16 +7,165 @@ from django.shortcuts import render, redirect
 
 from createtests.models import UserTest
 from django.contrib import messages
-import docx
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
-from docx.shared import Pt
-from django.http import HttpResponse
-
 
 from django.shortcuts import render
 from django.http import HttpResponse
-from docx.shared import Pt
 import docx
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, TableStyle
+from reportlab.lib import colors
+from reportlab.platypus import Table
+
+def download_student_view_pdf(request, id):
+    user_tests = UserTest.objects.get(pk=id)
+
+    # Function to create the PDF document for teacher view
+    def create_teacher_view_pdf(user_tests):
+        response = HttpResponse(content_type='application/pdf')
+        filename = f'student_view_{user_tests.id}.pdf'
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+        doc = SimpleDocTemplate(response, pagesize=letter)
+        styles = getSampleStyleSheet()
+        elements = []
+
+        header_style = styles['Title']
+        header_style.alignment = 1  # Center alignment
+        elements.append(Paragraph(user_tests.header, header_style))
+
+        subtitle_style = styles['Heading3']
+        subtitle_style.alignment = 1  # Center alignment
+        elements.append(Paragraph(user_tests.subtitle, subtitle_style))
+
+        institution_style = styles['Heading3']
+        institution_style.alignment = 1  # Center alignment
+        elements.append(Paragraph(user_tests.institution, institution_style))
+
+        add_header_info_style = styles['Heading3']
+        add_header_info_style.alignment = 1  # Center alignment
+        elements.append(Paragraph(user_tests.add_header_info, add_header_info_style))
+
+        for question_id, question_data in user_tests.questions.items():
+            elements.append(Paragraph(f"Question {question_id[1:]}:", styles['Heading2']))
+            elements.append(Paragraph(question_data['question'], styles['Normal']))
+            elements.append(Spacer(1, 12))
+
+            if 'answers' in question_data:
+                for index, answer in enumerate(question_data['answers'], start=1):
+                    elements.append(Paragraph(f"{index}. {answer}", styles['Normal']))
+
+        elements.append(Paragraph("Grades", styles['Heading2']))
+        # Add table with grades
+        table_data = [['Percentage', 'Grade']]
+        for grade in user_tests.grades:
+            table_data.append([f"{grade['percentage']}%", grade['grade']])
+
+        table_style = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                                  ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                                  ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                  ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                  ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                                  ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                                  ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+
+        # Create the table and apply the style
+        grade_table = Table(table_data)
+        grade_table.setStyle(table_style)
+
+        # Add the table to the elements list
+        elements.append(grade_table)
+        elements.append(Spacer(1, 12))
+
+        elements.append(Paragraph(user_tests.footer, styles['Normal']))
+
+        doc.build(elements)
+        return response
+
+    # Create the PDF document for teacher view
+    return create_teacher_view_pdf(user_tests)
+
+
+def download_teacher_view_pdf(request, id):
+    user_tests = UserTest.objects.get(pk=id)
+
+    # Function to create the PDF document for teacher view
+    def create_teacher_view_pdf(user_tests):
+        response = HttpResponse(content_type='application/pdf')
+        filename = f'teacher_view_{user_tests.id}.pdf'
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+        doc = SimpleDocTemplate(response, pagesize=letter)
+        styles = getSampleStyleSheet()
+        elements = []
+
+        header_style = styles['Title']
+        header_style.alignment = 1  # Center alignment
+        elements.append(Paragraph(user_tests.header, header_style))
+
+        subtitle_style = styles['Heading3']
+        subtitle_style.alignment = 1  # Center alignment
+        elements.append(Paragraph(user_tests.subtitle, subtitle_style))
+
+        institution_style = styles['Heading3']
+        institution_style.alignment = 1  # Center alignment
+        elements.append(Paragraph(user_tests.institution, institution_style))
+
+        add_header_info_style = styles['Heading3']
+        add_header_info_style.alignment = 1  # Center alignment
+        elements.append(Paragraph(user_tests.add_header_info, add_header_info_style))
+
+        for question_id, question_data in user_tests.questions.items():
+            elements.append(Paragraph(f"Question {question_id[1:]}:", styles['Heading2']))
+            elements.append(Paragraph(question_data['question'], styles['Normal']))
+            elements.append(Spacer(1, 12))
+
+            if 'answers' in question_data:
+                for index, answer in enumerate(question_data['answers'], start=1):
+                    elements.append(Paragraph(f"{index}. {answer}", styles['Normal']))
+
+            if question_data['correct_answer']:
+                elements.append(Paragraph("Correct Answer:", styles['Heading4']))
+                correct_answer_list = question_data['correct_answer']
+                elements.append(Paragraph(", ".join(str(answer) for answer in correct_answer_list), styles['Normal']))
+
+            if question_data['explanation']:
+                elements.append(Paragraph("Explanation:", styles['Heading4']))
+                elements.append(Paragraph(question_data['explanation'], styles['Normal']))
+
+        elements.append(Paragraph("Grades", styles['Heading2']))
+        # Add table with grades
+        table_data = [['Percentage', 'Grade']]
+        for grade in user_tests.grades:
+            table_data.append([f"{grade['percentage']}%", grade['grade']])
+
+        table_style = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                                  ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                                  ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                  ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                  ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                                  ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                                  ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+
+        # Create the table and apply the style
+        grade_table = Table(table_data)
+        grade_table.setStyle(table_style)
+
+        # Add the table to the elements list
+        elements.append(grade_table)
+        elements.append(Spacer(1, 12))
+
+        elements.append(Paragraph(user_tests.footer, styles['Normal']))
+
+        doc.build(elements)
+        return response
+
+    # Create the PDF document for teacher view
+    return create_teacher_view_pdf(user_tests)
+
+#-----------download pdf views---
 
 def download_teacher_view(request, id):
     user_tests = UserTest.objects.get(pk=id)
@@ -45,7 +194,7 @@ def download_teacher_view(request, id):
                 for index, answer in enumerate(question_data['answers'], start=1):
                     doc.add_paragraph(f"{index}. {answer}")
 
-            if 'correct_answer' in question_data:
+            if question_data['correct_answer']:
                 doc.add_heading("Correct Answer:", level=3)
                 correct_answer_list = question_data['correct_answer']  # Assuming correct_answer is a list
                 doc.add_paragraph(", ".join(str(answer) for answer in correct_answer_list))
@@ -55,7 +204,26 @@ def download_teacher_view(request, id):
                 doc.add_paragraph(question_data['explanation'])
 
             doc.add_paragraph("")  # Adding a blank line between questions
-        doc.add_heading(user_tests.footer, level=3)
+
+        doc.add_heading(f"Grading", level=2)
+        # Add a table with the grades
+        grades_table = doc.add_table(rows=1, cols=2)
+        grades_table.autofit = True
+
+        # Add table header
+        header_cells = grades_table.rows[0].cells
+        header_cells[0].text = 'Percentage'
+        header_cells[1].text = 'Grade'
+
+        # Add data rows to the table
+        for grade_info in user_tests.grades:
+            row_cells = grades_table.add_row().cells
+            row_cells[0].text = f"{grade_info['percentage']}%"
+            row_cells[1].text = grade_info['grade']
+
+        doc.add_paragraph("")
+
+        doc.add_paragraph(user_tests.footer)
 
         return doc
 
@@ -103,7 +271,25 @@ def download_student_view(request, id):
 
             doc.add_paragraph("")  # Adding a blank line between questions
 
-        doc.add_heading(user_tests.footer, level=3)
+        doc.add_heading(f"Grading", level=2)
+        # Add a table with the grades
+        grades_table = doc.add_table(rows=1, cols=2)
+        grades_table.autofit = True
+
+        # Add table header
+        header_cells = grades_table.rows[0].cells
+        header_cells[0].text = 'Percentage'
+        header_cells[1].text = 'Grade'
+
+        # Add data rows to the table
+        for grade_info in user_tests.grades:
+            row_cells = grades_table.add_row().cells
+            row_cells[0].text = f"{grade_info['percentage']}%"
+            row_cells[1].text = grade_info['grade']
+
+        doc.add_paragraph("")
+
+        doc.add_paragraph(user_tests.footer)
 
         return doc
 

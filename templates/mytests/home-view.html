@@ -28,6 +28,8 @@
           <!-- Add this button in your home-view.html template -->
 <div class="row">
     <a href="{% url 'download-student-view' user_tests.id %}" class="btn btn-primary">Download Student View</a>
+    <a href="{% url 'download-student-view-pdf' user_tests.id %}" class="btn btn-primary">Download Student View (PDF)</a>
+
 </div>
 
 <div class="form-control-scroll" id="student-view" name="student-view">
@@ -63,6 +65,8 @@
         <label for="">Teacher view</label>
           <div class="row">
                   <a href="{% url 'download-teacher-view' user_tests.id %}" class="btn btn-primary">Download Teacher View</a>
+                          <a href="{% url 'download-teacher-view-pdf' user_tests.id %}" class="btn btn-primary">Download Teacher View (PDF)</a>
+
 
 </div>
 

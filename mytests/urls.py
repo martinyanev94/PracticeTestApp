@@ -11,5 +11,7 @@ urlpatterns = [
     path('search-test', csrf_exempt(views.search_tests), name="search-test"),
     path('download-student-view/<int:id>/', views.download_student_view, name='download-student-view'),
     path('download-teacher-view/<int:id>/', views.download_teacher_view, name='download-teacher-view'),
+    path('download-teacher-view-pdf/<int:id>/', views.download_teacher_view_pdf, name='download-teacher-view-pdf'),
+    path('download-student-view-pdf/<int:id>/', views.download_student_view_pdf, name='download-student-view-pdf'),
 
 ]
