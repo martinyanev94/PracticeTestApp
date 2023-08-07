@@ -7,7 +7,119 @@ from django.shortcuts import render, redirect
 
 from createtests.models import UserTest
 from django.contrib import messages
+import docx
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx.shared import Pt
+from django.http import HttpResponse
 
+
+from django.shortcuts import render
+from django.http import HttpResponse
+from docx.shared import Pt
+import docx
+
+def download_teacher_view(request, id):
+    user_tests = UserTest.objects.get(pk=id)
+
+    # Function to create the Word document for teacher view
+    def create_teacher_view_docx(user_tests):
+        doc = docx.Document()
+        heading = doc.add_heading(user_tests.header, level=1)
+        heading.paragraph_format.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
+
+        subtitle = doc.add_heading(user_tests.subtitle, level=3)
+        subtitle.paragraph_format.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
+
+        institution = doc.add_heading(user_tests.institution, level=3)
+        institution.paragraph_format.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
+
+        add_header_info = doc.add_heading(user_tests.add_header_info, level=3)
+        add_header_info.paragraph_format.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
+
+
+        for question_id, question_data in user_tests.questions.items():
+            doc.add_heading(f"Question {question_id[1:]}:", level=2)
+            doc.add_paragraph(question_data['question'])
+
+            if 'answers' in question_data:
+                for index, answer in enumerate(question_data['answers'], start=1):
+                    doc.add_paragraph(f"{index}. {answer}")
+
+            if 'correct_answer' in question_data:
+                doc.add_heading("Correct Answer:", level=3)
+                correct_answer_list = question_data['correct_answer']  # Assuming correct_answer is a list
+                doc.add_paragraph(", ".join(str(answer) for answer in correct_answer_list))
+
+            if question_data['explanation']:
+                doc.add_heading("Explanation:", level=3)
+                doc.add_paragraph(question_data['explanation'])
+
+            doc.add_paragraph("")  # Adding a blank line between questions
+        doc.add_heading(user_tests.footer, level=3)
+
+        return doc
+
+    # Create the Word document for teacher view
+    doc = create_teacher_view_docx(user_tests)
+
+    # Create a response with the Word document as a downloadable file
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+    response['Content-Disposition'] = f'attachment; filename=teacher_view_{user_tests.id}.docx'
+
+    # Save the document to the response
+    doc.save(response)
+
+    return response
+
+
+def download_student_view(request, id):
+    user_tests = UserTest.objects.get(pk=id)
+    header = user_tests.header
+
+    # Function to create the Word document
+    def create_student_view_docx(user_tests):
+        doc = docx.Document()
+        heading = doc.add_heading(user_tests.header, level=1)
+        heading.paragraph_format.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
+
+        subtitle = doc.add_heading(user_tests.subtitle, level=3)
+        subtitle.paragraph_format.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
+
+        institution = doc.add_heading(user_tests.institution, level=3)
+        institution.paragraph_format.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
+
+        add_header_info = doc.add_heading(user_tests.add_header_info, level=3)
+        add_header_info.paragraph_format.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
+
+
+        for question_id, question_data in user_tests.questions.items():
+            print(question_data)
+            doc.add_heading(f"Question {question_id[1:]}:", level=2)
+            doc.add_paragraph(question_data['question'])
+
+            if 'answers' in question_data:
+                for index, answer in enumerate(question_data['answers'], start=1):
+                    doc.add_paragraph(f"{index}. {answer}")
+
+            doc.add_paragraph("")  # Adding a blank line between questions
+
+        doc.add_heading(user_tests.footer, level=3)
+
+        return doc
+
+    # Create the Word document
+    doc = create_student_view_docx(user_tests)
+
+    # Create a response with the Word document as a downloadable file
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+    response['Content-Disposition'] = f'attachment; filename=student_view_{user_tests.id}.docx'
+
+    # Save the document to the response
+    doc.save(response)
+
+    return response
+
+#-----------------END DOWNLOAD VIEWS----------------------
 
 
 
@@ -97,6 +209,7 @@ def edit_pt(request, id):
 
 
         # Update question fields
+        #TODO do the same for the answers field to be in a list
         questions = {}
         for key, value in request.POST.items():
             if key.startswith('questions_'):
