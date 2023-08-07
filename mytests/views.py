@@ -19,6 +19,84 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, TableStyle
 from reportlab.lib import colors
 from reportlab.platypus import Table
 
+
+
+#----------------------txt view---------------
+def download_student_view_txt(request, id):
+    user_tests = UserTest.objects.get(pk=id)
+
+    # Function to create the text file for teacher view
+    def create_teacher_view_txt(user_tests):
+        content = f"{user_tests.header}\n\n{user_tests.subtitle}\n\n{user_tests.institution}\n\n{user_tests.add_header_info}\n\n"
+
+        for question_id, question_data in user_tests.questions.items():
+            content += f"Question {question_id[1:]}:\n{question_data['question']}\n"
+
+            if 'answers' in question_data:
+                for index, answer in enumerate(question_data['answers'], start=1):
+                    content += f"{index}. {answer}\n"
+
+            content += "\n"  # Adding a blank line between questions
+
+        content += "Grading\nPercentage\tGrade\n"
+        for grade_info in user_tests.grades:
+            content += f"{grade_info['percentage']}%\t\t{grade_info['grade']}\n"
+
+        content += f"\n{user_tests.footer}"
+
+        return content
+
+    # Create the text file content
+    content = create_teacher_view_txt(user_tests)
+
+    # Create a response with the text content as a downloadable file
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = f'attachment; filename=student_view_{user_tests.id}.txt'
+
+    return response
+
+def download_teacher_view_txt(request, id):
+    user_tests = UserTest.objects.get(pk=id)
+
+    # Function to create the text file for teacher view
+    def create_teacher_view_txt(user_tests):
+        content = f"{user_tests.header}\n\n{user_tests.subtitle}\n\n{user_tests.institution}\n\n{user_tests.add_header_info}\n\n"
+
+        for question_id, question_data in user_tests.questions.items():
+            content += f"Question {question_id[1:]}:\n{question_data['question']}\n"
+
+            if 'answers' in question_data:
+                for index, answer in enumerate(question_data['answers'], start=1):
+                    content += f"{index}. {answer}\n"
+            content += "\n"  # Adding a blank line between questions
+
+            if question_data['correct_answer']:
+                content += f"Correct Answer: {', '.join(str(answer) for answer in question_data['correct_answer'])}\n"
+
+            if question_data['explanation']:
+                content += f"Explanation: {question_data['explanation']}\n"
+
+            content += "\n"  # Adding a blank line between questions
+
+        content += "Grading\nPercentage\tGrade\n"
+        for grade_info in user_tests.grades:
+            content += f"{grade_info['percentage']}%\t\t{grade_info['grade']}\n"
+
+        content += f"\n{user_tests.footer}"
+
+        return content
+
+    # Create the text file content
+    content = create_teacher_view_txt(user_tests)
+
+    # Create a response with the text content as a downloadable file
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = f'attachment; filename=teacher_view_{user_tests.id}.txt'
+
+    return response
+
+
+
 def download_student_view_pdf(request, id):
     user_tests = UserTest.objects.get(pk=id)
 

@@ -17,7 +17,14 @@
 
 <div class="card">
   <div class="card-body">
-    <form action="{% url 'edit-test' user_tests.id %}" method="post">
+                  <td>
+                    <a
+            href="{% url 'edit-test' user_tests.id  %}"
+            class="btn btn-secondary btn-sm"
+            >Edit</a
+          >
+
+        </td>
       {% include 'partials/_messages.html'%}
       {% csrf_token %}
       <div>
@@ -29,6 +36,8 @@
 <div class="row">
     <a href="{% url 'download-student-view' user_tests.id %}" class="btn btn-primary">Download Student View</a>
     <a href="{% url 'download-student-view-pdf' user_tests.id %}" class="btn btn-primary">Download Student View (PDF)</a>
+    <a href="{% url 'download-student-view-txt' user_tests.id %}" class="btn btn-primary">Download Student View (.txt)</a>
+
 
 </div>
 
@@ -65,7 +74,9 @@
         <label for="">Teacher view</label>
           <div class="row">
                   <a href="{% url 'download-teacher-view' user_tests.id %}" class="btn btn-primary">Download Teacher View</a>
-                          <a href="{% url 'download-teacher-view-pdf' user_tests.id %}" class="btn btn-primary">Download Teacher View (PDF)</a>
+              <a href="{% url 'download-teacher-view-pdf' user_tests.id %}" class="btn btn-primary">Download Teacher View (PDF)</a>
+                  <a href="{% url 'download-teacher-view-txt' user_tests.id %}" class="btn btn-primary">Download Teacher View (.txt)</a>
+
 
 
 </div>
@@ -110,9 +121,6 @@
   </div>
 </div>
 
-
-      <input type="submit" value="Save" class="btn btn-primary btn-primary-sm" />
-    </form>
   </div>
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">

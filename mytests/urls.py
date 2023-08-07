@@ -13,5 +13,7 @@ urlpatterns = [
     path('download-teacher-view/<int:id>/', views.download_teacher_view, name='download-teacher-view'),
     path('download-teacher-view-pdf/<int:id>/', views.download_teacher_view_pdf, name='download-teacher-view-pdf'),
     path('download-student-view-pdf/<int:id>/', views.download_student_view_pdf, name='download-student-view-pdf'),
+    path('download-teacher-view-txt/<int:id>/', views.download_teacher_view_txt, name='download-teacher-view-txt'),
+    path('download-student-view-txt/<int:id>/', views.download_student_view_txt, name='download-student-view-txt'),
 
 ]
