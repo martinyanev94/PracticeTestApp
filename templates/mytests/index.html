@@ -54,11 +54,10 @@
             class="btn btn-secondary btn-sm"
             >Word</a
           >
-
         </td>
           <td>
                     <a
-            href="{% url 'download-teacher-view-pdf' user_tests.id  %}"
+            href="{% url 'download-student-view-pdf' user_tests.id  %}"
             class="btn btn-secondary btn-sm"
             >PDF</a
           >
@@ -66,7 +65,7 @@
 
           <td>
                     <a
-            href="{% url 'download-teacher-view-txt' user_tests.id  %}"
+            href="{% url 'download-student-view-txt' user_tests.id  %}"
             class="btn btn-secondary btn-sm"
             >TXT</a
           >
@@ -100,7 +99,6 @@
         <tr>
           <th>Header</th>
           <th>Notes</th>
-          <th>Questions</th>
             <th>Date</th>
           <th></th>
         </tr>
@@ -131,7 +129,156 @@
     {% endif %}
   </div>
 </div>
-    <script src="{% static 'js/searchTests.js' %}"></script>
+    <script>
+        const searchField = document.querySelector("#searchField");
+const tableOutput = document.querySelector(".table-output");
+const appTable = document.querySelector(".app-table");
+tableOutput.style.display = "none";
+const paginationContainer = document.querySelector(".pagination-container");
+const noResults = document.querySelector(".no-results");
+const tbody = document.querySelector(".table-body");
+
+
+searchField.addEventListener("keyup", (e) => {
+  const searchValue = e.target.value;
+
+  if (searchValue.trim().length > 0) {
+    paginationContainer.style.display = "none";
+    tbody.innerHTML = "";
+
+    fetch("/my-tests/search-test", {
+      body: JSON.stringify({ searchText: searchValue }),
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("data", data);
+        appTable.style.display = "none";
+        tableOutput.style.display = "block";
+        console.log(data);
+        if (data.length === 0) {
+          noResults.style.display = "block";
+          tableOutput.style.display = "none";
+        } else {
+          noResults.style.display = "none";
+          data.forEach((item) => {
+            const createdAtDate = new Date(item.created_at);
+              const options = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  };
+  const formattedDate = new Intl.DateTimeFormat("en-US", options).format(createdAtDate);
+
+            tbody.innerHTML += `
+              <tr>
+                <td>
+                <a href="#" class="home-view" data-id="${item.id}">${item.header}</a>
+          </td>
+                <td>${item.notes}</td>
+      <td>${formattedDate}</td>
+                 <td>
+                  <a href="#" class="btn btn-secondary btn-sm download-student-view" data-id="${item.id}">Word</a>
+                </td>
+                  <td>
+                  <a href="#" class="btn btn-secondary btn-sm download-student-view-pdf" data-id="${item.id}">PDF</a>
+                </td>
+                 <td>
+                  <a href="#" class="btn btn-secondary btn-sm download-student-view-txt" data-id="${item.id}">TXT</a>
+                </td>
+                <td>
+                  <a href="#" class="btn btn-secondary btn-sm edit-button" data-id="${item.id}">Edit</a>
+                </td>
+                <td>
+                  <a href="#" class="btn btn-danger btn-sm delete-button" data-id="${item.id}">Delete</a>
+                </td>
+              </tr>
+            `;
+          });
+
+          // Attach event listeners to dynamically created buttons
+          attachButtonEventListeners();
+        }
+      });
+  } else {
+    tableOutput.style.display = "none";
+    appTable.style.display = "block";
+    paginationContainer.style.display = "block";
+  }
+});
+
+function attachButtonEventListeners() {
+  const editButtons = document.querySelectorAll(".edit-button");
+  const deleteButtons = document.querySelectorAll(".delete-button");
+  const testHeaderView = document.querySelectorAll(".home-view");
+  const downloadStudentViewButtons = document.querySelectorAll(".download-student-view");
+  const downloadStudentViewPDFButtons = document.querySelectorAll(".download-student-view-pdf");
+   const downloadStudentViewTXTButtons = document.querySelectorAll(".download-student-view-txt");
+
+
+testHeaderView.forEach((a) => {
+  a.addEventListener("click", (e) => {
+    e.preventDefault();
+    const id = a.getAttribute("data-id");
+    const testHeaderViewUrl = `/my-tests/home-view/${id}`;
+    window.location.href = testHeaderViewUrl;
+  });
+});
+
+  editButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = e.target.getAttribute("data-id");
+      const editUrl = `/my-tests/edit-test/${id}`;
+      window.location.href = editUrl;
+    });
+  });
+
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = e.target.getAttribute("data-id");
+      if (confirmDelete()) {
+        const deleteUrl = `/my-tests/delete-test/${id}`;
+        window.location.href = deleteUrl;
+      }
+    });
+  });
+
+
+          downloadStudentViewButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = e.target.getAttribute("data-id");
+        const downloadStudentViewUrl = `/my-tests/download-student-view/${id}`;
+        window.location.href = downloadStudentViewUrl;
+
+    });
+  });
+            downloadStudentViewPDFButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = e.target.getAttribute("data-id");
+        const downloadStudentViewPDFUrl = `/my-tests/download-student-view-pdf/${id}`;
+        window.location.href = downloadStudentViewPDFUrl;
+
+    });
+  });
+            downloadStudentViewTXTButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = e.target.getAttribute("data-id");
+        const downloadStudentViewTXTUrl = `/my-tests/download-student-view-txt/${id}`;
+        window.location.href = downloadStudentViewTXTUrl;
+
+    });
+  });
+
+}
+    </script>
         <script src="{% static 'js/myTests.js' %}"></script>
 
 
