@@ -338,7 +338,6 @@ def download_student_view(request, id):
 
 
         for question_id, question_data in user_tests.questions.items():
-            print(question_data)
             doc.add_heading(f"Question {question_id[1:]}:", level=2)
             doc.add_paragraph(question_data['question'])
 
@@ -504,7 +503,6 @@ def edit_pt(request, id):
                 else:
                     questions[question_id][field_name] = value
         user_tests.questions = questions
-        print(questions)
         user_tests.save()
         messages.success(request, f'Practice test {header} updated successfully')
 

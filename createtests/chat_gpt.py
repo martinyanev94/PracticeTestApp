@@ -131,6 +131,13 @@ def generate_questions(teaching_material, number_of_questions):
         json_questions_list[f"q{final_question + 1}"] = process_lines(json_questions_list[f"q{final_question + 1}"],
                                                                       lines)
 
+    for key, question in json_questions_list.items():
+        # Check if 'correct_answer' or 'answers' is empty
+        if not question.get('correct_answer') or not question.get('answers'):
+            # Remove the keys 'correct_answer' and 'answers' if they are empty
+            question.pop('correct_answer', None)
+            question.pop('answers', None)
+
     b = time.time()
     print(f"TIME: {b-a}")
     print(total_tokens)

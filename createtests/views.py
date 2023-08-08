@@ -100,18 +100,9 @@ def quick_test(request):
         question_data = generate_questions(teaching_material, question_types)
         footer = generate_footer_info(header)
 
-        print(request.user)
-        print(header)
-        print(subtitle)
-        print(institution)
-        print(add_header_info)
-        print(grades)
-        print("/")
-        print(question_types)
-        print("/")
+
         print(question_data)
-        print(footer)
-        print(tag)
+
 
 
         user_test = UserTest.objects.create(owner=request.user, header=header, subtitle=subtitle,
@@ -201,18 +192,8 @@ def advanced_test(request):
         question_data = generate_questions(teaching_material, question_types)
         footer = request.POST['footer']
 
-        print(request.user)
-        print(header)
-        print(subtitle)
-        print(institution)
-        print(add_header_info)
-        print(grades)
-        print("/")
-        print(question_types)
-        print("/")
         print(question_data)
-        print(footer)
-        print(tag)
+
 
         user_test = UserTest.objects.create(owner=request.user, header=header, subtitle=subtitle,
                                             institution=institution,
