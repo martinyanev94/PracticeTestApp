@@ -325,7 +325,27 @@ document.getElementById('teaching-material').addEventListener('input', function 
   });
 
 
+  document.addEventListener('DOMContentLoaded', function () {
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 
+    let deleteUrl = '';
+
+    // Attach click event to all delete buttons
+    deleteButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        deleteUrl = btn.getAttribute('data-url');
+        $('#confirmationModal').modal('show');
+      });
+    });
+
+    // Attach click event to confirm delete button in modal
+    confirmDeleteBtn.addEventListener('click', function () {
+      if (deleteUrl) {
+        window.location.href = deleteUrl;
+      }
+    });
+  });
 
 
 

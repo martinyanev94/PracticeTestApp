@@ -48,6 +48,30 @@
         <td>{{user_tests.notes}}</td>
           <td>{{user_tests.created_at}}</td>
 
+                  <td>
+                    <a
+            href="{% url 'download-student-view' user_tests.id  %}"
+            class="btn btn-secondary btn-sm"
+            >Word</a
+          >
+
+        </td>
+          <td>
+                    <a
+            href="{% url 'download-teacher-view-pdf' user_tests.id  %}"
+            class="btn btn-secondary btn-sm"
+            >PDF</a
+          >
+        </td>
+
+          <td>
+                    <a
+            href="{% url 'download-teacher-view-txt' user_tests.id  %}"
+            class="btn btn-secondary btn-sm"
+            >TXT</a
+          >
+        </td>
+
         <td>
                     <a
             href="{% url 'edit-test' user_tests.id  %}"
@@ -57,11 +81,7 @@
 
         </td>
           <td>
-                    <a
-            href="{% url 'delete-test' user_tests.id  %}"
-            class="btn btn-danger btn-sm"
-            >Delete</a
-          >
+    <a href="{% url 'delete-test' user_tests.id %}" class="btn btn-danger btn-sm" onclick="return confirmDelete();">Delete</a>
 
         </td>
       </tr>
@@ -112,6 +132,9 @@
   </div>
 </div>
     <script src="{% static 'js/searchTests.js' %}"></script>
+        <script src="{% static 'js/myTests.js' %}"></script>
+
+
 </div>
 
 {% endblock content %}
