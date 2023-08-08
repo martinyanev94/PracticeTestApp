@@ -59,6 +59,13 @@
           <div class="accordion-content">
             {% for question_id, question_data in values.questions.items %}
             <!-- Remove the previous "Answers" input field -->
+
+                                          <input
+                  type="hidden"
+                  class="form-control form-control-sm"
+                  name="questions_{{ question_id }}_type"
+                  value="{{ question_data.type }}"
+                />
               <div class="form-group question">
                 <label for="">Question {{ forloop.counter }}</label>
                 <input
@@ -68,6 +75,7 @@
                   value="{{ question_data.question }}"
                 />
               </div>
+
   
             <!-- Loop to generate separate input fields for each answer -->
             {% for answer in question_data.answers %}
@@ -88,7 +96,7 @@
                 <input
                   type="text"
                   class="form-control form-control-sm"
-                  name="questions_{{ question_id }}_correctanswer"
+                  name="questions_{{ question_id }}_correct_answer"
                   value="{{ question_data.correct_answer|join:', ' }}"
                 />
               </div>

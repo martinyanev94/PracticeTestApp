@@ -70,7 +70,7 @@ def download_teacher_view_txt(request, id):
                     content += f"{index}. {answer}\n"
             content += "\n"  # Adding a blank line between questions
 
-            if question_data['correct_answer']:
+            if 'correct_answer' in question_data:
                 content += f"Correct Answer: {', '.join(str(answer) for answer in question_data['correct_answer'])}\n"
 
             if question_data['explanation']:
@@ -204,7 +204,7 @@ def download_teacher_view_pdf(request, id):
                 for index, answer in enumerate(question_data['answers'], start=1):
                     elements.append(Paragraph(f"{index}. {answer}", styles['Normal']))
 
-            if question_data['correct_answer']:
+            if 'correct_answer' in question_data:
                 elements.append(Paragraph("Correct Answer:", styles['Heading4']))
                 correct_answer_list = question_data['correct_answer']
                 elements.append(Paragraph(", ".join(str(answer) for answer in correct_answer_list), styles['Normal']))
@@ -263,7 +263,6 @@ def download_teacher_view(request, id):
         add_header_info = doc.add_heading(user_tests.add_header_info, level=3)
         add_header_info.paragraph_format.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
 
-
         for question_id, question_data in user_tests.questions.items():
             doc.add_heading(f"Question {question_id[1:]}:", level=2)
             doc.add_paragraph(question_data['question'])
@@ -272,7 +271,7 @@ def download_teacher_view(request, id):
                 for index, answer in enumerate(question_data['answers'], start=1):
                     doc.add_paragraph(f"{index}. {answer}")
 
-            if question_data['correct_answer']:
+            if 'correct_answer' in question_data:
                 doc.add_heading("Correct Answer:", level=3)
                 correct_answer_list = question_data['correct_answer']  # Assuming correct_answer is a list
                 doc.add_paragraph(", ".join(str(answer) for answer in correct_answer_list))
@@ -500,11 +499,12 @@ def edit_pt(request, id):
                     if 'answers' not in questions[question_id]:
                         questions[question_id]['answers'] = []  #[q1: {answers: [] }
                     questions[question_id]['answers'].append(value)
+                elif field_name == 'correct':
+                    questions[question_id]["correct_answer"] = [int(s) for s in value.split(',')]
                 else:
                     questions[question_id][field_name] = value
-
         user_tests.questions = questions
-
+        print(questions)
         user_tests.save()
         messages.success(request, f'Practice test {header} updated successfully')
 
