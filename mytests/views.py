@@ -449,7 +449,6 @@ def edit_pt(request, id):
         tag = request.POST['notes']
         footer = request.POST['footer']
         grades = []
-        print(user_tests.grades)
         for i in range(1, 20):  # Assuming there are four grades (you can adjust the range based on your actual data)
             grade_key = f'grade_{i}_grade'
             percentage_key = f'grade_{i}_percentage'
@@ -476,18 +475,30 @@ def edit_pt(request, id):
         #TODO do the same for the answers field to be in a list
         questions = {}
         for key, value in request.POST.items():
+
             if key.startswith('questions_'):
                 parts = key.split('_')
-                question_id = parts[1]
-                field_name = parts[2]
+                question_id = parts[1]  #q1
+                field_name = parts[2]  #question or answer
 
                 if question_id not in questions:
-                    questions[question_id] = {}
+                    questions[question_id] = {} #[q1: {}]
 
                 # If it's an answer field, create a list and append the values
+                '''
+                ct_keys(['csrfmiddlewaretoken', 'header', 'subtitle', 'notes', 'institution', 'add_header_info',
+                         'questions_q1_question', 'questions_q1_answers_1', 'questions_q1_answers_2',
+                         'questions_q1_answers_3', 'questions_q1_answers_4', 'questions_q1_correct_answer', 'questions
+                         _q1_explanation', 'questions_q2_question', 'questions_q2_answers_1', 'questions_q2_answers_2
+                         ', 'questions_q2_answers_3', 'questions_q2_answers_4', 'questions_q2_answers_5', '
+                         questions_q2_correct_answer', 'questions_q2_explanation', 'questions_q3_question', 'questions_q
+                         3_explanation', 'grade_1_grade', 'grade_1_percentage', 'grade_2_grade', 'grade_2_percentage', '
+                         grade_3_grade', 'grade_3_percentage', 'grade_4_grade', 'grade_4_percentage', 'footer'])
+                 '''
+
                 if field_name == 'answers':
                     if 'answers' not in questions[question_id]:
-                        questions[question_id]['answers'] = []
+                        questions[question_id]['answers'] = []  #[q1: {answers: [] }
                     questions[question_id]['answers'].append(value)
                 else:
                     questions[question_id][field_name] = value
