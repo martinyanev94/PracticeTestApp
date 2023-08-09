@@ -26,15 +26,16 @@
 <div class="app-table">
 
   <table class="table table-stripped table-hover">
-    <thead>
-      <tr>
-        <th>Header</th>
-        <th>Notes</th>
-          <th>Date</th>
+<thead>
+  <tr>
+    <th><a href="?sort_column=header&sort_order={{ sort_order }}">Header</a></th>
+    <th><a href="?sort_column=notes&sort_order={{ sort_order }}">Notes</a></th>
+    <th><a href="?sort_column=created_at&sort_order={{ sort_order }}">Date</a></th>
+    <th></th>
+  </tr>
+</thead>
 
-        <th></th>
-      </tr>
-    </thead>
+
 
     <tbody>
       {% for user_tests in page_obj%}
@@ -278,6 +279,24 @@ testHeaderView.forEach((a) => {
   });
 
 }
+
+// Inside your existing JavaScript code
+// Attach event listeners to sorting links
+const sortingLinks = document.querySelectorAll("th a");
+sortingLinks.forEach(link => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+    const sortColumn = link.getAttribute("href").split("=")[1];
+    const currentSortOrder = link.getAttribute("href").includes("sort_order=asc") ? "desc" : "asc";
+    const searchValue = searchField.value; // Preserve search value
+
+    // Update query parameters and reload the page
+    const newUrl = `?sort_column=${sortColumn}&sort_order=${currentSortOrder}&page=1`;
+    window.location.href = newUrl;
+  });
+});
+
+
     </script>
         <script src="{% static 'js/myTests.js' %}"></script>
 
