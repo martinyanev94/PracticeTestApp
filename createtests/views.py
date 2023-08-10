@@ -87,7 +87,7 @@ def quick_test(request):
             oaq = 0
         question_types = {"mcq": mcq, "msq": msq, "oaq": oaq}
 
-        total_questions = msq + msq + oaq
+        total_questions = mcq + msq + oaq
         if total_questions > 120:
             messages.error(request, 'Total Questions more than 120')
             return render(request, 'createtests/quick-test.html', context)
