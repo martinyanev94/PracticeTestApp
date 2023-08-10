@@ -56,7 +56,7 @@ def gpt_headers(prompt, n=1, max_tokens=200):
             {"role": "user", "content": f" {prompt}"}
         ]
     )
-    print(response)
+    # print(response)
     total_tokens += response['usage']['total_tokens']
     response_text = [response["choices"][0]["message"]["content"]]
 

@@ -192,7 +192,7 @@ def advanced_test(request):
         question_data = generate_questions(teaching_material, question_types)
         footer = request.POST['footer']
 
-        print(question_data)
+        # print(question_data)
 
 
         user_test = UserTest.objects.create(owner=request.user, header=header, subtitle=subtitle,

@@ -40,6 +40,7 @@ $(document).ready(function() {
 
         $('#advanced-test-form').submit(function(event) {
             event.preventDefault();
+
             var gradesList = [];
             $('.appending_div div').each(function() {
                 var percentage = $(this).find('input[name="score"]').val();
@@ -64,11 +65,69 @@ $(document).ready(function() {
                 value: gradesDataJson
             }).appendTo('#advanced-test-form');
 
-            // Now submit the form with the grades data included
-            $('#advanced-test-form').unbind('submit').submit();
+
+                  var header = $('[name="header"]').val();
+            if (header === '') {
+        alert('Header field cannot be empty.');
+        return;
+      }
+
+
+               // Check if the "Teaching Material" field has a value
+      var teachingMaterialValue = $('#teaching-material').val().trim();
+      if (teachingMaterialValue === '') {
+        alert('Teaching Material field cannot be empty.');
+        return;
+      }
+
+      // Check if the "Teaching Material" field has a length between 100 and 54000 characters
+      if (teachingMaterialValue.length < 100 || teachingMaterialValue.length > 54000) {
+        alert('Teaching Material must be between 30 and 14000 words.');
+        return;
+      }
+
+      // Check if the total number of questions is greater than 0
+      var mcqValue = parseInt($('[name="mcq"]').val()) || 0;
+      var msqValue = parseInt($('[name="msq"]').val()) || 0;
+      var oaqValue = parseInt($('[name="oaq"]').val()) || 0;
+      var totalQuestions = mcqValue + msqValue + oaqValue;
+      if (totalQuestions <= 0) {
+        alert('Total questions must be greater than 0.');
+        return;
+      }
+       if (totalQuestions > 120) {
+        alert('Total questions must be lower than 120.');
+        return;
+      }
+
+
+      // Show the overlay and loading animation
+      $('#overlay').show();
+      $('#loading-animation').show();
+
+      // Send the form data using AJAX
+      $.ajax({
+        url: $(this).attr('action'),
+        type: $(this).attr('method'),
+        data: $(this).serialize(),
+        success: function(response) {
+          // Hide the overlay and loading animation
+          $('#overlay').hide();
+          $('#loading-animation').hide();
+
+          // Redirect to '/my-tests' only upon success and if Teaching Material has a value and total questions > 0
+          window.location.href = '/my-tests/';
+        },
+        error: function(error) {
+          // Handle error if needed
+          console.log(error);
+          // Hide the overlay and loading animation in case of an error
+          $('#overlay').hide();
+          $('#loading-animation').hide();
+        }
+      });
+
         });
-
-
 
     });
 
@@ -141,17 +200,6 @@ $(document).ready(function() {
       }
     });
 
-    // Form submission event
-    $('#advanced-test-form').on('submit', function(event) {
-      if (totalQuestions > 150) {
-        // Show the error message and prevent form submission
-        $('#error-message').show();
-        event.preventDefault();
-      } else {
-        // Hide the error message if total questions are within the limit
-        $('#error-message').hide();
-      }
-    });
   });
 
 // Keep track of uploaded file contents
@@ -217,79 +265,6 @@ document.getElementById('teaching-material').addEventListener('input', function 
     }
   });
 });
-
-
-  $(document).ready(function() {
-    // Intercept form submission
-    $('#advanced-test-form').on('submit', function(e) {
-      e.preventDefault(); // Prevent default form submission
-
-      var header = $('[name="header"]').val();
-            if (header === '') {
-        alert('Header field cannot be empty.');
-        return;
-      }
-
-
-               // Check if the "Teaching Material" field has a value
-      var teachingMaterialValue = $('#teaching-material').val().trim();
-      if (teachingMaterialValue === '') {
-        alert('Teaching Material field cannot be empty.');
-        return;
-      }
-
-      // Check if the "Teaching Material" field has a length between 100 and 54000 characters
-      if (teachingMaterialValue.length < 100 || teachingMaterialValue.length > 54000) {
-        alert('Teaching Material must be between 30 and 14000 words.');
-        return;
-      }
-
-      // Check if the total number of questions is greater than 0
-      var mcqValue = parseInt($('[name="mcq"]').val()) || 0;
-      var msqValue = parseInt($('[name="msq"]').val()) || 0;
-      var oaqValue = parseInt($('[name="oaq"]').val()) || 0;
-      var totalQuestions = mcqValue + msqValue + oaqValue;
-      if (totalQuestions <= 0) {
-        alert('Total questions must be greater than 0.');
-        return;
-      }
-       if (totalQuestions > 120) {
-        alert('Total questions must be lower than 120.');
-        return;
-      }
-
-
-      // Show the overlay and loading animation
-      $('#overlay').show();
-      $('#loading-animation').show();
-
-      // Send the form data using AJAX
-      $.ajax({
-        url: $(this).attr('action'),
-        type: $(this).attr('method'),
-        data: $(this).serialize(),
-        success: function(response) {
-          // Hide the overlay and loading animation
-          $('#overlay').hide();
-          $('#loading-animation').hide();
-
-          // Redirect to '/my-tests' only upon success and if Teaching Material has a value and total questions > 0
-          window.location.href = '/my-tests/';
-        },
-        error: function(error) {
-          // Handle error if needed
-          console.log(error);
-          // Hide the overlay and loading animation in case of an error
-          $('#overlay').hide();
-          $('#loading-animation').hide();
-        }
-      });
-    });
-  });
-
-
-
-
 
   $(document).ready(function() {
     // Intercept form submission
