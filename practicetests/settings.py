@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'createtests',
     'mytests',
-    'homepage'
+    'homepage',
+    'payment',
 
 ]
 

@@ -310,3 +310,5 @@ class CompletePasswordReset(View):
             return render(request, 'authentication/set_new_password.html', context)
 
 
+def edit_account_view(request):
+    return render(request, 'authentication/edit_account.html')
