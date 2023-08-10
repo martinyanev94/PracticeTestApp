@@ -2,6 +2,68 @@
 {% load static %}
 
 {% block content %}
-<h1>Home Page</h1>
+  <style>
+    .centered-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 80vh; /* This will make the container take up the full viewport height */
+    }
 
-{% endblock %}
+    /* Additional styling for the image and text */
+    .centered-container img {
+      max-width: 100%;
+    }
+
+    .box-heading {
+      text-align: center;
+    }
+
+    /* Two-column layout */
+    .columns-container {
+      display: flex;
+      justify-content: space-between;
+      width: 80%; /* Adjust this width as needed */
+      margin-top: 20px;
+    }
+
+    .column {
+      flex-basis: 48%; /* Adjust this width as needed */
+    }
+
+    /* Bullet points */
+    .column ul {
+      list-style-type: disc;
+      margin-left: 20px;
+    }
+  </style>
+
+  <div class="centered-container">
+    <div>
+      <img src="{% static '/img/front.png' %}" alt="Description of the image">
+    </div>
+    <br>
+    <h2 class="box-heading">Welcome to TestBox</h2>
+    <p>Create exams and quizzes with the power of AI</p>
+
+    <div class="columns-container">
+      <div class="column">
+        <h3><b>Manage your account</b></h3>
+        <ul>
+            <li > <a href="{%url 'edit-account' %}">Edit Your Profile</a></li>
+            <li > <a href="{%url 'payment-plans' %}">Upgrade to Pro Edition</a></li>
+        </ul>
+      </div>
+      <div class="column">
+        <h3><b>Generate exams and quizzes</b></h3>
+        <ul>
+            <li > <a href="{%url 'choose-create-speed' %}">Create a new exam</a></li>
+            <li > <a href="{%url 'my-tests' %}">Access your exams</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
