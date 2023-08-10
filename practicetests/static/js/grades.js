@@ -1,15 +1,42 @@
-    $(document).ready(function() {
-        var i = 1;
-        $('.add').on('click', function() {
+$(document).ready(function() {
+    var i = 1;
+    var maxGrades = 6; // Set the maximum number of grades fields
+
+    // Disable the "Add" button if the maximum limit is reached
+    if (i >= maxGrades) {
+        $('.add').prop('disabled', true);
+    }
+
+    $('.add').on('click', function() {
+        if (i < maxGrades) {
             var field = '<div><br><input type="text" name="grade">&nbsp<input type="text" name="score">&nbsp<span class="fa fa-minus remove"></span></div>';
             $('.appending_div').append(field);
             i = i + 1;
-        });
 
-        // Handle removal of fields
-        $('.appending_div').on('click', '.remove', function() {
-            $(this).parent().remove();
-        });
+            if (i >= maxGrades) {
+                $(this).prop('disabled', true);
+            }
+        }
+
+        if (i === maxGrades) {
+            $(this).hide(); // Hide the plus sign button when the maximum limit is reached
+        }
+    });
+
+    // Handle removal of fields
+    $('.appending_div').on('click', '.remove', function() {
+        $(this).parent().remove();
+        i = i - 1;
+
+        if (i < maxGrades) {
+            $('.add').prop('disabled', false);
+            $('.add').show(); // Show the plus sign button when a field is removed
+        }
+
+        if (i === 0) {
+            $('.add').show(); // Show the plus sign button when all fields are removed
+        }
+    });
 
         $('#advanced-test-form').submit(function(event) {
             event.preventDefault();

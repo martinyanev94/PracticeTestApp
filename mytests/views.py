@@ -399,14 +399,29 @@ def search_tests(request):
 @login_required(login_url='/authentication/login')
 def my_tests(request):
     user_tests = UserTest.objects.filter(owner=request.user)
+
+    # Get sorting parameters from query parameters
+    sort_column = request.GET.get('sort_column', 'created_at')
+    sort_order = request.GET.get('sort_order', 'desc')  # Default to descending order
+
+    # Apply sorting to the queryset
+    if sort_order == 'desc':
+        user_tests = user_tests.order_by('-' + sort_column)
+    else:
+        user_tests = user_tests.order_by(sort_column)
+
     paginator = Paginator(user_tests, 5)
     page_number = request.GET.get('page')
-    page_obj = Paginator.get_page(paginator, page_number)
+    page_obj = paginator.get_page(page_number)
+
     context = {
         'user_tests': user_tests,
         'page_obj': page_obj,
+        'sort_column': sort_column,
+        'sort_order': sort_order,
     }
     return render(request, 'mytests/index.html', context)
+
 
 
 
@@ -468,35 +483,20 @@ def edit_pt(request, id):
         user_tests.notes = tag
         user_tests.footer = footer
 
-
-        # Update question fields
-        #TODO do the same for the answers field to be in a list
         questions = {}
         for key, value in request.POST.items():
 
             if key.startswith('questions_'):
                 parts = key.split('_')
-                question_id = parts[1]  #q1
-                field_name = parts[2]  #question or answer
+                question_id = parts[1]
+                field_name = parts[2]
 
                 if question_id not in questions:
-                    questions[question_id] = {} #[q1: {}]
-
-                # If it's an answer field, create a list and append the values
-                '''
-                ct_keys(['csrfmiddlewaretoken', 'header', 'subtitle', 'notes', 'institution', 'add_header_info',
-                         'questions_q1_question', 'questions_q1_answers_1', 'questions_q1_answers_2',
-                         'questions_q1_answers_3', 'questions_q1_answers_4', 'questions_q1_correct_answer', 'questions
-                         _q1_explanation', 'questions_q2_question', 'questions_q2_answers_1', 'questions_q2_answers_2
-                         ', 'questions_q2_answers_3', 'questions_q2_answers_4', 'questions_q2_answers_5', '
-                         questions_q2_correct_answer', 'questions_q2_explanation', 'questions_q3_question', 'questions_q
-                         3_explanation', 'grade_1_grade', 'grade_1_percentage', 'grade_2_grade', 'grade_2_percentage', '
-                         grade_3_grade', 'grade_3_percentage', 'grade_4_grade', 'grade_4_percentage', 'footer'])
-                 '''
+                    questions[question_id] = {}
 
                 if field_name == 'answers':
                     if 'answers' not in questions[question_id]:
-                        questions[question_id]['answers'] = []  #[q1: {answers: [] }
+                        questions[question_id]['answers'] = []
                     questions[question_id]['answers'].append(value)
                 elif field_name == 'correct':
                     questions[question_id]["correct_answer"] = [int(s) for s in value.split(',')]

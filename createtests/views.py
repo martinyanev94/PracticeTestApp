@@ -3,9 +3,10 @@ import pdb
 
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib import messages
 
+from mytests.views import my_tests
 from .chat_gpt import gpt_engine, generate_header, generate_subtitle, \
     generate_footer_info, generate_questions
 from .models import UserTest
@@ -111,8 +112,7 @@ def quick_test(request):
                                             grades=grades, question_types=question_types, questions=question_data,
                                             footer=footer, notes=tag)
 
-        return render(request, 'createtests/choose-create-speed.html')
-
+        return redirect(my_tests)
 
 @login_required(login_url='/authentication/login')
 def advanced_test(request):
@@ -201,4 +201,5 @@ def advanced_test(request):
                                             grades=grades, question_types=question_types, questions=question_data,
                                             footer=footer, notes=tag)
 
-        return render(request, 'createtests/choose-create-speed.html')
+
+        return redirect(my_tests)
