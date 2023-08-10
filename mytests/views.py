@@ -22,6 +22,7 @@ from reportlab.platypus import Table
 
 
 #----------------------txt view---------------
+@login_required(login_url='/authentication/login')
 def download_student_view_txt(request, id):
     user_tests = UserTest.objects.get(pk=id)
 
@@ -55,6 +56,7 @@ def download_student_view_txt(request, id):
 
     return response
 
+@login_required(login_url='/authentication/login')
 def download_teacher_view_txt(request, id):
     user_tests = UserTest.objects.get(pk=id)
 
@@ -96,7 +98,7 @@ def download_teacher_view_txt(request, id):
     return response
 
 
-
+@login_required(login_url='/authentication/login')
 def download_student_view_pdf(request, id):
     user_tests = UserTest.objects.get(pk=id)
 
@@ -165,7 +167,7 @@ def download_student_view_pdf(request, id):
     # Create the PDF document for teacher view
     return create_teacher_view_pdf(user_tests)
 
-
+@login_required(login_url='/authentication/login')
 def download_teacher_view_pdf(request, id):
     user_tests = UserTest.objects.get(pk=id)
 
@@ -244,7 +246,7 @@ def download_teacher_view_pdf(request, id):
     return create_teacher_view_pdf(user_tests)
 
 #-----------download pdf views---
-
+@login_required(login_url='/authentication/login')
 def download_teacher_view(request, id):
     user_tests = UserTest.objects.get(pk=id)
 
@@ -316,7 +318,7 @@ def download_teacher_view(request, id):
 
     return response
 
-
+@login_required(login_url='/authentication/login')
 def download_student_view(request, id):
     user_tests = UserTest.objects.get(pk=id)
     header = user_tests.header
@@ -384,7 +386,7 @@ def download_student_view(request, id):
 #-----------------END DOWNLOAD VIEWS----------------------
 
 
-
+@login_required(login_url='/authentication/login')
 def search_tests(request):
     if request.method == 'POST':
         search_str = json.loads(request.body).get('searchText')
