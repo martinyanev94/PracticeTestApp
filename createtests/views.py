@@ -130,7 +130,8 @@ def advanced_test(request):
     if request.method == 'POST':
         teaching_material = request.POST['teaching_material']
         header = request.POST['header']
-
+        print(len(teaching_material))
+        print(teaching_material)
         if not header or header.isspace():
             messages.error(request, 'Header is required')
             return render(request, 'createtests/advanced-test.html', context)
@@ -138,7 +139,7 @@ def advanced_test(request):
         if not teaching_material or teaching_material.isspace():
             messages.error(request, 'Please provide teaching material')
             return render(request, 'createtests/advanced-test.html', context)
-        print(len(teaching_material))
+
         if len(teaching_material) < min_characters:
             messages.error(request, f"Please provide teaching material longer than {min_characters} characters.")
             return render(request, 'createtests/advanced-test.html', context)
@@ -188,7 +189,6 @@ def advanced_test(request):
             messages.error(request, 'Total questions are 0. Please add more questions')
             return render(request, 'createtests/advanced-test.html', context)
 
-        # Will be question_data = generate_questions(request.POST['teaching_materail']) in->text out->json
         question_data = generate_questions(teaching_material, question_types)
         footer = request.POST['footer']
 

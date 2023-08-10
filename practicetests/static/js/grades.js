@@ -202,69 +202,82 @@ $(document).ready(function() {
 
   });
 
-// Keep track of uploaded file contents
-const uploadedFiles = [];
+    const uploadedFiles = [];
 
-// Handle drag and drop events for the file input
-const fileDropArea = document.querySelector('.file-drop-area');
+    const fileDropArea = document.querySelector('.file-drop-area');
 
-fileDropArea.addEventListener('dragover', (event) => {
-  event.preventDefault();
-  fileDropArea.classList.add('file-drop-active');
-});
+    fileDropArea.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      fileDropArea.classList.add('file-drop-active');
+    });
 
-fileDropArea.addEventListener('dragleave', () => {
-  fileDropArea.classList.remove('file-drop-active');
-});
+    fileDropArea.addEventListener('dragleave', () => {
+      fileDropArea.classList.remove('file-drop-active');
+    });
 
-fileDropArea.addEventListener('drop', (event) => {
-  event.preventDefault();
-  fileDropArea.classList.remove('file-drop-active');
+    fileDropArea.addEventListener('drop', (event) => {
+      event.preventDefault();
+      fileDropArea.classList.remove('file-drop-active');
 
-  const file = event.dataTransfer.files[0];
-  const reader = new FileReader();
+      handleFile(event.dataTransfer.files[0]);
+    });
 
-  reader.onload = function (e) {
-    // Update the textarea with the content of the dropped file
-    const teachingMaterialTextarea = document.getElementById('teaching-material');
-    teachingMaterialTextarea.value += '\n\n' + e.target.result;
+    document.getElementById('file-input').addEventListener('change', function (event) {
+      handleFile(event.target.files[0]);
+    });
 
-    // Add the file content to the uploadedFiles array
-    uploadedFiles.push(e.target.result);
-  };
+    document.getElementById('teaching-material').addEventListener('input', function (event) {
+      const teachingMaterialTextarea = event.target;
+      uploadedFiles.length = 0;
+      const lines = teachingMaterialTextarea.value.split('\n');
+      lines.forEach(line => {
+        if (line.trim() !== '') {
+          uploadedFiles.push(line);
+        }
+      });
+    });
 
-  reader.readAsText(file);
-});
+    function handleFile(file) {
+      const reader = new FileReader();
 
-// Handle file input change event
-document.getElementById('file-input').addEventListener('change', function (event) {
-  const file = event.target.files[0];
-  const reader = new FileReader();
+      reader.onload = function (e) {
+        const teachingMaterialTextarea = document.getElementById('teaching-material');
+        const fileType = file.name.split('.').pop().toLowerCase();
 
-  reader.onload = function (e) {
-    // Update the textarea with the content of the selected file
-    const teachingMaterialTextarea = document.getElementById('teaching-material');
-    teachingMaterialTextarea.value += '\n\n' + e.target.result;
+        if (fileType === 'docx') {
+          mammoth.extractRawText({ arrayBuffer: e.target.result })
+            .then((result) => {
+              // Preserve new lines from the Word document
+              const plainText = result.value.trim();
+              teachingMaterialTextarea.value += '\n\n' + plainText;
+              uploadedFiles.push(plainText);
+            });
+        } else if (fileType === 'pdf') {
+      const typedArray = new Uint8Array(e.target.result);
+      pdfjsLib.getDocument(typedArray).promise.then((pdfDoc) => {
+        const numPages = pdfDoc.numPages;
+        for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+          pdfDoc.getPage(pageNum).then((page) => {
+            return page.getTextContent();
+          }).then((content) => {
+            const pageText = content.items.map(item => item.str).join(' ');
+            teachingMaterialTextarea.value += '\n\n' + pageText;
+            uploadedFiles.push(pageText);
+          });
+        }
+      });
+        } else {
+          teachingMaterialTextarea.value += '\n\n' + e.target.result;
+          uploadedFiles.push(e.target.result);
+        }
+      };
 
-    // Add the file content to the uploadedFiles array
-    uploadedFiles.push(e.target.result);
-  };
-
-  reader.readAsText(file);
-});
-
-// Handle changes in the textarea (e.g., if the user deletes text)
-document.getElementById('teaching-material').addEventListener('input', function (event) {
-  const teachingMaterialTextarea = event.target;
-  // Update the uploadedFiles array with the textarea content
-  uploadedFiles.length = 0;
-  const lines = teachingMaterialTextarea.value.split('\n');
-  lines.forEach(line => {
-    if (line.trim() !== '') {
-      uploadedFiles.push(line);
+            if (file.type === 'text/plain') {
+        reader.readAsText(file);
+      } else {
+        reader.readAsArrayBuffer(file);
+      }
     }
-  });
-});
 
   $(document).ready(function() {
     // Intercept form submission
