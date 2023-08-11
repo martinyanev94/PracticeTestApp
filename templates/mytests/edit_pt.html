@@ -155,11 +155,13 @@
               <input type="text" class="form-control form-control-sm" name="footer" value="{{ values.footer }}" />
             </div>
           </div>
+
         </div>
   
   
   
-  
+        <a href="{% url 'my-tests' %}" class="btn btn-primary btn-primary-sm mt-4" onclick="return confirmExit();">Back to My Exams</a>
+
         <input type="submit" value="Save" class="btn btn-primary btn-primary-sm mt-4" />
       </form>
     </div>

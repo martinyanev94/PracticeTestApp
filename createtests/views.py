@@ -18,6 +18,7 @@ from .models import UserTest
 def choose_create_speed(request):
     return render(request, 'createtests/choose-create-speed.html')
 
+
 @login_required(login_url='/authentication/login')
 def quick_test(request):
     context = {
@@ -49,24 +50,23 @@ def quick_test(request):
         add_header_info = " "
 
         grades = [
-                {
-                    "percentage": 49,
-                    "grade": "F"
-                },
-                {
-                    "percentage": 65,
-                    "grade": "C"
-                },
-                {
-                    "percentage": 75,
-                    "grade": "B"
-                },
-                {
-                    "percentage": 100,
-                    "grade": "A"
-                }
-            ]
-
+            {
+                "percentage": 49,
+                "grade": "F"
+            },
+            {
+                "percentage": 65,
+                "grade": "C"
+            },
+            {
+                "percentage": 75,
+                "grade": "B"
+            },
+            {
+                "percentage": 100,
+                "grade": "A"
+            }
+        ]
 
         # Questions Data
         mcq = request.POST['mcq']
@@ -101,10 +101,7 @@ def quick_test(request):
         question_data = generate_questions(teaching_material, question_types)
         footer = generate_footer_info(header)
 
-
         print(question_data)
-
-
 
         user_test = UserTest.objects.create(owner=request.user, header=header, subtitle=subtitle,
                                             institution=institution,
@@ -114,15 +111,16 @@ def quick_test(request):
 
         return redirect(my_tests)
 
+
 @login_required(login_url='/authentication/login')
 def advanced_test(request):
     context = {
         'values': request.POST
     }
     max_tokens_per_teaching_material = 14000
-    max_characters = max_tokens_per_teaching_material*4
+    max_characters = max_tokens_per_teaching_material * 4
     min_characters = 100
-    max_words = 14000*.75
+    max_words = 14000 * .75
 
     if request.method == 'GET':
         return render(request, 'createtests/advanced-test.html')
@@ -194,12 +192,10 @@ def advanced_test(request):
 
         # print(question_data)
 
-
         user_test = UserTest.objects.create(owner=request.user, header=header, subtitle=subtitle,
                                             institution=institution,
                                             add_header_info=add_header_info,
                                             grades=grades, question_types=question_types, questions=question_data,
                                             footer=footer, notes=tag)
-
 
         return redirect(my_tests)

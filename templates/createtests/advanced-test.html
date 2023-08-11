@@ -183,10 +183,10 @@
   </div>
 </div>
 
-        <input type="hidden" id="current-page" value="1">
+<input type="hidden" id="current-page" value="1">
 
-<button type="button" class="btn btn-primary btn-primary-sm" id="prev-page">Previous</button>
-<button type="button" class="btn btn-primary btn-primary-sm" id="next-page">Next</button>
+<button type="button" class="btn btn-primary btn-primary-sm" id="prev-page">Back</button>
+<button type="button" class="btn btn-primary btn-primary-sm" id="next-page">Continue</button>
 <input type="submit" value="Submit" class="btn btn-primary btn-primary-sm" id="submit-btn" style="display: none;" />
 </form>
 </div>
@@ -204,6 +204,26 @@
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
   <script src="{% static 'js/grades.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+  const prevButton = document.getElementById('prev-page');
+  const currentPageInput = document.getElementById('current-page');
+
+  // Define the target page to go back to if on the first page
+  const targetPage = '/create-tests/'; // Replace with the actual URL
+
+  prevButton.addEventListener('click', function () {
+    const currentPage = parseInt(currentPageInput.value);
+
+    if (currentPage === 0) {
+      window.location.href = targetPage;
+    } else {
+      currentPageInput.value = currentPage - 1;
+    }
+  });
+});
+    </script>
+
 </div>
 
 {% endblock %}

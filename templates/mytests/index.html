@@ -127,11 +127,20 @@
 
 
       </ul>
-    {% endif %}
+
   </div>
+           {% else %}
+    <!-- Display "Create a test" link when no tests are available -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>No tests available. <a href="{% url 'choose-create-speed' %}">Create a test</a> here.</h2>
+      </div>
+    </div>
+           {% endif %}
+
 </div>
     <script>
-        const searchField = document.querySelector("#searchField");
+const searchField = document.querySelector("#searchField");
 const tableOutput = document.querySelector(".table-output");
 const appTable = document.querySelector(".app-table");
 tableOutput.style.display = "none";
@@ -164,6 +173,7 @@ searchField.addEventListener("keyup", (e) => {
           noResults.style.display = "none";
           data.forEach((item) => {
             const createdAtDate = new Date(item.created_at);
+
               const options = {
     year: "numeric",
     month: "short",
@@ -173,7 +183,6 @@ searchField.addEventListener("keyup", (e) => {
     hour12: true,
   };
   const formattedDate = new Intl.DateTimeFormat("en-US", options).format(createdAtDate);
-
             tbody.innerHTML += `
               <tr>
                 <td>
@@ -295,6 +304,7 @@ sortingLinks.forEach(link => {
     window.location.href = newUrl;
   });
 });
+
 
 
     </script>

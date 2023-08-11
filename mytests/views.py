@@ -20,8 +20,7 @@ from reportlab.lib import colors
 from reportlab.platypus import Table
 
 
-
-#----------------------txt view---------------
+# ----------------------txt view---------------
 @login_required(login_url='/authentication/login')
 def download_student_view_txt(request, id):
     user_tests = UserTest.objects.get(pk=id)
@@ -55,6 +54,7 @@ def download_student_view_txt(request, id):
     response['Content-Disposition'] = f'attachment; filename=student_view_{user_tests.id}.txt'
 
     return response
+
 
 @login_required(login_url='/authentication/login')
 def download_teacher_view_txt(request, id):
@@ -167,6 +167,7 @@ def download_student_view_pdf(request, id):
     # Create the PDF document for teacher view
     return create_teacher_view_pdf(user_tests)
 
+
 @login_required(login_url='/authentication/login')
 def download_teacher_view_pdf(request, id):
     user_tests = UserTest.objects.get(pk=id)
@@ -245,7 +246,8 @@ def download_teacher_view_pdf(request, id):
     # Create the PDF document for teacher view
     return create_teacher_view_pdf(user_tests)
 
-#-----------download pdf views---
+
+# -----------download pdf views---
 @login_required(login_url='/authentication/login')
 def download_teacher_view(request, id):
     user_tests = UserTest.objects.get(pk=id)
@@ -318,6 +320,7 @@ def download_teacher_view(request, id):
 
     return response
 
+
 @login_required(login_url='/authentication/login')
 def download_student_view(request, id):
     user_tests = UserTest.objects.get(pk=id)
@@ -337,7 +340,6 @@ def download_student_view(request, id):
 
         add_header_info = doc.add_heading(user_tests.add_header_info, level=3)
         add_header_info.paragraph_format.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
-
 
         for question_id, question_data in user_tests.questions.items():
             doc.add_heading(f"Question {question_id[1:]}:", level=2)
@@ -383,7 +385,8 @@ def download_student_view(request, id):
 
     return response
 
-#-----------------END DOWNLOAD VIEWS----------------------
+
+# -----------------END DOWNLOAD VIEWS----------------------
 
 
 @login_required(login_url='/authentication/login')
@@ -391,11 +394,12 @@ def search_tests(request):
     if request.method == 'POST':
         search_str = json.loads(request.body).get('searchText')
         user_tests = UserTest.objects.filter(
-            header__istartswith=search_str, owner=request.user) | UserTest.objects.filter(
-            notes__istartswith=search_str, owner=request.user) | UserTest.objects.filter(
+            header__icontains=search_str, owner=request.user) | UserTest.objects.filter(
+            notes__icontains=search_str, owner=request.user) | UserTest.objects.filter(
             created_at__icontains=search_str, owner=request.user)
         data = user_tests.values()
         return JsonResponse(list(data), safe=False)
+
 
 # Create your views here.
 @login_required(login_url='/authentication/login')
@@ -425,8 +429,6 @@ def my_tests(request):
     return render(request, 'mytests/index.html', context)
 
 
-
-
 @login_required(login_url='/authentication/login')
 def home_view(request, id):
     user_tests = UserTest.objects.get(pk=id)
@@ -438,7 +440,6 @@ def home_view(request, id):
         return render(request, 'mytests/home-view.html', context)
     if request.method == 'POST':
         header = request.POST['header']
-
 
 
 @login_required(login_url='/authentication/login')
@@ -509,8 +510,6 @@ def edit_pt(request, id):
         messages.success(request, f'Practice test {header} updated successfully')
 
         return redirect('my-tests')
-
-
 
 
 def delete_pt(request, id):
