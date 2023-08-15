@@ -19,7 +19,7 @@ def gpt_engine(prompt, n=1, max_tokens=200):
         model=model['type'],
         n=n,
         max_tokens=max_tokens,
-        temperature=0.7,
+        temperature=1,
         messages=[
             {"role": "user", "content": f"{preparation_prompt}"},
             {"role": "assistant", "content": "Ok"},

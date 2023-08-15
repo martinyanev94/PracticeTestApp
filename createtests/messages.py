@@ -1,6 +1,8 @@
 preparation_prompt = f"I want to create a sample question from a teaching text. " \
                      f"Below I will ask you to create a sample question. I will specify the question type," \
-                     f" question format and teaching material."
+                     f" question format and teaching material. \n" \
+                     f"When building the question select a random word, sentence or idea from the text and focus the " \
+                     f"question on that. "
 
 
 def multi_choice_prompt(teaching_material):
