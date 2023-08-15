@@ -12,7 +12,7 @@ def multi_choice_prompt(teaching_material):
        Format: Type a star(*) before every question and a (~) before every possible answer. Number the possible answers. 
        Write the correct answer below with (&) symbol in front. The explanation should have (|) in front.
        This is how the question should look like (The explanation should be one sentence long): 
-       
+       "
        *Which of the following AWS services can be used to store and manage objects such as photos, videos, and documents?
        
        ~1 Amazon EC2
@@ -23,6 +23,7 @@ def multi_choice_prompt(teaching_material):
        &3
        
        |Amazon S3 (Simple Storage Service) is an object storage service that offers industry-leading scalability, data availability, security, and performance.
+       "
        Do you understand?
        
        Teaching material:\n {teaching_material}
@@ -39,7 +40,7 @@ def multi_selection_prompt(teaching_material):
        There should be more than one correct answers. 
        Write the correct answers on a single line separated by (,) with (&) symbol in front. The explanation should have (|) in front.
        This is how the question should look like (The explanation should be one sentence long): 
-
+        "
        *Which of the following are characteristics of a mammal? Select all that apply.
 
        ~1 Lays eggs
@@ -49,7 +50,7 @@ def multi_selection_prompt(teaching_material):
        ~5 Gives live birth
 
        &3,5
-
+        "
        |Mammals are warm-blooded and give birth to live young, which are usually nourished with milk produced by the mother.
 
        Teaching material:\n {teaching_material}

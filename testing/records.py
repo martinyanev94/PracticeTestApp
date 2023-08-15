@@ -71,33 +71,120 @@ TIME: 7.518105745315552
 '''
 
 a = '''
+Middle Ages (7th century – 1517)
+Main article: Egypt in the Middle Ages
 
-World War II or the Second World War, often abbreviated as WWII or WW2, was a global conflict that lasted from 1939 to 1945. The vast majority of the world's countries, including all of the great powers, fought as part of two opposing military alliances: the Allies and the Axis. Many participants threw their economic, industrial, and scientific capabilities behind this total war, blurring the distinction between civilian and military resources. Aircraft played a major role, enabling the strategic bombing of population centres and the delivery of the only two nuclear weapons ever used in war. World War II was by far the deadliest conflict in history, resulting in an estimated 70 to 85 million fatalities, mostly among civilians. Tens of millions died due to genocides (including the Holocaust), starvation, massacres, and disease. In the wake of the Axis defeat, Germany and Japan were occupied, and war crimes tribunals were conducted against German and Japanese leaders.
+The Amr ibn al-As mosque in Cairo, recognized as the oldest in Africa
+The Byzantines were able to regain control of the country after a brief Sasanid Persian invasion early in the 7th century amidst the Byzantine–Sasanian War of 602–628 during which they established a new short-lived province for ten years known as Sasanian Egypt, until 639–42, when Egypt was invaded and conquered by the Islamic caliphate by the Muslim Arabs. When they defeated the Byzantine armies in Egypt, the Arabs brought Islam to the country. Some time during this period, Egyptians began to blend in their new faith with indigenous beliefs and practices, leading to various Sufi orders that have flourished to this day.[39] These earlier rites had survived the period of Coptic Christianity.[41]
 
-Create a list of 10 random letters. Choose a random letter from the list and then choose a random word from the text starting with this letter.'''
+In 639 an army of around 4,000 men were sent in Egypt by the second caliph, Umar, under the command of Amr ibn al-As. They were joined by additional 5,000 men in 640 and defeated a Roman army at the battle of Heliopolis. Amr next proceeded in the direction of Alexandria, which surrendered to him by a treaty signed on 8 November 641. Alexandria was regained for the Byzantine Empire in 645 but was retaken by Amr in 646. In 654 an invasion fleet sent by Constans II was repulsed. From that time no serious effort was made by the Byzantine Romans to regain possession of the country.
 
+The Arabs founded the capital of Egypt called Fustat, which was later burned down during the Crusades. Cairo was later built in the year 986 to grow to become the largest and richest city in the Arab caliphate, second only to Baghdad and one of the biggest and richest in the world.
 
-import openai
+Abbasid period
 
-openai.api_key = "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"
+The Ibn Tulun Mosque in Cairo, of Ahmad Ibn Tulun
+The Abbasid period was marked by new taxations, and the Copts revolted again in the fourth year of Abbasid rule. At the beginning of the 9th century the practice of ruling Egypt through a governor was resumed under Abdallah ibn Tahir, who decided to reside at Baghdad, sending a deputy to Egypt to govern for him. In 828 another Egyptian revolt broke out, and in 831 the Copts joined with native Muslims against the government. Eventually the power loss of the Abbasids in Baghdad has led for general upon general to take over rule of Egypt, yet being under Abbasid allegiance, the Tulunid dynasty (868–905) and Ikhshidid dynasty (935–969) were among the most successful to defy the Abbasid Caliph.
 
-response = openai.ChatCompletion.create(
-    model='gpt-3.5-turbo',
-    n=10,
-    max_tokens=3000,
-    temperature=1,
-    messages=[
-        {"role": "user", "content": "I will ask you a question"},
-        {"role": "assistant", "content": "Ok"},
-        {"role": "user", "content": f" {a}"}
-    ]
-)
+Fatimids, Ayyubids and Mamluks
 
-print(response)
+The Al-Hakim Mosque in Cairo, of Al-Hakim bi-Amr Allah, the sixth caliph, as renovated by Dawoodi Bohra
+Muslim rulers remained in control of Egypt for the next six centuries, with Cairo as the seat of the Fatimid Caliphate. With the end of the Ayyubid dynasty, the Mamluks, a Turco-Circassian military caste, took control about 1250. By the late 13th century, Egypt linked the Red Sea, India, Malaya, and East Indies.[42] The mid-14th-century Black Death killed about 40% of the country's population.[43]
 
+Select a random nuber from 0 to the number of words in the text. Choose an other random number. Sum both numbers and divide them by 2. Now choose a word from the text corresponding to that number. What is the word?
+'''
 
 
 
+# import openai
+#
+# openai.api_key = "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"
+#
+# print(a)
+# response = openai.ChatCompletion.create(
+#     model='gpt-3.5-turbo',
+#     n=10,
+#     max_tokens=3000,
+#     temperature=1,
+#     messages=[
+#         {"role": "user", "content": "I will ask you a question"},
+#         {"role": "assistant", "content": "Ok"},
+#         {"role": "user", "content": f" {a}"}
+#     ]
+# )
+#
+# print(response)
+
+
+
+
+# def distribute_text_cuts(questions, cuts):
+#     # Calculate the number of apples to be placed in each bucket
+#     if questions % cuts > 0:
+#         return questions // cuts + 1
+#     else:
+#         return questions // cuts
+#
+# text_cuts = ["apple", "banana", "cherry", "date", "elderberry", "fig", "grape", "honeydew", "kiwi", "lemon"]
+# mcq_record = 2
+# mcq_generated = []
+# mcq_cut = distribute_text_cuts(mcq_record, len(text_cuts))
+# msq_record = 3
+# msq_generated = []
+# msq_cut = distribute_text_cuts(msq_record, len(text_cuts))
+# oaq_record = 10
+# oaq_generated = []
+# oaq_cut = distribute_text_cuts(oaq_record, len(text_cuts))
+# total_q = oaq_record + mcq_record + msq_record
+# total_questions_per_cut = distribute_text_cuts(total_q, len(text_cuts))
+#
+#
+#
+# for cut in text_cuts:
+#     total_questions_per_cut_record = total_questions_per_cut
+#
+#     if mcq_record >= mcq_cut and mcq_cut != 0:
+#         mcq_generated += [mcq_cut, cut]
+#         mcq_record = mcq_record - mcq_cut
+#         total_questions_per_cut_record = total_questions_per_cut_record - mcq_cut
+#         if total_questions_per_cut_record == 0:
+#             continue
+#     elif mcq_record < mcq_cut and mcq_record != 0:
+#         mcq_generated += [mcq_record, cut]
+#         mcq_record = 0
+#         total_questions_per_cut_record = total_questions_per_cut_record - mcq_record
+#         if total_questions_per_cut_record == 0:
+#             continue
+#
+#     if msq_record >= msq_cut and msq_cut != 0:
+#         msq_generated += [msq_cut, cut]
+#         msq_record = msq_record - msq_cut
+#         total_questions_per_cut_record = total_questions_per_cut_record - msq_cut
+#         if total_questions_per_cut_record == 0:
+#             continue
+#     elif msq_record < msq_cut and msq_record != 0:
+#         msq_generated += [msq_record, cut]
+#         msq_record = 0
+#         total_questions_per_cut_record = total_questions_per_cut_record - msq_record
+#         if total_questions_per_cut_record == 0:
+#             continue
+#
+#     if oaq_record >= oaq_cut and oaq_cut != 0:
+#         oaq_generated += [oaq_cut, cut]
+#         oaq_record = oaq_record - oaq_cut
+#         total_questions_per_cut_record = total_questions_per_cut_record - oaq_cut
+#         if total_questions_per_cut_record == 0:
+#             continue
+#     elif oaq_record < oaq_cut and oaq_record != 0:
+#         oaq_generated += [oaq_record, cut]
+#         oaq_record = 0
+#         total_questions_per_cut_record = total_questions_per_cut_record - oaq_record
+#         if total_questions_per_cut_record == 0:
+#             continue
+#
+# print(mcq_generated)
+# print(msq_generated)
+# print(oaq_generated)
 
 
 

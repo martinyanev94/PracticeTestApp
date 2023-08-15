@@ -81,8 +81,11 @@ $(document).ready(function() {
       }
 
       // Check if the "Teaching Material" field has a length between 100 and 54000 characters
-      if (teachingMaterialValue.length < 100 || teachingMaterialValue.length > 54000) {
-        alert('Teaching Material must be between 30 and 14000 words.');
+        var splits = teachingMaterialValue.split(/(\s+)/);
+        var words = splits.filter((x) => x.trim().length>0);
+        var wordCount = words.length;
+      if (wordCount < 100 || wordCount > 12000) {
+        alert('Teaching Material must be between 100 and 12000 words.');
         return;
       }
 
@@ -100,6 +103,14 @@ $(document).ready(function() {
         return;
       }
 
+        var WQratio = wordCount / totalQuestions;
+
+      if (WQratio < 100) {
+  var userConfirmation = confirm('Too many question for a short text. There are more than 1 questions per 100 words. This might introduce repeated questions. Do you want to continue?');
+  if (!userConfirmation) {
+    return;
+  }
+}
 
       // Show the overlay and loading animation
       $('#overlay').show();
@@ -292,8 +303,11 @@ $(document).ready(function() {
       }
 
       // Check if the "Teaching Material" field has a length between 100 and 54000 characters
-      if (teachingMaterialValue.length < 100 || teachingMaterialValue.length > 54000) {
-        alert('Teaching Material must be between 30 and 14000 words.');
+        var splits = teachingMaterialValue.split(/(\s+)/);
+        var words = splits.filter((x) => x.trim().length>0);
+        var wordCount = words.length;
+      if (wordCount < 100 || wordCount > 12000) {
+        alert('Teaching Material must be between 100 and 12000 words.');
         return;
       }
 
@@ -310,6 +324,15 @@ $(document).ready(function() {
         alert('Total questions must be lower than 120.');
         return;
       }
+
+      var WQratio = wordCount / totalQuestions;
+
+      if (WQratio < 100) {
+  var userConfirmation = confirm('Too many question for a short text. There are more than 1 questions per 100 words. This might introduce repeated questions. Do you want to continue?');
+  if (!userConfirmation) {
+    return;
+  }
+}
 
       // Show the overlay and loading animation
       $('#overlay').show();

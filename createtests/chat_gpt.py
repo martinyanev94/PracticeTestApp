@@ -1,4 +1,5 @@
 import pdb
+import random
 import time
 from copy import copy, deepcopy
 import roman
@@ -19,7 +20,7 @@ def gpt_engine(prompt, n=1, max_tokens=200):
         model=model['type'],
         n=n,
         max_tokens=max_tokens,
-        temperature=1,
+        temperature=0.7,
         messages=[
             {"role": "user", "content": f"{preparation_prompt}"},
             {"role": "assistant", "content": "Ok"},
@@ -65,14 +66,13 @@ def gpt_headers(prompt, n=1, max_tokens=200):
 
 
 def generate_header(teaching_material):
-    return gpt_headers(f"I am a building a practice test. "
-                      f"Based on the text below create a header "
-                      f"for this practice test. Write the header only without any additional words: \n {teaching_material[:500]}")[0]
+    return gpt_headers(f"Generate a short title on the following text. Give me only the title without any quotes or "
+                       f"additional explanation: \n {teaching_material[:500]}")[0]
 
 
 def generate_subtitle(header):
-    return gpt_headers(f"Based on the following practice test title, create a subtitle. Write the subtitle only "
-                       f"without any additional words: \n {header}")[0]
+    return gpt_headers(f"Generate a subtitle on the following text.  Give me only the subtitle without any quotes or "
+                       f"additional explanation:: \n {header}")[0]
 
 
 
@@ -86,10 +86,25 @@ def generate_footer_info(header):
 
 # In Teaching material -> Out questions
 def generate_questions(teaching_material, number_of_questions):
+    desired_words_per_question = 100
+    max_words_per_question = 2000
+    sub_cut_words = 200
+
     a = time.time()
-    max_words_per_cut = 2000  # number of words used for each text cut
+    total_questions_record = number_of_questions["mcq"] + number_of_questions["msq"] + number_of_questions["oaq"]
+    number_of_words = len(teaching_material.split())
+    WQRatio = number_of_words//total_questions_record
+    if WQRatio < desired_words_per_question:
+        max_words_per_cut = desired_words_per_question  # number of words used for each text cut
+    elif WQRatio > max_words_per_question:
+        max_words_per_cut = max_words_per_question
+    else:
+        max_words_per_cut = WQRatio
 
     text_cuts = split_into_parts(teaching_material, max_words=max_words_per_cut)
+
+    #TODO maybe ask users if they want to shuffle
+    random.shuffle(text_cuts)
 
     mcq_record = deepcopy(number_of_questions["mcq"])
     mcq_cut = distribute_text_cuts(number_of_questions["mcq"], len(text_cuts))
@@ -100,29 +115,55 @@ def generate_questions(teaching_material, number_of_questions):
     oaq_record = deepcopy(number_of_questions["oaq"])
     oaq_cut = distribute_text_cuts(number_of_questions["oaq"], len(text_cuts))
 
+    total_questions_per_cut = distribute_text_cuts(number_of_questions["mcq"] + number_of_questions["msq"] + number_of_questions["oaq"], len(text_cuts))
+
     final_questions_list = []
 
     for cut in text_cuts:
+        if len(cut.split()) > sub_cut_words:
+            cut = random_portion_of_words(cut, sub_cut_words)
+
+        total_questions_per_cut_record = total_questions_per_cut
+
         if mcq_record >= mcq_cut and mcq_cut != 0:
             final_questions_list.extend(gpt_engine(multi_choice_prompt(cut), mcq_cut))
             mcq_record = mcq_record - mcq_cut
+            total_questions_per_cut_record = total_questions_per_cut_record - mcq_cut
+            if total_questions_per_cut_record == 0:
+                continue
         elif mcq_record < mcq_cut and mcq_record != 0:
             final_questions_list.extend(gpt_engine(multi_choice_prompt(cut), mcq_record))
             mcq_record = 0
+            total_questions_per_cut_record = total_questions_per_cut_record - mcq_record
+            if total_questions_per_cut_record == 0:
+                continue
 
         if msq_record >= msq_cut and msq_cut != 0:
             final_questions_list.extend(gpt_engine(multi_selection_prompt(cut), msq_cut))
             msq_record = msq_record - msq_cut
+            total_questions_per_cut_record = total_questions_per_cut_record - msq_cut
+            if total_questions_per_cut_record == 0:
+                continue
         elif msq_record < msq_cut and msq_record != 0:
             final_questions_list.extend(gpt_engine(multi_selection_prompt(cut), msq_record))
             msq_record = 0
+            total_questions_per_cut_record = total_questions_per_cut_record - msq_record
+            if total_questions_per_cut_record == 0:
+                continue
 
         if oaq_record >= oaq_cut and oaq_cut != 0:
             final_questions_list.extend(gpt_engine(open_answer_prompt(cut), oaq_cut))
             oaq_record = oaq_record - oaq_cut
+            total_questions_per_cut_record = total_questions_per_cut_record - oaq_cut
+            if total_questions_per_cut_record == 0:
+                continue
         elif oaq_record < oaq_cut and oaq_record != 0:
             final_questions_list.extend(gpt_engine(open_answer_prompt(cut), oaq_record))
             oaq_record = 0
+            total_questions_per_cut_record = total_questions_per_cut_record - oaq_record
+            if total_questions_per_cut_record == 0:
+                continue
+
     json_questions_list = {}
     for final_question in range(len(final_questions_list)):
         lines = final_questions_list[final_question]["question"].splitlines()
@@ -218,3 +259,15 @@ def process_lines(json_question, lines):
             json_question['explanation'] = line[1:]
 
     return json_question
+
+
+def random_portion_of_words(input_string, num_words):
+    words = input_string.split()
+
+    if num_words >= len(words):
+        return ' '.join(words)
+
+    start_index = random.randint(0, len(words) - num_words)
+    selected_words = words[start_index: start_index + num_words]
+
+    return ' '.join(selected_words)
