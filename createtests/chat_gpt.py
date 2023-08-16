@@ -6,17 +6,32 @@ import roman
 import openai
 import time
 import re
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_random_exponential,
+)  # for exponential backoff
 from .messages import preparation_prompt, multi_choice_prompt, multi_selection_prompt, open_answer_prompt
 
 openai.api_key = "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"
 
+
+# Retry function in case we reach open ai rate limits. stop_after_attempt can be increased
+@retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
+def completion_with_backoff(**kwargs):
+    print("RATE LIMIT")
+    return openai.ChatCompletion.create(**kwargs)
+
+
 total_tokens = 0
+
+
 def gpt_engine(prompt, n=1, max_tokens=200):
     global total_tokens
     gpt_35_turbo = {"type": "gpt-3.5-turbo", "prompt_cost": 0.0015, "completion_cost": 0.002}
     gpt_35_turbo_16k = {"type": "gpt-3.5-turbo-16k", "prompt_cost": 0.003, "completion_cost": 0.004}
     model = gpt_35_turbo
-    response = openai.ChatCompletion.create(
+    response = completion_with_backoff(
         model=model['type'],
         n=n,
         max_tokens=max_tokens,
@@ -41,18 +56,19 @@ def gpt_engine(prompt, n=1, max_tokens=200):
                     response['usage']['completion_tokens'] / 1000 * model['completion_cost']
     return response_text
 
+
 def gpt_headers(prompt, n=1, max_tokens=200):
     global total_tokens
     gpt_35_turbo = {"type": "gpt-3.5-turbo", "prompt_cost": 0.0015, "completion_cost": 0.002}
     gpt_35_turbo_16k = {"type": "gpt-3.5-turbo-16k", "prompt_cost": 0.003, "completion_cost": 0.004}
     model = gpt_35_turbo
-    response = openai.ChatCompletion.create(
+    response = completion_with_backoff(
         model=model['type'],
         n=n,
         max_tokens=max_tokens,
         temperature=0.7,
         messages=[
-            {"role": "user", "content": f"{preparation_prompt}"},
+            {"role": "user", "content": f"I will ask you a question."},
             {"role": "assistant", "content": "Ok"},
             {"role": "user", "content": f" {prompt}"}
         ]
@@ -64,7 +80,6 @@ def gpt_headers(prompt, n=1, max_tokens=200):
     return response_text
 
 
-
 def generate_header(teaching_material):
     return gpt_headers(f"Generate a short title on the following text. Give me only the title without any quotes or "
                        f"additional explanation: \n {teaching_material[:500]}")[0]
@@ -73,7 +88,6 @@ def generate_header(teaching_material):
 def generate_subtitle(header):
     return gpt_headers(f"Generate a subtitle on the following text.  Give me only the subtitle without any quotes or "
                        f"additional explanation:: \n {header}")[0]
-
 
 
 def generate_footer_info(header):
@@ -93,7 +107,7 @@ def generate_questions(teaching_material, number_of_questions):
     a = time.time()
     total_questions_record = number_of_questions["mcq"] + number_of_questions["msq"] + number_of_questions["oaq"]
     number_of_words = len(teaching_material.split())
-    WQRatio = number_of_words//total_questions_record
+    WQRatio = number_of_words // total_questions_record
     if WQRatio < desired_words_per_question:
         max_words_per_cut = desired_words_per_question  # number of words used for each text cut
     elif WQRatio > max_words_per_question:
@@ -103,7 +117,7 @@ def generate_questions(teaching_material, number_of_questions):
 
     text_cuts = split_into_parts(teaching_material, max_words=max_words_per_cut)
 
-    #TODO maybe ask users if they want to shuffle
+    # TODO maybe ask users if they want to shuffle
     random.shuffle(text_cuts)
 
     mcq_record = deepcopy(number_of_questions["mcq"])
@@ -115,7 +129,8 @@ def generate_questions(teaching_material, number_of_questions):
     oaq_record = deepcopy(number_of_questions["oaq"])
     oaq_cut = distribute_text_cuts(number_of_questions["oaq"], len(text_cuts))
 
-    total_questions_per_cut = distribute_text_cuts(number_of_questions["mcq"] + number_of_questions["msq"] + number_of_questions["oaq"], len(text_cuts))
+    total_questions_per_cut = distribute_text_cuts(
+        number_of_questions["mcq"] + number_of_questions["msq"] + number_of_questions["oaq"], len(text_cuts))
 
     final_questions_list = []
 
@@ -125,6 +140,7 @@ def generate_questions(teaching_material, number_of_questions):
 
         total_questions_per_cut_record = total_questions_per_cut
 
+        # Function with 5 variables final_questions_list is global + one function
         if mcq_record >= mcq_cut and mcq_cut != 0:
             final_questions_list.extend(gpt_engine(multi_choice_prompt(cut), mcq_cut))
             mcq_record = mcq_record - mcq_cut
@@ -137,6 +153,7 @@ def generate_questions(teaching_material, number_of_questions):
             total_questions_per_cut_record = total_questions_per_cut_record - mcq_record
             if total_questions_per_cut_record == 0:
                 continue
+        # ===========================================
 
         if msq_record >= msq_cut and msq_cut != 0:
             final_questions_list.extend(gpt_engine(multi_selection_prompt(cut), msq_cut))
@@ -180,7 +197,7 @@ def generate_questions(teaching_material, number_of_questions):
             question.pop('answers', None)
 
     b = time.time()
-    print(f"TIME: {b-a}")
+    print(f"TIME: {b - a}")
     print(total_tokens)
     return json_questions_list
 
@@ -193,7 +210,7 @@ def distribute_text_cuts(questions, cuts):
         return questions // cuts
 
 
-#TODO Gives list of text_cut strings. Add check where if the word is longer than 15 characters we count it as more than one word for every 15 characters
+# TODO Gives list of text_cut strings. Add check where if the word is longer than 15 characters we count it as more than one word for every 15 characters
 def split_into_parts(paragraph, max_words=400):
     # Split the paragraph into sentences using a regular expression
     sentences = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s', paragraph)
@@ -231,6 +248,7 @@ exception_chars = []
 for i in range(37):
     exception_chars.append(str(i))
     exception_chars.append(roman.toRoman(i))
+
 
 def process_lines(json_question, lines):
     # Iterate over the lines in the input file

@@ -128,8 +128,6 @@ def advanced_test(request):
     if request.method == 'POST':
         teaching_material = request.POST['teaching_material']
         header = request.POST['header']
-        print(len(teaching_material))
-        print(teaching_material)
         if not header or header.isspace():
             messages.error(request, 'Header is required')
             return render(request, 'createtests/advanced-test.html', context)
