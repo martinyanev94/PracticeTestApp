@@ -17,6 +17,7 @@ openai.api_key = "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"
 
 
 # Retry function in case we reach open ai rate limits. stop_after_attempt can be increased
+
 @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
 def completion_with_backoff(**kwargs):
     print("RATE LIMIT")
@@ -103,7 +104,6 @@ def generate_questions(teaching_material, number_of_questions):
     desired_words_per_question = 100
     max_words_per_question = 2000
     sub_cut_words = 200
-
     a = time.time()
     total_questions_record = number_of_questions["mcq"] + number_of_questions["msq"] + number_of_questions["oaq"]
     number_of_words = len(teaching_material.split())

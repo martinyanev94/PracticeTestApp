@@ -103,14 +103,6 @@ $(document).ready(function() {
         return;
       }
 
-        var WQratio = wordCount / totalQuestions;
-
-      if (WQratio < 100) {
-  var userConfirmation = confirm('Too many question for a short text. There are more than 1 questions per 100 words. This might introduce repeated questions. Do you want to continue?');
-  if (!userConfirmation) {
-    return;
-  }
-}
 
       // Show the overlay and loading animation
       $('#overlay').show();

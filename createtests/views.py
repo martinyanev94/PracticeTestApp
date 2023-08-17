@@ -39,9 +39,6 @@ def quick_test(request):
         if not teaching_material or teaching_material.isspace():
             messages.error(request, 'Please provide teaching material')
             return render(request, 'createtests/quick-test.html', context)
-        if len(teaching_material) < 100:
-            messages.error(request, "Please provide teaching material longer than 100 characters.")
-            return render(request, 'createtests/quick-test.html', context)
 
         subtitle = generate_subtitle(header)
         institution = " "
@@ -134,13 +131,6 @@ def advanced_test(request):
         # disable for now for testing purposes
         if not teaching_material or teaching_material.isspace():
             messages.error(request, 'Please provide teaching material')
-            return render(request, 'createtests/advanced-test.html', context)
-
-        if len(teaching_material) < min_characters:
-            messages.error(request, f"Please provide teaching material longer than {min_characters} characters.")
-            return render(request, 'createtests/advanced-test.html', context)
-        if len(teaching_material) > max_characters:
-            messages.error(request, f"Please provide teaching material shorter than {max_characters} characters.")
             return render(request, 'createtests/advanced-test.html', context)
 
         subtitle = request.POST['subtitle']
