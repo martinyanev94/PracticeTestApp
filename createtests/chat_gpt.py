@@ -44,7 +44,11 @@ def gpt_engine(prompt, n=1, max_tokens=200):
             {"role": "user", "content": f" {prompt[1]}"}
         ]
     )
+    print("============================")
+    print(prompt[1])
+    print("****************************")
     print(response)
+    print("============================")
     total_tokens += response['usage']['total_tokens']
     response_text = []
     if n == 1:
@@ -129,6 +133,10 @@ def generate_questions(teaching_material, number_of_questions):
     oaq_cut = distribute_text_cuts(number_of_questions["oaq"], len(text_cuts))
 
     final_questions_list = []
+    print(text_cuts)
+    print(mcq_cut)
+    print(msq_cut)
+    print(oaq_cut)
 
     def process_mcq(cut):
         if mcq_cut[cut] != 0:
