@@ -84,8 +84,13 @@ $(document).ready(function() {
         var splits = teachingMaterialValue.split(/(\s+)/);
         var words = splits.filter((x) => x.trim().length>0);
         var wordCount = words.length;
-      if (wordCount < 100 || wordCount > 12000) {
-        alert('Teaching Material must be between 100 and 12000 words.');
+      if (wordCount < 100 ) {
+        alert('Teaching Material must be more than 100 words.');
+        return;
+      }
+
+      if (wordCount > 200000) {
+        alert('Teaching Material must be less than 200,000 words.');
         return;
       }
 
@@ -298,8 +303,13 @@ $(document).ready(function() {
         var splits = teachingMaterialValue.split(/(\s+)/);
         var words = splits.filter((x) => x.trim().length>0);
         var wordCount = words.length;
-      if (wordCount < 100 || wordCount > 12000) {
-        alert('Teaching Material must be between 100 and 12000 words.');
+      if (wordCount < 100) {
+        alert('Teaching Material must be more than 100 words.');
+        return;
+      }
+
+      if (wordCount > 200000) {
+        alert('Teaching Material must be less than 200,000 words.');
         return;
       }
 

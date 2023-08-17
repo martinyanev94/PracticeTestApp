@@ -6,6 +6,7 @@ import roman
 import openai
 import time
 import re
+import concurrent.futures
 from tenacity import (
     retry,
     stop_after_attempt,
@@ -103,11 +104,12 @@ def generate_footer_info(header):
 def generate_questions(teaching_material, number_of_questions):
     desired_words_per_question = 100
     max_words_per_question = 2000
-    sub_cut_words = 200
+    sub_cut_words = 130
     a = time.time()
     total_questions_record = number_of_questions["mcq"] + number_of_questions["msq"] + number_of_questions["oaq"]
     number_of_words = len(teaching_material.split())
     WQRatio = number_of_words // total_questions_record
+
     if WQRatio < desired_words_per_question:
         max_words_per_cut = desired_words_per_question  # number of words used for each text cut
     elif WQRatio > max_words_per_question:
@@ -120,66 +122,47 @@ def generate_questions(teaching_material, number_of_questions):
     # TODO maybe ask users if they want to shuffle
     random.shuffle(text_cuts)
 
-    mcq_record = deepcopy(number_of_questions["mcq"])
     mcq_cut = distribute_text_cuts(number_of_questions["mcq"], len(text_cuts))
 
-    msq_record = deepcopy(number_of_questions["msq"])
     msq_cut = distribute_text_cuts(number_of_questions["msq"], len(text_cuts))
 
-    oaq_record = deepcopy(number_of_questions["oaq"])
     oaq_cut = distribute_text_cuts(number_of_questions["oaq"], len(text_cuts))
-
-    total_questions_per_cut = distribute_text_cuts(
-        number_of_questions["mcq"] + number_of_questions["msq"] + number_of_questions["oaq"], len(text_cuts))
 
     final_questions_list = []
 
-    for cut in text_cuts:
-        if len(cut.split()) > sub_cut_words:
-            cut = random_portion_of_words(cut, sub_cut_words)
+    def process_mcq(cut):
+        if mcq_cut[cut] != 0:
+            final_questions_list.extend(gpt_engine(multi_choice_prompt(text_cuts[cut]), mcq_cut[cut]))
 
-        total_questions_per_cut_record = total_questions_per_cut
+    def process_msq(cut):
+        if msq_cut[cut] != 0:
+            final_questions_list.extend(gpt_engine(multi_choice_prompt(text_cuts[cut]), msq_cut[cut]))
 
-        # Function with 5 variables final_questions_list is global + one function
-        if mcq_record >= mcq_cut and mcq_cut != 0:
-            final_questions_list.extend(gpt_engine(multi_choice_prompt(cut), mcq_cut))
-            mcq_record = mcq_record - mcq_cut
-            total_questions_per_cut_record = total_questions_per_cut_record - mcq_cut
-            if total_questions_per_cut_record == 0:
-                continue
-        elif mcq_record < mcq_cut and mcq_record != 0:
-            final_questions_list.extend(gpt_engine(multi_choice_prompt(cut), mcq_record))
-            mcq_record = 0
-            total_questions_per_cut_record = total_questions_per_cut_record - mcq_record
-            if total_questions_per_cut_record == 0:
-                continue
-        # ===========================================
+    def process_oaq(cut):
+        if oaq_cut[cut] != 0:
+            final_questions_list.extend(gpt_engine(multi_choice_prompt(text_cuts[cut]), oaq_cut[cut]))
 
-        if msq_record >= msq_cut and msq_cut != 0:
-            final_questions_list.extend(gpt_engine(multi_selection_prompt(cut), msq_cut))
-            msq_record = msq_record - msq_cut
-            total_questions_per_cut_record = total_questions_per_cut_record - msq_cut
-            if total_questions_per_cut_record == 0:
-                continue
-        elif msq_record < msq_cut and msq_record != 0:
-            final_questions_list.extend(gpt_engine(multi_selection_prompt(cut), msq_record))
-            msq_record = 0
-            total_questions_per_cut_record = total_questions_per_cut_record - msq_record
-            if total_questions_per_cut_record == 0:
-                continue
+    # Inner thread loop for each question type
+    def process_cut(cut):
+        with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+            futures = []
+            futures.append(executor.submit(process_mcq, cut))
+            futures.append(executor.submit(process_msq, cut))
+            futures.append(executor.submit(process_oaq, cut))
 
-        if oaq_record >= oaq_cut and oaq_cut != 0:
-            final_questions_list.extend(gpt_engine(open_answer_prompt(cut), oaq_cut))
-            oaq_record = oaq_record - oaq_cut
-            total_questions_per_cut_record = total_questions_per_cut_record - oaq_cut
-            if total_questions_per_cut_record == 0:
-                continue
-        elif oaq_record < oaq_cut and oaq_record != 0:
-            final_questions_list.extend(gpt_engine(open_answer_prompt(cut), oaq_record))
-            oaq_record = 0
-            total_questions_per_cut_record = total_questions_per_cut_record - oaq_record
-            if total_questions_per_cut_record == 0:
-                continue
+            for future in concurrent.futures.as_completed(futures):
+                pass  # We don't need to do anything here, but this waits for all futures to complete
+
+    # Outer main thread loop for each cut iteration
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as main_executor:
+        futures = []
+        for cut in range(len(text_cuts)):
+            if len(text_cuts[cut].split()) > sub_cut_words:
+                text_cuts[cut] = random_portion_of_words(text_cuts[cut], sub_cut_words)
+            futures.append(main_executor.submit(process_cut, cut))
+
+        for future in concurrent.futures.as_completed(futures):
+            pass  # Wait for all cut processing to complete
 
     json_questions_list = {}
     for final_question in range(len(final_questions_list)):
@@ -202,12 +185,24 @@ def generate_questions(teaching_material, number_of_questions):
     return json_questions_list
 
 
-def distribute_text_cuts(questions, cuts):
-    # Calculate the number of apples to be placed in each bucket
-    if questions % cuts > 0:
-        return questions // cuts + 1
-    else:
-        return questions // cuts
+def distribute_text_cuts(questions, num_elements):
+
+    if num_elements == 0:
+        return []
+
+    # Calculate the equal portion of the input number for each element
+    equal_portion = questions // num_elements
+
+    # Distribute the equal portion to each element
+    result = [equal_portion] * num_elements
+
+    # Distribute any remaining part of the input number
+    remaining = questions % num_elements
+    for i in range(remaining):
+        result[i] += 1
+    random.shuffle(result)
+
+    return result
 
 
 # TODO Gives list of text_cut strings. Add check where if the word is longer than 15 characters we count it as more than one word for every 15 characters
