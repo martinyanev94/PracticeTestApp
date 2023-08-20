@@ -44,11 +44,12 @@ def gpt_engine(prompt, n=1, max_tokens=200):
             {"role": "user", "content": f" {prompt[1]}"}
         ]
     )
-    print("============================")
-    print(prompt[1])
-    print("****************************")
-    print(response)
-    print("============================")
+    # # PROMPT DEBUG LINES
+    # print("============================")
+    # print(prompt[1])
+    # print("****************************")
+    # print(response)
+    # print("============================")
     total_tokens += response['usage']['total_tokens']
     response_text = []
     if n == 1:
@@ -108,7 +109,7 @@ def generate_footer_info(header):
 def generate_questions(teaching_material, number_of_questions):
     desired_words_per_question = 100
     max_words_per_question = 2000
-    sub_cut_words = 130
+    sub_cut_words = 100
     a = time.time()
     total_questions_record = number_of_questions["mcq"] + number_of_questions["msq"] + number_of_questions["oaq"]
     number_of_words = len(teaching_material.split())
@@ -133,10 +134,6 @@ def generate_questions(teaching_material, number_of_questions):
     oaq_cut = distribute_text_cuts(number_of_questions["oaq"], len(text_cuts))
 
     final_questions_list = []
-    print(text_cuts)
-    print(mcq_cut)
-    print(msq_cut)
-    print(oaq_cut)
 
     def process_mcq(cut):
         if mcq_cut[cut] != 0:
@@ -144,15 +141,15 @@ def generate_questions(teaching_material, number_of_questions):
 
     def process_msq(cut):
         if msq_cut[cut] != 0:
-            final_questions_list.extend(gpt_engine(multi_choice_prompt(text_cuts[cut]), msq_cut[cut]))
+            final_questions_list.extend(gpt_engine(multi_selection_prompt(text_cuts[cut]), msq_cut[cut]))
 
     def process_oaq(cut):
         if oaq_cut[cut] != 0:
-            final_questions_list.extend(gpt_engine(multi_choice_prompt(text_cuts[cut]), oaq_cut[cut]))
+            final_questions_list.extend(gpt_engine(open_answer_prompt(text_cuts[cut]), oaq_cut[cut]))
 
     # Inner thread loop for each question type
     def process_cut(cut):
-        with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
             futures = []
             futures.append(executor.submit(process_mcq, cut))
             futures.append(executor.submit(process_msq, cut))
@@ -162,11 +159,15 @@ def generate_questions(teaching_material, number_of_questions):
                 pass  # We don't need to do anything here, but this waits for all futures to complete
 
     # Outer main thread loop for each cut iteration
-    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as main_executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as main_executor:
         futures = []
         for cut in range(len(text_cuts)):
             if len(text_cuts[cut].split()) > sub_cut_words:
                 text_cuts[cut] = random_portion_of_words(text_cuts[cut], sub_cut_words)
+                text_cuts[cut] = text_cuts[cut][:sub_cut_words*10]   # Make sure too long words does not increase tokens size
+            else:
+
+                text_cuts[cut] = text_cuts[cut][:max_words_per_cut*10]
             futures.append(main_executor.submit(process_cut, cut))
 
         for future in concurrent.futures.as_completed(futures):
@@ -213,7 +214,6 @@ def distribute_text_cuts(questions, num_elements):
     return result
 
 
-# TODO Gives list of text_cut strings. Add check where if the word is longer than 15 characters we count it as more than one word for every 15 characters
 def split_into_parts(paragraph, max_words=400):
     # Split the paragraph into sentences using a regular expression
     sentences = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s', paragraph)
