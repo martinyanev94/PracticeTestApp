@@ -311,4 +311,9 @@ class CompletePasswordReset(View):
 
 
 def edit_account_view(request):
-    return render(request, 'authentication/edit_account.html')
+    context = {
+        'user_data': request.user  # Pass the current user's username to the template
+    }
+
+    return render(request, 'authentication/edit_account.html', context)
+
