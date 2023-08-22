@@ -128,21 +128,34 @@ Delete account
 <div class="card">
 <div class="card-body">
 <h5 class="card-title">Change Password</h5>
-<form>
+<form action="{% url 'edit-account' %}" method="post" id="edit-account-form">
+        {% include 'partials/_messages.html'%} {% csrf_token %}
 <div class="form-group">
-<label for="inputPasswordCurrent">Current password</label>
-<input type="password" class="form-control" id="inputPasswordCurrent">
-<small><a href="#">Forgot your password?</a></small>
+<label>Current password</label>
+    <input
+      type="password"
+      name="current_password"
+      class="form-control form-control-sm"
+    />
+<small><a href="{% url 'request-password' %}">Forgot your password?</a></small>
 </div>
 <div class="form-group">
-<label for="inputPasswordNew">New password</label>
-<input type="password" class="form-control" id="inputPasswordNew">
+<label>New password</label>
+    <input
+      type="password"
+      name="password"
+      class="form-control form-control-sm"
+    />
 </div>
 <div class="form-group">
-<label for="inputPasswordNew2">Verify password</label>
-<input type="password" class="form-control" id="inputPasswordNew2">
+<label>Verify password</label>
+    <input
+      type="password"
+      name="password2"
+      class="form-control form-control-sm"
+    />
 </div>
-<button type="submit" class="btn btn-primary">Save changes</button>
+<input type="submit" value="Submit" class="btn btn-primary btn-primary-sm" id="submit-btn" />
 </form>
 </div>
 </div>
@@ -153,22 +166,6 @@ Delete account
 <div class="card">
 <div class="card-body">
 <h5 class="card-title">Payment Info</h5>
-<form>
-<div class="form-group">
-<label for="inputPasswordCurrent">Current password</label>
-<input type="password" class="form-control" id="paymentInfo1">
-<small><a href="#">Forgot your password?</a></small>
-</div>
-<div class="form-group">
-<label for="inputPasswordNew">New password</label>
-<input type="password" class="form-control" id="paymentInfo2">
-</div>
-<div class="form-group">
-<label for="inputPasswordNew2">Verify password</label>
-<input type="password" class="form-control" id="paymentInfo3">
-</div>
-<button type="submit" class="btn btn-primary">Save changes</button>
-</form>
 </div>
 </div>
 </div>

@@ -2,6 +2,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.views import View
 import json
@@ -210,7 +211,7 @@ class RequestPasswordResetEmail(View):
         # Skipped because gmail gives ssl certificate error.
         current_site = get_current_site(request)
 
-        #Will fail for invalid email no matter what fails in the block below
+        # Will fail for invalid email no matter what fails in the block below
         try:
             user = User.objects.get(email__exact=email)
             email_contents = {
@@ -257,7 +258,6 @@ class RequestPasswordResetEmail(View):
         except:
             messages.error(request, "Please supply a valid email")
             return render(request, 'authentication/reset_password.html')
-
 
 
 class CompletePasswordReset(View):
@@ -310,10 +310,46 @@ class CompletePasswordReset(View):
             return render(request, 'authentication/set_new_password.html', context)
 
 
+@login_required(login_url='/authentication/login')
 def edit_account_view(request):
     context = {
+        "values": request.POST,
         'user_data': request.user  # Pass the current user's username to the template
     }
 
-    return render(request, 'authentication/edit_account.html', context)
+    if request.method == 'GET':
+        print(1)
+        return render(request, 'authentication/edit_account.html', context)
+
+    if request.method == 'POST':
+        current_password = request.POST['current_password']
+        user = auth.authenticate(username=request.user.username, password=current_password)
+        if user:
+            password = request.POST['password']
+            password2 = request.POST['password2']
+
+            if password != password2:
+                messages.error(request, "Passwords do not match")
+                return render(request, 'authentication/edit_account.html', context)
+
+            if len(password) < 6:
+                messages.error(request, "Password too short")
+                return render(request, 'authentication/edit_account.html', context)
+
+            try:
+                user.set_password(password)
+                user.save()
+                messages.success(
+                    request, "Password reset successfully, you can login with your new password")
+            except Exception as identifier:
+                messages.info(
+                    request, 'Something went wrong, try again')
+
+            return render(request, 'authentication/edit_account.html', context)
+
+        else:
+            messages.error(request, "Incorrect password. If you don't know your password please click 'Forgot your "
+                                    "'password?'")
+
+    return render(request, 'authentication/edit_account.html')
 
