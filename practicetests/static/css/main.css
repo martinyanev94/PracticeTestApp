@@ -441,6 +441,8 @@ button:focus {
 /* Accordion Questions */
 .accordion-content {
   display: none;
+  max-height: 40vh;
+  overflow: scroll;
 }
 .active .accordion-content {
   display: block;
@@ -510,4 +512,18 @@ button:focus {
 }
 .question-header h2 {
   font-weight: 600;
+}
+
+#loading-animation {
+  position: absolute;
+  top: 40%;
+  text-align: center;
+}
+
+/* Download Icons */
+.download-table td {
+  vertical-align: middle;
+}
+.download-icon {
+  width: 30px;
 }
