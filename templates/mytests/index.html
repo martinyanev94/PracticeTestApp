@@ -9,7 +9,7 @@
     <h2>My Tests</h2>
   </div>
 
-   <div class="container">
+   <div>
     {% include 'partials/_messages.html' %}
 
     {% if user_tests.count %}
@@ -23,11 +23,11 @@
         </div>
       </div>
      </div>
-<div class="app-table">
+<div class="app-table download-table">
 
   <table class="table table-stripped table-hover">
 <thead>
-  <tr>
+  <tr style="border-top: 2px solid #dee2e6">
     <th><a href="?sort_column=header&sort_order={{ sort_order }}">Header</a></th>
     <th><a href="?sort_column=notes&sort_order={{ sort_order }}">Notes</a></th>
     <th><a href="?sort_column=created_at&sort_order={{ sort_order }}">Date</a></th>
@@ -52,23 +52,20 @@
                   <td>
                     <a
             href="{% url 'download-student-view' user_tests.id  %}"
-            class="btn btn-secondary btn-sm"
-            >Word</a
+            ><img class="download-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACMUlEQVR4nGNgGAWjgLZAsuzSf1pgibJLHUPWA0atN+jnCUkaeOD0kx//Tdro5AlJGnjg8ae/9POEJI08QDdPSNLQA4/p4Qlae+AxrT1BDw88pqUn6OWBx7TyBD098JgWnqC3Bx6jeWJQeoAUzDDqgbLRGPg/moQoAaNJqGw0CVEGCIXgvmvv/5998AmMDVuuwcVXnHoDFjtx9+N/2YrLcPE9V7GrlxyoegDkoF+/foFxzNx7YDG5ysv/P3/7CRd3nXALLK7VcBUu9ubT9//S5YOgIuve+QzuqPbtz8BiXpNvw8VAuGLtY7B4yIy7cLG9194Pjpo4dt49uKM2nH8LFqve8ATFA6tOvwGL125EiPfuejY4PKDTeA3uqFvPv4DF1px5g+KBOy+/gsWXnXwNFwN5XHIweACE7778CnbUj5+//ivXXAE7GMT/+h2RD/Sarv0/9+ATnG/QfG3weGDd2bcoIQtjI4d48sL7/79AM/aD198GV2u0Dilt77j8Ds52m3Dr/8evPzDEYXlFcrB4wHcqotT5/uMnSjF58OYHFHEQbtz8dHB5QLH6Ckp6B+FdV96B5XqQilkYDpx+Z3B5QLLs0v/zDxEZFLlOiJyDyBOwjK5ae2XweWDekVcoDg2eAQlltborKMnn0uPPRDtekp4eyFvxEO7Ibz9+/lepQYTyhYef4XKLjr0anB6QpBFmGPVA2WgM/B9NQpSA0SRUNpqEKAOjSahsgJPQKBgFDHgBAJeSBw0Mc0kLAAAAAElFTkSuQmCC"></a
           >
         </td>
           <td>
                     <a
             href="{% url 'download-student-view-pdf' user_tests.id  %}"
-            class="btn btn-secondary btn-sm"
-            >PDF</a
+            ><img class="download-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABvUlEQVR4nO3XTUsCQRgH8P0qWYe+QwZdgqBDL4dWqEuHDklBBYIGUUFQp7xEEHWMLlGdgkCJojCUUguDIvE1qEnoCwT+Y3xclrUtiGXGteaBB31mHPDn/ndBTVOlSmxB90BIj7SttSygOtklDwEBgI+HNKp+rxyEEAB7kYeAKIAsBEQCmASEcAATjJACYAIR0gBMEEIqgAlASAcwK8KVgN+0pgC6ugJQEXJSKkK6ipCz+psRmusDigWznx6ByD5g/FUMDlj3kzFgfdo8vzJu3S/We7ZXEiDQD1TegfIzcHEC3MZpvk8Do53A/DDNpRIQiwDlMs2bITq/OkFzPkvnjfZ3Swakrmj2tQPXl7S2PGYCEme0P9UDsApQyNFnDUD0oEkRagTwPt6ltfDMVwDvTJLWeMxcA8ik6P2ij+LA1/hsB0ic01pw0D5Ch9tNADS28SXsAHEbwOubeQPze0U6IJcF9sLA1gIQGjL37QB3N/UIeV16D+ie7wE897Vfuwj4OloIkM8Dp0f0yuedJetjNOp2QC3nFXoCbQTM/aYDdHmtKYCurgBUhJyUipCuIuSsVIR0FaF/HiFVqrQf6xPo5lRgsHhigAAAAABJRU5ErkJggg=="></a
           >
         </td>
 
           <td>
                     <a
             href="{% url 'download-student-view-txt' user_tests.id  %}"
-            class="btn btn-secondary btn-sm"
-            >TXT</a
+            ><img class="download-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB10lEQVR4nGNgGAWjgPZgV8aJ/7TAO9NPdAxZDxysOEc/T9DCA2+uffh/sJJOnqCFBz4//Uo/T9DKA5/p5QlaeuAzPTxBaw98prUn6OGBz7T0BL088JlWnqCnBz7TwhP09sBnNE8MSg+QghlGPZAxGgP/R5MQJWA0CWWMJiHKwLBMQmWmi/8HSk3AiueH7PwfrzwdzJ7ivRmsfrrfVjA/WnHa/4Whu3HqLTZeRB8PtDis/p+hPed/ouqM/14iPf8DJSeA+SC8NHLv/06XdWDxNM3ZYPXZOnPB/FaH1f9XRu+Hqw2Q7AeLJ6nNBPOb7FbRtyZeELoL7gBk8W2pR/8HS0/47y3S839e0M7/3qI9YMduTjqCoi4RGgALQ3cNTFMClwfAsWS/GiwXIj0RTNfbrMBQkziYPbA5+Qg4aYHk/cT6/q9PODS0PLAp6cj/AIk+sLyvWO//9fFDzAONtqtQklCt1fKh44GtqUf/B0lPhGTiYEgm9hfv/78x6fDQ8ECb4xqweLrWHDA/W3cemI9eTCYORg9sTzv+P1R2Elh8ktcmeEUG4gdJTfi/NeXo4PHALjpghlEPZIzGwP/RJEQJGE1CGaNJiDIwmoQyRpPQCE9Co2AUMOAEAJwwiBR+LIQRAAAAAElFTkSuQmCC"></a
           >
         </td>
 

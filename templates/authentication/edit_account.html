@@ -58,7 +58,22 @@ Account
 <a class="list-group-item list-group-item-action" data-toggle="list" href="#payment_info" role="tab" aria-selected="false">
 Payment Info
 </a>
-<a class="list-group-item list-group-item-action" data-toggle="list" href="#delete_account" role="tab" aria-selected="false">
+<a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+Privacy and safety
+</a>
+<a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+Email notifications
+</a>
+<a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+Web notifications
+</a>
+<a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+Widgets
+</a>
+<a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+Your data
+</a>
+<a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
 Delete account
 </a>
 </div>
@@ -113,34 +128,21 @@ Delete account
 <div class="card">
 <div class="card-body">
 <h5 class="card-title">Change Password</h5>
-<form action="{% url 'edit-account' %}" method="post" id="edit-account-form">
-        {% include 'partials/_messages.html'%} {% csrf_token %}
+<form>
 <div class="form-group">
-<label>Current password</label>
-    <input
-      type="password"
-      name="current_password"
-      class="form-control form-control-sm"
-    />
-<small><a href="{% url 'request-password' %}">Forgot your password?</a></small>
+<label for="inputPasswordCurrent">Current password</label>
+<input type="password" class="form-control" id="inputPasswordCurrent">
+<small><a href="#">Forgot your password?</a></small>
 </div>
 <div class="form-group">
-<label>New password</label>
-    <input
-      type="password"
-      name="password"
-      class="form-control form-control-sm"
-    />
+<label for="inputPasswordNew">New password</label>
+<input type="password" class="form-control" id="inputPasswordNew">
 </div>
 <div class="form-group">
-<label>Verify password</label>
-    <input
-      type="password"
-      name="password2"
-      class="form-control form-control-sm"
-    />
+<label for="inputPasswordNew2">Verify password</label>
+<input type="password" class="form-control" id="inputPasswordNew2">
 </div>
-<input type="submit" value="Submit" class="btn btn-primary btn-primary-sm" id="submit-btn" />
+<button type="submit" class="btn btn-primary">Save changes</button>
 </form>
 </div>
 </div>
@@ -151,13 +153,22 @@ Delete account
 <div class="card">
 <div class="card-body">
 <h5 class="card-title">Payment Info</h5>
+<form>
+<div class="form-group">
+<label for="inputPasswordCurrent">Current password</label>
+<input type="password" class="form-control" id="paymentInfo1">
+<small><a href="#">Forgot your password?</a></small>
 </div>
+<div class="form-group">
+<label for="inputPasswordNew">New password</label>
+<input type="password" class="form-control" id="paymentInfo2">
 </div>
+<div class="form-group">
+<label for="inputPasswordNew2">Verify password</label>
+<input type="password" class="form-control" id="paymentInfo3">
 </div>
-<div class="tab-pane fade" id="delete_account" role="tabpanel">
-<div class="card">
-<div class="card-body">
-<h5 class="card-title">Delete Account</h5>
+<button type="submit" class="btn btn-primary">Save changes</button>
+</form>
 </div>
 </div>
 </div>
