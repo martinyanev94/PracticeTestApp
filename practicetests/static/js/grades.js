@@ -292,6 +292,29 @@ $(document).ready(function() {
     $('#quick-test-form').on('submit', function(e) {
       e.preventDefault(); // Prevent default form submission
 
+       // Check if the total number of questions is greater than 0
+      var mcqValue = parseInt($('[name="mcq"]').val()) || 0;
+      var msqValue = parseInt($('[name="msq"]').val()) || 0;
+      var oaqValue = parseInt($('[name="oaq"]').val()) || 0;
+      var totalQuestions = mcqValue + msqValue + oaqValue;
+
+        const userMembershipType = document.getElementById('user_membership').value;
+const userMembershipWords = parseInt(document.getElementById('membership_words').value, 10);
+const userMembershipQuestions = parseInt(document.getElementById('membership_questions').value, 10);
+const userMembershipTests = parseInt(document.getElementById('membership_tests').value, 10);
+
+
+        console.log('User Membership Type:', userMembershipType);
+        console.log('User Membership Words:', userMembershipWords);
+        console.log('User Membership Tests:', userMembershipTests);
+        console.log('User Membership Tests:', totalQuestions);
+        console.log('User Membership Questions:', userMembershipQuestions);
+
+        if (totalQuestions > userMembershipQuestions) {
+            alert('You exceeded the maximum number of questions for your membership');
+        return;
+      }
+
        // Check if the "Teaching Material" field has a value
       var teachingMaterialValue = $('#teaching-material').val().trim();
       if (teachingMaterialValue === '') {
@@ -307,17 +330,11 @@ $(document).ready(function() {
         alert('Teaching Material must be more than 100 words.');
         return;
       }
-
       if (wordCount > 200000) {
         alert('Teaching Material must be less than 200,000 words.');
         return;
       }
 
-      // Check if the total number of questions is greater than 0
-      var mcqValue = parseInt($('[name="mcq"]').val()) || 0;
-      var msqValue = parseInt($('[name="msq"]').val()) || 0;
-      var oaqValue = parseInt($('[name="oaq"]').val()) || 0;
-      var totalQuestions = mcqValue + msqValue + oaqValue;
       if (totalQuestions <= 0) {
         alert('Total questions must be greater than 0.');
         return;

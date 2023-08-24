@@ -84,14 +84,15 @@
             <label for="">Multiple Selection Questions</label>&nbsp
             <input type="text" name="msq" class="question-type" pattern="[0-9]*" value="{{values.msq}}" ><br>
             <label for="">Open Answer Questions</label>&nbsp
-            <input type="text" name="oaq" class="question-type" pattern="[0-9]*" value="{{values.oaq}}" >
+              <input type="text" name="oaq" class="question-type" pattern="[0-9]*" value="{{values.oaq}}" >
+
           </div>
         </div>
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label for="">Total Questions</label>
+        <label>Total Questions</label>
         <div class="number_of_questions">
           <span id="total-questions">0</span>
         </div>
@@ -114,6 +115,10 @@
 
       </div>
 
+<input type="hidden" id="user_membership" value="{{ user_membership.membership_type }}">
+        <input type="hidden" id="membership_words" value="{{ user_membership.allowed_words }}">
+        <input type="hidden" id="membership_questions" value="{{ user_membership.allowed_question }}">
+        <input type="hidden" id="membership_tests" value="{{ user_membership.allowed_tests }}">
 
 </div>
 </div>
@@ -122,7 +127,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-  <script src="{% static 'js/grades.js' %}"></script>
+
+    <script src="{% static 'js/grades.js' %}"></script>
 
 </div>
 

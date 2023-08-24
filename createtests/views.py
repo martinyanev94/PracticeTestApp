@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 
 from mytests.views import my_tests
+from payment.models import UserMembership
 from .chat_gpt import gpt_engine, generate_header, generate_subtitle, \
     generate_footer_info, generate_questions
 from .models import UserTest
@@ -21,12 +22,21 @@ def choose_create_speed(request):
 
 @login_required(login_url='/authentication/login')
 def quick_test(request):
+    user_membership = UserMembership.objects.filter(user=request.user).first()
     context = {
-        'values': request.POST
+        'values': request.POST,
+        'user_membership': user_membership.membership,
+
     }
 
+
+    #TODO memberships are handeled here but not in js. Think on how to fix that
+    user_membership_type = user_membership.membership.membership_type
+
+    max_words = user_membership.membership.allowed_words
+
     if request.method == 'GET':
-        return render(request, 'createtests/quick-test.html')
+        return render(request, 'createtests/quick-test.html', context)
 
     if request.method == 'POST':
         teaching_material = request.POST['teaching_material']
