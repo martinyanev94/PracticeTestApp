@@ -30,6 +30,8 @@ def quick_test(request):
     }
 
 
+
+
     #TODO memberships are handeled here but not in js. Think on how to fix that
     user_membership_type = user_membership.membership.membership_type
 
@@ -39,6 +41,19 @@ def quick_test(request):
         return render(request, 'createtests/quick-test.html', context)
 
     if request.method == 'POST':
+
+        #TODO use the count of the tests to make sure user does not create more than 7
+        user_test_count = UserTest.objects.filter(owner=request.user).count()
+        # Calculate the date one month ago from today
+        one_month_ago = timezone.now() - timedelta(days=30)
+        # Count the number of tests created by the user in the last month
+        user_test_count_last_month = UserTest.objects.filter(owner=request.user, created_at__gte=one_month_ago).count()
+
+        print(user_test_count)
+        if not user_test_count > 1:
+            messages.error(request, 'Test is required')
+            return render(request, 'createtests/quick-test.html', context)
+
         teaching_material = request.POST['teaching_material']
 
         header = generate_header(teaching_material)
