@@ -123,7 +123,7 @@ class RegistrationView(View):
                 try:
                     user = User.objects.create_user(username=username, email=email)
                     user.set_password(password)
-                    user.is_active = False
+                    user.is_active = True
                     user.save()
                     send_activation_email(user, request)
                     messages.success(request, f"Account successfully created. Now you need to verify your email. "
