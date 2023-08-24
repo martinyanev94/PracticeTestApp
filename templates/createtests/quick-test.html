@@ -19,12 +19,13 @@
 
 </style>
 
-<div class="container mt-4">
+<div class="container">
+  <a class="back-btn" href="{% url 'choose-create-speed' %}" class=""><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAV0lEQVR4nO3VsRFAQBAF0FeALhQmOYEKKFcjnFwi4hj/zWz8/2ywS0TEhwzoW4VP2LGiezp8xIaKOeG/W3u9YS6V1gXOJRaNlJR40yamlqf4Fc8oIsJdDmEuSwKiW3qxAAAAAElFTkSuQmCC">Back</a>
   <nav aria-label="Exam Info">
     <h1>Exam Info</h1>
   </nav>
 
-  <div class="card">
+  <div class="card mb-5">
     <div class="card-body">
       <form action="{% url 'quick-test' %}" method="post" id="quick-test-form">
         {% include 'partials/_messages.html'%} {% csrf_token %}
@@ -68,31 +69,30 @@
             />
           </div>
 <div>
-   <h3>4. Questions </h3>
+   <h3 class="mt-5">4. Questions </h3>
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 p-3">
       <div class="form-group">
-        <label for="">Question Types               <label class="info-tooltip" for="">
+        <label for="" class="font-weight-bold">Question Types               <label class="info-tooltip" for="">
               <span class="info-icon"></span>
                     <span class="info-text">You can add up to 120 questions in total for your exam. Just write the
                         number of questions per group in the fields below</span>
             </label></label>
         <div class="question_types">
           <div>
-            <label for="">Multiple Choice Questions</label>&nbsp
+            <label for="">Multiple Choice Questions:</label>&nbsp
             <input type="text" name="mcq" class="question-type" pattern="[0-9]*" value="{{values.mcq}}" > <br>
-            <label for="">Multiple Selection Questions</label>&nbsp
+            <label for="">Multiple Selection Questions:</label>&nbsp
             <input type="text" name="msq" class="question-type" pattern="[0-9]*" value="{{values.msq}}" ><br>
-            <label for="">Open Answer Questions</label>&nbsp
-              <input type="text" name="oaq" class="question-type" pattern="[0-9]*" value="{{values.oaq}}" >
-
+            <label for="">Open Answer Questions:</label>&nbsp
+            <input type="text" name="oaq" class="question-type" pattern="[0-9]*" value="{{values.oaq}}" >
           </div>
         </div>
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label>Total Questions</label>
+        <label for="">Total Questions</label>
         <div class="number_of_questions">
           <span id="total-questions">0</span>
         </div>
@@ -102,7 +102,6 @@
 </div>
 
         <input type="hidden" id="current-page" value="1">
-            <a href="{% url 'choose-create-speed' %}" class="btn btn-primary btn-primary-sm">Back</a>
 <input type="submit" value="Submit" class="btn btn-primary btn-primary-sm"  />
 </form>
 
@@ -115,10 +114,6 @@
 
       </div>
 
-<input type="hidden" id="user_membership" value="{{ user_membership.membership_type }}">
-        <input type="hidden" id="membership_words" value="{{ user_membership.allowed_words }}">
-        <input type="hidden" id="membership_questions" value="{{ user_membership.allowed_question }}">
-        <input type="hidden" id="membership_tests" value="{{ user_membership.allowed_tests }}">
 
 </div>
 </div>
@@ -127,8 +122,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-
-    <script src="{% static 'js/grades.js' %}"></script>
+  <script src="{% static 'js/grades.js' %}"></script>
 
 </div>
 

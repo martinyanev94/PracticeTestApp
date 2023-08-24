@@ -20,6 +20,8 @@
 </style>
 
 <div class="container mt-4">
+  <a class="back-btn" href="{% url 'choose-create-speed' %}" class=""><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAV0lEQVR4nO3VsRFAQBAF0FeALhQmOYEKKFcjnFwi4hj/zWz8/2ywS0TEhwzoW4VP2LGiezp8xIaKOeG/W3u9YS6V1gXOJRaNlJR40yamlqf4Fc8oIsJdDmEuSwKiW3qxAAAAAElFTkSuQmCC">Back</a>
+
   <nav aria-label="Exam Info">
     <h1>Exam Info</h1>
   </nav>
@@ -32,64 +34,73 @@
         <!-- Page 1 -->
 
         <div class="page" data-page="1">
-                      <h3>1. Exam Header</h3>
-          <div class="form-group">
-            <label for="">Your exam title*
+          <h3>1. Exam Header</h3>
+          <div class="my-4">
+            <div class="form-group">
+              <label for="">Your exam title*
                 <label class="info-tooltip" for="">
-              <span class="info-icon"></span>
-                    <span class="info-text">Give a name to your exam. This field is required.</span>
-            </label></label>
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              name="header"
-              value="{{values.header}}"
-            />
-          </div>
-          <div class="form-group">
-            <label for="">Your exam subtitle</label>
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              name="subtitle"
-              value="{{values.subtitle}}"
-            />
-          </div>
-          <div class="form-group">
-            <label for="">Exam tag                <label class="info-tooltip" for="">
-              <span class="info-icon"></span>
-                    <span class="info-text">Add a tag to easily find an exam or a group of exams.</span>
-            </label></label>
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              name="tag"
-              value="{{values.tag}}"
-            />
-          </div>
-                      <div class="form-group">
-            <label for="">Institution                <label class="info-tooltip" for="">
-              <span class="info-icon"></span>
-                    <span class="info-text">Enter the name of your company, university or school.</span>
-            </label></label>
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              name="institution"
-              value="{{values.institution}}"
-            />
-          </div>
-          <div class="form-group">
-            <label for="">Additional Info                <label class="info-tooltip" for="">
-              <span class="info-icon"></span>
-                    <span class="info-text">Add some instructions to the exam just before the questions.</span>
-            </label></label>
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              name="add_header_info"
-              value="{{values.add_header_info}}"
-            />
+                  <span class="info-icon"></span>
+                  <span class="info-text">Give a name to your exam. This field is required.</span>
+                </label>
+              </label>
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                name="header"
+                value="{{values.header}}"
+              />
+            </div>
+            <div class="form-group">
+              <label for="">Your exam subtitle</label>
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                name="subtitle"
+                value="{{values.subtitle}}"
+              />
+            </div>
+            <div class="form-group">
+              <label for="">Exam tag
+                <label class="info-tooltip" for="">
+                  <span class="info-icon"></span>
+                  <span class="info-text">Add a tag to easily find an exam or a group of exams.</span>
+                </label>
+              </label>
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                name="tag"
+                value="{{values.tag}}"
+              />
+            </div>
+            <div class="form-group">
+              <label for="">Institution
+                <label class="info-tooltip" for="">
+                  <span class="info-icon"></span>
+                  <span class="info-text">Enter the name of your company, university or school.</span>
+                </label>
+              </label>
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                name="institution"
+                value="{{values.institution}}"
+              />
+            </div>
+            <div class="form-group">
+              <label for="">Additional Info
+                <label class="info-tooltip" for="">
+                  <span class="info-icon"></span>
+                  <span class="info-text">Add some instructions to the exam just before the questions.</span>
+                </label>
+              </label>
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                name="add_header_info"
+                value="{{values.add_header_info}}"
+              />
+            </div>
           </div>
         </div>
 
@@ -153,20 +164,20 @@
 <div class="page" data-page="4">
    <h3>4. Questions </h3>
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 p-3">
       <div class="form-group">
-        <label for="">Question Types               <label class="info-tooltip" for="">
+        <label for="" class="font-weight-bold">Question Types               <label class="info-tooltip" for="">
               <span class="info-icon"></span>
                     <span class="info-text">You can add up to 120 questions in total for your exam. Just write the
                         number of questions per group in the fields below</span>
             </label></label>
         <div class="question_types">
           <div>
-            <label for="">Multiple Choice Questions</label>&nbsp
+            <label for="">Multiple Choice Questions:</label>&nbsp
             <input type="text" name="mcq" class="question-type" pattern="[0-9]*" value="{{values.mcq}}" > <br>
-            <label for="">Multiple Selection Questions</label>&nbsp
+            <label for="">Multiple Selection Questions:</label>&nbsp
             <input type="text" name="msq" class="question-type" pattern="[0-9]*" value="{{values.msq}}" ><br>
-            <label for="">Open Answer Questions</label>&nbsp
+            <label for="">Open Answer Questions:</label>&nbsp
             <input type="text" name="oaq" class="question-type" pattern="[0-9]*" value="{{values.oaq}}" >
           </div>
         </div>
@@ -185,7 +196,6 @@
 
 <input type="hidden" id="current-page" value="1">
 
-<button type="button" class="btn btn-primary btn-primary-sm" id="prev-page">Back</button>
 <button type="button" class="btn btn-primary btn-primary-sm" id="next-page">Continue</button>
 <input type="submit" value="Submit" class="btn btn-primary btn-primary-sm" id="submit-btn" style="display: none;" />
 </form>
