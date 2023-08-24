@@ -1,3 +1,7 @@
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 500 !important;
+}
+
 .bd-placeholder-img {
   font-size: 1.125rem;
   text-anchor: middle;
@@ -142,7 +146,7 @@ header {
 }
 .navbar {
   border-bottom: 2px solid black;
-  width: 80%;
+  width: 85%;
   margin-left: auto;
 }
 .log-out {
@@ -162,13 +166,11 @@ header {
   transition: opacity .3s ease-in-out;
 }
 
-nav {
-  width: 20%;
-}
 .sidebar-sticky {
   height: 100vh !important;
 }
 .sidebar {
+  width: 15%;
   z-index: 9999 !important;
   height: 100%;
   padding: 0 !important;
@@ -287,7 +289,7 @@ nav {
 
 .main-box {
   position: relative;
-  width: 80%;
+  width: 85%;
   margin-left: auto;
   padding-left: 40px;
   padding-top: 40px;
@@ -441,6 +443,8 @@ button:focus {
 /* Accordion Questions */
 .accordion-content {
   display: none;
+  max-height: 40vh;
+  overflow: scroll !important;
 }
 .active .accordion-content {
   display: block;
@@ -510,4 +514,64 @@ button:focus {
 }
 .question-header h2 {
   font-weight: 600;
+}
+
+#loading-animation {
+  position: absolute;
+  top: 40%;
+  text-align: center;
+}
+
+/* Download Icons */
+.download-table td {
+  vertical-align: middle;
+}
+.download-icon {
+  width: 30px;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  font-weight: 600;
+  top: 10px;
+  left: 30px;
+  color: #373a3c;
+  transition: color .3s ease-in-out;
+}
+.back-btn img {
+  width: 25px;
+  transition: transform 0.3s;
+}
+.back-btn:hover {
+  color: #444444d2;
+  transition: color .3s ease-in-out;
+}
+.back-btn:hover img{
+  color: #444444d2;
+  transform: translateX(-2px);
+}
+
+.mytest-search {
+  padding-left: 35px;
+}
+.search-icon {
+  position: absolute;
+  top: 5.5px;
+  left: 22px;
+}
+
+.question_types label {
+  width: 190px;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #2B7A78;
 }
