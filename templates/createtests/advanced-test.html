@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
 
 <style>
@@ -199,6 +198,7 @@
 <button type="button" class="btn btn-primary btn-primary-sm" id="next-page">Continue</button>
 <input type="submit" value="Submit" class="btn btn-primary btn-primary-sm" id="submit-btn" style="display: none;" />
 </form>
+
 </div>
           <div id="overlay"></div>
       <div id="loading-animation" style="display: none;">
@@ -207,6 +207,12 @@
             <img src="{% static '/img/loading.gif' %}" alt="Animated GIF">
 
       </div>
+
+        <input type="hidden" id="user_membership" value="{{ user_membership.membership_type }}">
+        <input type="hidden" id="membership_words" value="{{ user_membership.allowed_words }}">
+        <input type="hidden" id="membership_questions" value="{{ user_membership.allowed_question }}">
+        <input type="hidden" id="membership_tests" value="{{ user_membership.allowed_tests }}">
+        <input type="hidden" id="user_test_count_last_month" value="{{ user_test_count_last_month }}">
 </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>

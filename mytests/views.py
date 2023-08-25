@@ -21,6 +21,9 @@ from reportlab.platypus import Table
 
 
 # ----------------------txt view---------------
+from payment.models import UserMembership
+
+
 @login_required(login_url='/authentication/login')
 def download_student_view_txt(request, id):
     user_tests = UserTest.objects.get(pk=id)
@@ -404,6 +407,8 @@ def search_tests(request):
 # Create your views here.
 @login_required(login_url='/authentication/login')
 def my_tests(request):
+    user_membership = UserMembership.objects.filter(user=request.user).first()
+
     user_tests = UserTest.objects.filter(owner=request.user)
 
     # Get sorting parameters from query parameters
@@ -425,6 +430,7 @@ def my_tests(request):
         'page_obj': page_obj,
         'sort_column': sort_column,
         'sort_order': sort_order,
+        'user_membership': user_membership.membership,
     }
     return render(request, 'mytests/index.html', context)
 

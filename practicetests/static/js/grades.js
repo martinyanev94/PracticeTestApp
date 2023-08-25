@@ -65,49 +65,53 @@ $(document).ready(function() {
                 value: gradesDataJson
             }).appendTo('#advanced-test-form');
 
+       // Check if the total number of questions is greater than 0
+      var mcqValue = parseInt($('[name="mcq"]').val()) || 0;
+      var msqValue = parseInt($('[name="msq"]').val()) || 0;
+      var oaqValue = parseInt($('[name="oaq"]').val()) || 0;
+      var totalQuestions = mcqValue + msqValue + oaqValue;
 
-                  var header = $('[name="header"]').val();
-            if (header === '') {
+      const userMembershipType = document.getElementById('user_membership').value;
+      const userMembershipWords = parseInt(document.getElementById('membership_words').value, 10);
+      const userMembershipQuestions = parseInt(document.getElementById('membership_questions').value, 10);
+      const userMembershipTests = parseInt(document.getElementById('membership_tests').value, 10);
+      const userTestsCountLastMonth = parseInt(document.getElementById('user_test_count_last_month').value, 10);
+
+        var header = $('[name="header"]').val();
+        if (header === '') {
         alert('Header field cannot be empty.');
         return;
       }
-
-
-               // Check if the "Teaching Material" field has a value
+        if (userTestsCountLastMonth > userMembershipTests) {
+            alert('You exceeded the maximum number of tests per month for your plan. Please upgrade.');
+        return;
+      }
+       // Check if the "Teaching Material" field has a value
       var teachingMaterialValue = $('#teaching-material').val().trim();
       if (teachingMaterialValue === '') {
         alert('Teaching Material field cannot be empty.');
         return;
       }
-
       // Check if the "Teaching Material" field has a length between 100 and 54000 characters
         var splits = teachingMaterialValue.split(/(\s+)/);
         var words = splits.filter((x) => x.trim().length>0);
         var wordCount = words.length;
-      if (wordCount < 100 ) {
+      if (wordCount < 100) {
         alert('Teaching Material must be more than 100 words.');
         return;
       }
-
-      if (wordCount > 200000) {
-        alert('Teaching Material must be less than 200,000 words.');
+      if (wordCount > userMembershipWords) {
+        alert('You exceeded the maximum words allowed for your membership. Please visit Plans to upgrade');
         return;
       }
-
-      // Check if the total number of questions is greater than 0
-      var mcqValue = parseInt($('[name="mcq"]').val()) || 0;
-      var msqValue = parseInt($('[name="msq"]').val()) || 0;
-      var oaqValue = parseInt($('[name="oaq"]').val()) || 0;
-      var totalQuestions = mcqValue + msqValue + oaqValue;
       if (totalQuestions <= 0) {
         alert('Total questions must be greater than 0.');
         return;
       }
-       if (totalQuestions > 120) {
-        alert('Total questions must be lower than 120.');
+       if (totalQuestions > userMembershipQuestions) {
+            alert('You exceeded the maximum number of questions per test for your membership');
         return;
       }
-
 
       // Show the overlay and loading animation
       $('#overlay').show();
@@ -302,16 +306,12 @@ $(document).ready(function() {
       const userMembershipWords = parseInt(document.getElementById('membership_words').value, 10);
       const userMembershipQuestions = parseInt(document.getElementById('membership_questions').value, 10);
       const userMembershipTests = parseInt(document.getElementById('membership_tests').value, 10);
+      const userTestsCountLastMonth = parseInt(document.getElementById('user_test_count_last_month').value, 10);
 
+//====================== Test eligibility alerts =========================================
 
-        console.log('User Membership Type:', userMembershipType);
-        console.log('User Membership Words:', userMembershipWords);
-        console.log('User Membership Tests:', userMembershipTests);
-        console.log('User Membership Tests:', totalQuestions);
-        console.log('User Membership Questions:', userMembershipQuestions);
-
-        if (totalQuestions > userMembershipQuestions) {
-            alert('You exceeded the maximum number of questions for your membership');
+        if (userTestsCountLastMonth > userMembershipTests) {
+            alert('You exceeded the maximum number of tests per month for your plan. Please upgrade.');
         return;
       }
 
@@ -339,8 +339,9 @@ $(document).ready(function() {
         alert('Total questions must be greater than 0.');
         return;
       }
-       if (totalQuestions > 120) {
-        alert('Total questions must be lower than 120.');
+
+       if (totalQuestions > userMembershipQuestions) {
+            alert('You exceeded the maximum number of questions per test for your membership');
         return;
       }
 
@@ -352,6 +353,9 @@ $(document).ready(function() {
     return;
   }
 }
+
+//====================== Test eligibility alerts =========================================
+
 
       // Show the overlay and loading animation
       $('#overlay').show();

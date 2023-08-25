@@ -1,7 +1,16 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+from payment.models import UserMembership
+
+
 @login_required(login_url='/authentication/login')
 # Create your views here.
 def home_page_view(request):
-    return render(request, 'homepage/home_page.html')
+    user_membership = UserMembership.objects.filter(user=request.user).first()
+
+    context = {
+        'user_membership': user_membership.membership,
+    }
+
+    return render(request, 'homepage/home_page.html', context)

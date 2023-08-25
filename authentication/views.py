@@ -13,6 +13,8 @@ from django.contrib import messages
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+
+from payment.models import UserMembership
 from .utils import account_activation_token
 from django.urls import reverse
 from django.contrib import auth
@@ -123,7 +125,7 @@ class RegistrationView(View):
                 try:
                     user = User.objects.create_user(username=username, email=email)
                     user.set_password(password)
-                    user.is_active = True
+                    user.is_active = True #TODO Make this false in production
                     user.save()
                     send_activation_email(user, request)
                     messages.success(request, f"Account successfully created. Now you need to verify your email. "
@@ -237,7 +239,6 @@ class RequestPasswordResetEmail(View):
             Hi {user.username}, Please click the link below to reset your password: {reset_url}
     
             """
-            print(reset_url)
 
             # Turn these into plain/html MIMEText objects
             part1 = MIMEText(text, "plain")
@@ -312,13 +313,15 @@ class CompletePasswordReset(View):
 
 @login_required(login_url='/authentication/login')
 def edit_account_view(request):
+    user_membership = UserMembership.objects.filter(user=request.user).first()
+
     context = {
         "values": request.POST,
-        'user_data': request.user  # Pass the current user's username to the template
+        'user_data': request.user,  # Pass the current user's username to the template
+        'user_membership': user_membership.membership,
     }
 
     if request.method == 'GET':
-        print(1)
         return render(request, 'authentication/edit_account.html', context)
 
     if request.method == 'POST':
@@ -351,5 +354,5 @@ def edit_account_view(request):
             messages.error(request, "Incorrect password. If you don't know your password please click 'Forgot your "
                                     "'password?'")
 
-    return render(request, 'authentication/edit_account.html')
+    return render(request, 'authentication/edit_account.html', context)
 

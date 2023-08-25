@@ -1,10 +1,12 @@
 import json
 import pdb
+from datetime import timedelta
 
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.utils import timezone
 
 from mytests.views import my_tests
 from payment.models import UserMembership
@@ -17,53 +19,45 @@ from .models import UserTest
 
 @login_required(login_url='/authentication/login')
 def choose_create_speed(request):
-    return render(request, 'createtests/choose-create-speed.html')
+    user_membership = UserMembership.objects.filter(user=request.user).first()
+
+    context = {
+        'values': request.POST,
+        'user_membership': user_membership.membership,
+    }
+
+    return render(request, 'createtests/choose-create-speed.html', context)
 
 
 @login_required(login_url='/authentication/login')
 def quick_test(request):
     user_membership = UserMembership.objects.filter(user=request.user).first()
+    one_month_ago = timezone.now() - timedelta(days=30)
+    user_test_count_last_month = UserTest.objects.filter(owner=request.user, created_at__gte=one_month_ago).count()
+
     context = {
         'values': request.POST,
         'user_membership': user_membership.membership,
-
+        'user_test_count_last_month': user_test_count_last_month,
     }
-
-
-
-
-    #TODO memberships are handeled here but not in js. Think on how to fix that
-    user_membership_type = user_membership.membership.membership_type
-
-    max_words = user_membership.membership.allowed_words
 
     if request.method == 'GET':
         return render(request, 'createtests/quick-test.html', context)
 
     if request.method == 'POST':
-
-        #TODO use the count of the tests to make sure user does not create more than 7
-        user_test_count = UserTest.objects.filter(owner=request.user).count()
-        # Calculate the date one month ago from today
-        one_month_ago = timezone.now() - timedelta(days=30)
-        # Count the number of tests created by the user in the last month
-        user_test_count_last_month = UserTest.objects.filter(owner=request.user, created_at__gte=one_month_ago).count()
-
-        print(user_test_count)
-        if not user_test_count > 1:
-            messages.error(request, 'Test is required')
-            return render(request, 'createtests/quick-test.html', context)
-
         teaching_material = request.POST['teaching_material']
 
         header = generate_header(teaching_material)
 
+#===================BACKEND CHECKS========================================
         if not header or header.isspace():
             messages.error(request, 'Header is required')
             return render(request, 'createtests/quick-test.html', context)
+
         if not teaching_material or teaching_material.isspace():
             messages.error(request, 'Please provide teaching material')
             return render(request, 'createtests/quick-test.html', context)
+# ===================BACKEND CHECKS========================================
 
         subtitle = generate_subtitle(header)
         institution = " "
@@ -111,19 +105,24 @@ def quick_test(request):
         question_types = {"mcq": mcq, "msq": msq, "oaq": oaq}
 
         total_questions = mcq + msq + oaq
-        if total_questions > 120:
-            messages.error(request, 'Total Questions more than 120')
+
+# ===================BACKEND CHECKS========================================
+        if user_test_count_last_month > user_membership.membership.allowed_tests:
+            messages.error(request, f'Total Test more {user_membership.membership.allowed_tests} allowed monthly')
+            return render(request, 'createtests/quick-test.html', context)
+
+        if total_questions > user_membership.membership.allowed_question:
+            messages.error(request, f'Total Questions more {user_membership.membership.allowed_question}')
             return render(request, 'createtests/quick-test.html', context)
 
         if total_questions < 1:
             messages.error(request, 'Total questions are 0. Please add more questions')
             return render(request, 'createtests/quick-test.html', context)
+# ===================BACKEND CHECKS========================================
 
         # Will use the generate_questions function
         question_data = generate_questions(teaching_material, question_types)
         footer = generate_footer_info(header)
-
-        print(question_data)
 
         user_test = UserTest.objects.create(owner=request.user, header=header, subtitle=subtitle,
                                             institution=institution,
@@ -136,20 +135,24 @@ def quick_test(request):
 
 @login_required(login_url='/authentication/login')
 def advanced_test(request):
+    user_membership = UserMembership.objects.filter(user=request.user).first()
+    one_month_ago = timezone.now() - timedelta(days=30)
+    user_test_count_last_month = UserTest.objects.filter(owner=request.user, created_at__gte=one_month_ago).count()
+
     context = {
-        'values': request.POST
+        'values': request.POST,
+        'user_membership': user_membership.membership,
+        'user_test_count_last_month': user_test_count_last_month,
     }
-    max_tokens_per_teaching_material = 14000
-    max_characters = max_tokens_per_teaching_material * 4
-    min_characters = 100
-    max_words = 14000 * .75
 
     if request.method == 'GET':
-        return render(request, 'createtests/advanced-test.html')
+        return render(request, 'createtests/advanced-test.html', context)
 
     if request.method == 'POST':
         teaching_material = request.POST['teaching_material']
         header = request.POST['header']
+
+# ===================BACKEND CHECKS========================================
         if not header or header.isspace():
             messages.error(request, 'Header is required')
             return render(request, 'createtests/advanced-test.html', context)
@@ -157,6 +160,8 @@ def advanced_test(request):
         if not teaching_material or teaching_material.isspace():
             messages.error(request, 'Please provide teaching material')
             return render(request, 'createtests/advanced-test.html', context)
+# ===================BACKEND CHECKS========================================
+
 
         subtitle = request.POST['subtitle']
 
@@ -192,18 +197,23 @@ def advanced_test(request):
         question_types = {"mcq": mcq, "msq": msq, "oaq": oaq}
 
         total_questions = mcq + msq + oaq
-        if total_questions > 120:
-            messages.error(request, 'Total Questions more than 120')
-            return render(request, 'createtests/advanced-test.html', context)
+
+        # ===================BACKEND CHECKS========================================
+        if user_test_count_last_month > user_membership.membership.allowed_tests:
+            messages.error(request, f'Total Test more {user_membership.membership.allowed_tests} allowed monthly')
+            return render(request, 'createtests/quick-test.html', context)
+
+        if total_questions > user_membership.membership.allowed_question:
+            messages.error(request, f'Total Questions more {user_membership.membership.allowed_question}')
+            return render(request, 'createtests/quick-test.html', context)
 
         if total_questions < 1:
             messages.error(request, 'Total questions are 0. Please add more questions')
-            return render(request, 'createtests/advanced-test.html', context)
+            return render(request, 'createtests/quick-test.html', context)
+        # ===================BACKEND CHECKS========================================
 
         question_data = generate_questions(teaching_material, question_types)
         footer = request.POST['footer']
-
-        # print(question_data)
 
         user_test = UserTest.objects.create(owner=request.user, header=header, subtitle=subtitle,
                                             institution=institution,

@@ -12,7 +12,7 @@ def create_initial_membership(sender, **kwargs):
         slug='free-plan',
         membership_type='Free',
         price=0,
-        stripe_plan_id='a1',
+        stripe_plan_id='free-plan',
         allowed_question=3,
         allowed_words=5000,
         allowed_tests=7
