@@ -1,33 +1,397 @@
 {% extends 'base.html' %}
-
+{% load static %}
 
 {% block content %}
-<div class="container">
-	<h1>Select a membership</h1>
-	<div class="row">
-		{% for object in object_list %}
-		<div class="col-sm-4 col-md-4">
-			<h2>{{ object.membership_type }}</h2>
-			<p>Price: ${{ object.price }}<small>/month</small></p>
-			<h4>Included Courses</h4>
-			<ul>
-			</ul>
-			{% if object.membership_type != 'Free' %}
-			<form method="POST" action="{% url 'select' %}">
-				{% csrf_token %}
-				{% if object.membership_type != current_membership %}
-					<button class="btn btn-warning">Select</button>
-				{% else %}
-					<small>This is your current membership</small>
-				{% endif %}
-				<input type="hidden" name="membership_type" value="{{ object.membership_type }}">
-			</form>			
-			{% endif %}	
-		</div>
+
+<style>
+
+#monthly-plans {
+  display: none;
+}
+
+  /* RESET RULES
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+:root {
+  --white: white;
+  --gray: #999;
+  --lightgray: whitesmoke;
+  --darkgreen: #34495e;
+  --popular: #ffdd40;
+  --starter: #f73859;
+  --essential: #00aeef;
+  --professional: #ff7f45;
+}
+
+
+
+ @import url(https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css);
+@import url(https://fonts.googleapis.com/css?family=Raleway:400,500,800);
+@import url(https://fonts.googleapis.com/css?family=Montserrat:800);
+.snip1214 {
+  font-family: 'Raleway', Arial, sans-serif;
+  color: #000000;
+  text-align: center;
+  font-size: 16px;
+  width: 100%;
+  max-width: 1000px;
+  margin: 40px 10px;
+}
+.snip1214 .plan {
+  margin: 0;
+  width: 25%;
+  position: relative;
+  float: left;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.snip1214 * {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.snip1214 header {
+  position: relative;
+}
+.snip1214 .plan-title {
+  position: relative;
+  top: 0;
+  font-weight: 800;
+  padding: 5px 15px;
+  margin: 0 auto;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  margin: 0;
+  display: inline-block;
+  background-color: #222f3d;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+.snip1214 .plan-cost {
+  padding: 0px 10px 20px;
+}
+.snip1214 .plan-price {
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-weight: 800;
+  font-size: 2.4em;
+  color: #34495e;
+}
+.snip1214 .plan-type {
+  opacity: 0.6;
+}
+.snip1214 .plan-features {
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  list-style: outside none none;
+  font-size: 0.8em;
+}
+.snip1214 .plan-features li {
+  border-top: 1px solid #d2d7e2;
+  padding: 10px 5%;
+}
+.snip1214 .plan-features li:nth-child(even) {
+  background: rgba(0, 0, 0, 0.08);
+}
+.snip1214 .plan-features i {
+  margin-right: 8px;
+  opacity: 0.4;
+}
+.snip1214 .plan-select {
+  border-top: 1px solid #d2d7e2;
+  padding: 10px 10px 0;
+}
+.snip1214 .plan-select a {
+  background-color: #222f3d;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0.5em 1em;
+  -webkit-transform: translateY(50%);
+  transform: translateY(50%);
+  font-weight: 800;
+  text-transform: uppercase;
+  display: inline-block;
+}
+.snip1214 .plan-select a:hover {
+  background-color: #46627f;
+}
+
+.snip1214 .plan-current {
+  border-top: 1px solid #e0dbca;
+  padding: 10px 10px 0;
+}
+.snip1214 .plan-current a {
+  background-color: #8c722b;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0.5em 1em;
+  -webkit-transform: translateY(50%);
+  transform: translateY(50%);
+  font-weight: 800;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.snip1214 .featured {
+  margin-top: -10px;
+  background-color: #34495e;
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+.snip1214 .featured .plan-title,
+.snip1214 .featured .plan-price {
+  color: #ffffff;
+}
+.snip1214 .featured .plan-cost {
+  padding: 10px 10px 20px;
+}
+.snip1214 .featured .plan-features li {
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+}
+.snip1214 .featured .plan-select {
+  padding: 20px 10px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+}
+@media only screen and (max-width: 767px) {
+  .snip1214 .plan {
+    width: 50%;
+  }
+  .snip1214 .plan-title,
+  .snip1214 .plan-select a {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  .snip1214 .plan-cost,
+  .snip1214 .featured .plan-cost {
+    padding: 20px 10px 20px;
+  }
+  .snip1214 .plan-select,
+  .snip1214 .featured .plan-select {
+    padding: 10px 10px 10px;
+  }
+  .snip1214 .featured {
+    margin-top: 0;
+  }
+}
+@media only screen and (max-width: 440px) {
+  .snip1214 .plan {
+    width: 100%;
+  }
+}
+
+/* SWITCH STYLES
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.switch-wrapper {
+  position: relative;
+  display: inline-flex;
+  padding: 4px;
+  border: 1px solid lightgrey;
+  margin-bottom: 40px;
+  border-radius: 30px;
+  background: var(--white);
+}
+
+.switch-wrapper [type="radio"] {
+  position: absolute;
+  left: -9999px;
+}
+
+.switch-wrapper [type="radio"]:checked#monthly ~ label[for="monthly"],
+.switch-wrapper [type="radio"]:checked#yearly ~ label[for="yearly"] {
+  color: var(--white);
+}
+
+.switch-wrapper [type="radio"]:checked#monthly ~ label[for="monthly"]:hover,
+.switch-wrapper [type="radio"]:checked#yearly ~ label[for="yearly"]:hover {
+  background: transparent;
+}
+
+.switch-wrapper
+  [type="radio"]:checked#monthly
+  + label[for="yearly"]
+  ~ .highlighter {
+  transform: none;
+}
+
+.switch-wrapper
+  [type="radio"]:checked#yearly
+  + label[for="monthly"]
+  ~ .highlighter {
+  transform: translateX(100%);
+}
+
+.switch-wrapper label {
+  font-size: 16px;
+  z-index: 1;
+  min-width: 100px;
+  line-height: 32px;
+  cursor: pointer;
+  border-radius: 30px;
+  transition: color 0.25s ease-in-out;
+    flex-grow: 1; /* Allow labels to grow and take equal space */
+  text-align: center; /* Center the label content horizontally */
+}
+
+.switch-wrapper label:hover {
+  background: var(--lightgray);
+}
+
+.switch-wrapper .highlighter {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  border-radius: 30px;
+  background: var(--darkgreen);
+  transition: transform 0.25s ease-in-out;
+}
+
+</style>
+
+
+<h1>Payment Plans</h1><br>
+  <div class="switch-wrapper">
+    <input id="monthly" type="radio" name="switch" >
+    <input id="yearly" type="radio" name="switch" checked>
+    <label for="monthly">Monthly</label>
+    <label for="yearly">Yearly - 40%</label>
+    <span class="highlighter"></span>
+  </div>
+
+<div id="monthly-plans">
+<div class="snip1214">
+	{% for object in object_list %}
+		<form method="POST" action="{% url 'payment-plans' %}">
+		{% csrf_token %}
+	{% if "yearly" not in object.slug %}
+
+	{% if object.membership_name == 'Professional' %}<div class="plan featured">
+		{% else %}
+  <div class="plan">
+	{% endif %}
+    <h3 class="plan-title">
+      {{ object.membership_name }}
+    </h3>
+    <div class="plan-cost"><span class="plan-price">${{ object.price }}</span><span class="plan-type">/ Monthly</span></div>
+    <ul class="plan-features">
+		{% if object.allowed_tests > 150 %}
+              <li><i class="ion-checkmark"> </i>Unlimited Tests Monthly</li>
+		{% else %}
+		      <li><i class="ion-checkmark"> </i>{{ object.allowed_tests }} Tests Monthly</li>
+		{% endif %}
+      <li><i class="ion-checkmark"> </i>{{ object.allowed_question }} Questions per Test</li>
+		{% if object.allowed_words > 150000 %}
+              <li><i class="ion-checkmark"> </i>Unlimited Content Words Per Test</li>
+		{% else %}
+				<li><i class="ion-checkmark"> </i>{{ object.allowed_words }} Content Words Per Test</li>
+		{% endif %}
+      <li><i class="ion-checkmark"> </i>20 Seconds Test Processing Time</li>
+      <li><i class="ion-checkmark"> </i>Unlimited PDF, Word and Txt Downloads</li>
+    </ul>
+	  <form method="POST" action="{% url 'payment-plans' %}">
+		  {% csrf_token %}
+	  {% if object.membership_type != 'Free' %}
+	      {% if object.membership_type != current_membership %}
+	            <button class="plan-select"><a href="">Select</a></button>
+	      {% else %}
+	          <div class="plan-current"><a>Current</a></div>
+	      {% endif %}
+	  {% else %}
+	  		{% if current_membership != 'Free'  %}
+	            <div class="plan-select"><a href="">Select</a></div>
+	        {% else %}
+	            <div class="plan-current"><a>Current</a></div>
+
+		    {% endif %}
+	  {% endif %}
+		  <input type="hidden" name="membership_type" value="{{ object.slug }}">
+
+	  </form>
+  </div>
+		{% endif %}
+
+
 		{% endfor %}
-	</div>
 </div>
+    </div>
+
+
+<div id="yearly-plans">
+<div class="snip1214">
+
+	{% for object in object_list %}
+	{% if "monthly" not in object.slug %}
+
+	{% if object.membership_name == 'Professional' %}<div class="plan featured">
+		{% else %}
+  <div class="plan">
+	{% endif %}
+
+    <h3 class="plan-title">
+      {{ object.membership_name }}
+    </h3>
+    <div class="plan-cost"><span class="plan-price">${{ object.monthly_price }}</span><span class="plan-type">/ Monthly</span></div>
+	                <p>${{ object.price }} billed annually</p>
+
+    <ul class="plan-features">
+		{% if object.allowed_tests > 150 %}
+              <li><i class="ion-checkmark"> </i>Unlimited Tests Monthly</li>
+		{% else %}
+		      <li><i class="ion-checkmark"> </i>{{ object.allowed_tests }} Tests Monthly</li>
+		{% endif %}
+      <li><i class="ion-checkmark"> </i>{{ object.allowed_question }} Questions Per Test</li>
+		{% if object.allowed_words > 150000 %}
+              <li><i class="ion-checkmark"> </i>Unlimited Content Words Per Test</li>
+		{% else %}
+				<li><i class="ion-checkmark"> </i>{{ object.allowed_words }} Content Words per Test</li>
+		{% endif %}
+      <li><i class="ion-checkmark"> </i>20 Seconds Test Processing Time</li>
+      <li><i class="ion-checkmark"> </i>Unlimited PDF, Word and Txt Downloads</li>
+    </ul>
+	  {% if object.membership_type != 'Free' %}
+	      {% if object.membership_type != current_membership %}
+	          <div class="plan-select"><a href="">Select</a></div>
+	      {% else %}
+	          <div class="plan-current"><a>Current</a></div>
+	      {% endif %}
+	  {% else %}
+	  		{% if current_membership != 'Free'  %}
+	            <div class="plan-select"><a href="">Select</a></div>
+	        {% else %}
+	            <div class="plan-current"><a>Current</a></div>
+
+	  	      {% endif %}
+	{% endif %}
+  </div>
+		{% endif %}
+		{% endfor %}
+</div>
+    </div>
 
 
 
-{% endblock content %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const monthlyPlans = document.getElementById("monthly-plans");
+    const yearlyPlans = document.getElementById("yearly-plans");
+    const monthlySwitch = document.getElementById("monthly");
+    const yearlySwitch = document.getElementById("yearly");
+    monthlySwitch.addEventListener("change", function () {
+      if (monthlySwitch.checked) {
+
+        monthlyPlans.style.display = "block";
+        yearlyPlans.style.display = "none";
+      }
+    });
+
+    yearlySwitch.addEventListener("change", function () {
+      if (yearlySwitch.checked) {
+        yearlyPlans.style.display = "block";
+        monthlyPlans.style.display = "none";
+      }
+    });
+  });
+</script>
+
+{% endblock %}

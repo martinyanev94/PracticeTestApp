@@ -30,6 +30,7 @@ from .models import Membership, UserMembership, Subscription
 
 import stripe
 
+
 def get_user_membership(request):
     user_membership_qs = UserMembership.objects.filter(user=request.user)
     if user_membership_qs.exists():
@@ -54,16 +55,6 @@ def get_selected_membership(request):
         return selected_membership_qs.first()
     return None
 
-@login_required
-def profile_view(request):
-    user_membership = get_user_membership(request)
-    user_subscription = get_user_subscription(request)
-    context = {
-        'user_membership': user_membership,
-        'user_subscription': user_subscription
-    }
-    return render(request, "memberships/profile.html", context)
-
 
 class MembershipSelectView(LoginRequiredMixin, ListView):
     model = Membership
@@ -71,16 +62,16 @@ class MembershipSelectView(LoginRequiredMixin, ListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
         current_membership = get_user_membership(self.request)
-        context['current_membership'] = str(current_membership.membership)
+        context['current_membership'] = str(current_membership.membership.membership_type)
+        context['user_membership'] = UserMembership.objects.filter(user=self.request.user).first().membership
         return context
 
     def post(self, request, **kwargs):
         user_membership = get_user_membership(request)
         user_subscription = get_user_subscription(request)
         selected_membership_type = request.POST.get('membership_type')
-
         selected_membership = Membership.objects.get(
-            membership_type=selected_membership_type)
+            slug=selected_membership_type)
 
         if user_membership.membership == selected_membership:
             if user_subscription is not None:
@@ -91,7 +82,8 @@ class MembershipSelectView(LoginRequiredMixin, ListView):
         # assign to the session
         request.session['selected_membership_type'] = selected_membership.membership_type
 
-        return HttpResponseRedirect(reverse('memberships:payment'))
+        return HttpResponseRedirect(reverse('payment'))
+
 
 @login_required
 def PaymentView(request):
@@ -112,8 +104,10 @@ def PaymentView(request):
             '''
 
             customer = stripe.Customer.retrieve(user_membership.stripe_customer_id)
-            customer.source = token # 4242424242424242
+            customer.source = token  # 4242424242424242
             customer.save()
+            print("HI")
+            print(token)
 
             '''
             Now we can create the subscription using only the customer as we don't need to pass their
@@ -123,7 +117,7 @@ def PaymentView(request):
             subscription = stripe.Subscription.create(
                 customer=user_membership.stripe_customer_id,
                 items=[
-                    { "plan": selected_membership.stripe_plan_id },
+                    {"plan": selected_membership.stripe_plan_id},
                 ]
             )
 
@@ -140,7 +134,8 @@ def PaymentView(request):
         'selected_membership': selected_membership
     }
 
-    return render(request, "memberships/membership_payment.html", context)
+    return render(request, "payment/membership_payment.html", context)
+
 
 @login_required
 def updateTransactionRecords(request, subscription_id):
@@ -163,6 +158,7 @@ def updateTransactionRecords(request, subscription_id):
     messages.info(request, 'Successfully created {} membership'.format(
         selected_membership))
     return redirect(reverse('memberships:select'))
+
 
 @login_required
 def cancelSubscription(request):

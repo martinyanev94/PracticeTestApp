@@ -7,20 +7,36 @@ import stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 MEMBERSHIP_CHOICES = (
+    ('EnterpriseAnnual', 'enta'),
+    ('PremiumAnnual', 'prema'),
+    ('ProfessionalAnnual', 'proa'),
+    ('EnterpriseMonthly', 'entm'),
+    ('PremiumMonthly', 'premm'),
+    ('ProfessionalMonthly', 'prom'),
+    ('Free', 'free')
+)
+
+MEMBERSHIP_NAMES = (
     ('Enterprise', 'ent'),
     ('Premium', 'prem'),
     ('Professional', 'pro'),
     ('Free', 'free')
 )
 
-#TODO Take price from stripe api
+
+# TODO Take price from stripe api
 class Membership(models.Model):
     slug = models.SlugField()
     membership_type = models.CharField(
         choices=MEMBERSHIP_CHOICES,
         default='Free',
         max_length=30)
+    membership_name = models.CharField(
+        choices=MEMBERSHIP_NAMES,
+        default='Free',
+        max_length=30)
     price = models.FloatField(default=10)
+    monthly_price = models.FloatField(default=10, null=True)
     stripe_plan_id = models.CharField(max_length=40)
     allowed_question = models.IntegerField()
     allowed_words = models.IntegerField(null=True)
