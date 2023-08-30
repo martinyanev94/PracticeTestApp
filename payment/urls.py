@@ -1,12 +1,11 @@
 from django.urls import path
-from . import views
-from .views import MembershipSelectView, PaymentView, updateTransactionRecords, cancelSubscription
+from .views import MembershipSelectView, CustomerPortalView, \
+    CheckoutView, payment_success_view
 
 urlpatterns = [
-    path('', MembershipSelectView.as_view(), name='payment-plans'),
-    path('payment/', PaymentView, name='payment'),
-    path('update-transactions/<subscription_id>/',
-         updateTransactionRecords, name='update-transactions'),
-    path('cancel/', cancelSubscription, name='cancel')
+    path('', MembershipSelectView, name='payment-plans'),
+    path('payment/', CheckoutView, name='payment'),
+    path('customer_portal/', CustomerPortalView, name='customer_portal'),
+    path('success/', payment_success_view, name='payment-success'),
 
 ]

@@ -13,6 +13,9 @@ MEMBERSHIP_CHOICES = (
     ('EnterpriseMonthly', 'entm'),
     ('PremiumMonthly', 'premm'),
     ('ProfessionalMonthly', 'prom'),
+    ('EnterpriseQuarterly', 'entq'),
+    ('PremiumQuarterly', 'premq'),
+    ('ProfessionalQuarterly', 'proq'),
     ('Free', 'free')
 )
 

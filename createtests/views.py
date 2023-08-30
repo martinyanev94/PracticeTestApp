@@ -9,7 +9,8 @@ from django.contrib import messages
 from django.utils import timezone
 
 from mytests.views import my_tests
-from payment.models import UserMembership
+from payment.models import UserMembership, Subscription, Membership
+from payment.views import get_stripe_subscriptions, manage_membership
 from .chat_gpt import gpt_engine, generate_header, generate_subtitle, \
     generate_footer_info, generate_questions
 from .models import UserTest
@@ -19,8 +20,9 @@ from .models import UserTest
 
 @login_required(login_url='/authentication/login')
 def choose_create_speed(request):
-    user_membership = UserMembership.objects.filter(user=request.user).first()
+    manage_membership(request)
 
+    user_membership = UserMembership.objects.filter(user=request.user).first()
     context = {
         'values': request.POST,
         'user_membership': user_membership.membership,

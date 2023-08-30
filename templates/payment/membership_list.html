@@ -258,7 +258,11 @@
     <label for="yearly">Yearly - 40%</label>
     <span class="highlighter"></span>
   </div>
+<form method="POST" action="{% url 'customer_portal' %}">
+			{% csrf_token %}
 
+  <button type="submit">Manage billing</button>
+</form>
 <div id="monthly-plans">
 <div class="snip1214">
 	{% for object in object_list %}
@@ -293,19 +297,18 @@
 		  {% csrf_token %}
 	  {% if object.membership_type != 'Free' %}
 	      {% if object.membership_type != current_membership %}
-	            <button class="plan-select"><a href="">Select</a></button>
+	            <button class="plan-select"><a>Select</a></button>
 	      {% else %}
 	          <div class="plan-current"><a>Current</a></div>
 	      {% endif %}
 	  {% else %}
 	  		{% if current_membership != 'Free'  %}
-	            <div class="plan-select"><a href="">Select</a></div>
+	            <div class="plan-current"><a>Always Included</a></div>
 	        {% else %}
 	            <div class="plan-current"><a>Current</a></div>
-
 		    {% endif %}
 	  {% endif %}
-		  <input type="hidden" name="membership_type" value="{{ object.slug }}">
+		  <input type="hidden" name="membership_type" value="{{ object.membership_type }}">
 
 	  </form>
   </div>
@@ -349,20 +352,26 @@
       <li><i class="ion-checkmark"> </i>20 Seconds Test Processing Time</li>
       <li><i class="ion-checkmark"> </i>Unlimited PDF, Word and Txt Downloads</li>
     </ul>
+	  <form method="POST" action="{% url 'payment-plans' %}">
+		  {% csrf_token %}
+
 	  {% if object.membership_type != 'Free' %}
 	      {% if object.membership_type != current_membership %}
-	          <div class="plan-select"><a href="">Select</a></div>
+	          <button class="plan-select"><a>Select</a></button>
 	      {% else %}
 	          <div class="plan-current"><a>Current</a></div>
 	      {% endif %}
 	  {% else %}
 	  		{% if current_membership != 'Free'  %}
-	            <div class="plan-select"><a href="">Select</a></div>
+	            <div class="plan-current"><a>Always Included</a></div>
 	        {% else %}
 	            <div class="plan-current"><a>Current</a></div>
 
 	  	      {% endif %}
 	{% endif %}
+		  		  <input type="hidden" name="membership_type" value="{{ object.membership_type }}">
+
+		  </form>
   </div>
 		{% endif %}
 		{% endfor %}
@@ -392,6 +401,9 @@
       }
     });
   });
+</script>
+	<script async
+  src="https://js.stripe.com/v3/buy-button.js">
 </script>
 
 {% endblock %}
