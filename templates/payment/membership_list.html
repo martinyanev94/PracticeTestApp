@@ -258,17 +258,12 @@
     <label for="yearly">Yearly - 40%</label>
     <span class="highlighter"></span>
   </div>
-<form method="POST" action="{% url 'customer_portal' %}">
-			{% csrf_token %}
-
-  <button type="submit">Manage billing</button>
-</form>
 <div id="monthly-plans">
 <div class="snip1214">
 	{% for object in object_list %}
 		<form method="POST" action="{% url 'payment-plans' %}">
 		{% csrf_token %}
-	{% if "yearly" not in object.slug %}
+	{% if "free" in object.slug or "monthly" in object.slug%}
 
 	{% if object.membership_name == 'Professional' %}<div class="plan featured">
 		{% else %}
@@ -324,7 +319,7 @@
 <div class="snip1214">
 
 	{% for object in object_list %}
-	{% if "monthly" not in object.slug %}
+	{% if "yearly" in object.slug or "free" in object.slug %}
 
 	{% if object.membership_name == 'Professional' %}<div class="plan featured">
 		{% else %}

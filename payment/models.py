@@ -27,7 +27,6 @@ MEMBERSHIP_NAMES = (
 )
 
 
-# TODO Take price from stripe api
 class Membership(models.Model):
     slug = models.SlugField()
     membership_type = models.CharField(

@@ -41,16 +41,34 @@ def manage_membership(request):
     if user_stripe_subscription:
         stripe_membership = Membership.objects.filter(stripe_plan_id=user_stripe_subscription[0].plan.id).first()
 
-        if stripe_membership.membership_type != user_membership.membership:
-            user_membership.membership = stripe_membership
+        # if stripe subscription is active ensure local membership and subscription are up-to-date
+        if user_stripe_subscription[0].plan.active:
+
+            # If local membership is not same as stripe membership: local=stripe and update subscription id
+            if stripe_membership.membership_type != user_membership.membership:
+                user_membership.membership = stripe_membership
+                user_membership.save()
+
+                sub, created = Subscription.objects.get_or_create(
+                    user_membership=user_membership)
+                sub.stripe_subscription_id = user_stripe_subscription[0].id
+                sub.active = True
+                sub.save()
+        else:
+            # If stripe subscription not active, move to free local subscription and make subscription inactive
+            user_membership.membership = Membership.objects.get(membership_type='Free')
             user_membership.save()
 
-            user_stripe_subscription = get_stripe_subscriptions(user_membership.stripe_customer_id)
             sub, created = Subscription.objects.get_or_create(
                 user_membership=user_membership)
             sub.stripe_subscription_id = user_stripe_subscription[0].id
-            sub.active = True
+            sub.active = False
             sub.save()
+    else:
+        # If no stripe subscription, move to free local subscription
+        user_membership.membership = Membership.objects.get(membership_type='Free')
+        user_membership.save()
+
 
 def get_stripe_subscriptions(customer_id):
     stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -92,10 +110,10 @@ def MembershipSelectView(request):
     if request.method == 'GET':
         user_membership = get_user_membership(request)
         current_membership = get_user_membership(request)
-        print(current_membership.membership.membership_type)
+        user_stripe_subscription = get_stripe_subscriptions(user_membership.stripe_customer_id)
 
         # TODO replace with a check on wether the user has existing subscribtions or not. Meaning wether he has subscription_id or not
-        if current_membership.membership.membership_type != "Free":
+        if user_stripe_subscription:
             return redirect(reverse("customer_portal"))
 
         context = {
@@ -142,7 +160,7 @@ def CustomerPortalView(request):
     )
     session = stripe.billing_portal.Session.create(
         customer=user_membership.stripe_customer_id,
-        return_url=request.build_absolute_uri(reverse("home-page-view")),
+        return_url=request.build_absolute_uri(reverse("choose-create-speed")),
     )
     return redirect(session.url)
 
