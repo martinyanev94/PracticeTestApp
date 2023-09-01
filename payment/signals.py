@@ -23,7 +23,7 @@ def create_initial_membership():
             monthly_price=8.33,
             stripe_plan_id="price_1NiP3mEIvcSmcyn9pYJlX7FK",
             allowed_question=60,
-            allowed_words=20000,
+            allowed_words=200000,
             allowed_tests=300
         )
 
@@ -35,7 +35,7 @@ def create_initial_membership():
             price=12.99,
             stripe_plan_id="price_1NiP3mEIvcSmcyn90MoA1CDH",
             allowed_question=60,
-            allowed_words=20000,
+            allowed_words=200000,
             allowed_tests=300
         )
 
@@ -48,7 +48,7 @@ def create_initial_membership():
             monthly_price=7.49,
             stripe_plan_id="price_1NiP4ZEIvcSmcyn9B6cG8TCx",
             allowed_question=60,
-            allowed_words=20000,
+            allowed_words=200000,
             allowed_tests=300
         )
 
@@ -61,7 +61,7 @@ def create_initial_membership():
             monthly_price=13.33,
             stripe_plan_id="price_1NiP5SEIvcSmcyn9xnavMCLF",
             allowed_question=120,
-            allowed_words=20000,
+            allowed_words=200000,
             allowed_tests=300
         )
 
@@ -73,7 +73,7 @@ def create_initial_membership():
             price=19.99,
             stripe_plan_id="price_1NiP5SEIvcSmcyn9hpHMOwnC",
             allowed_question=120,
-            allowed_words=20000,
+            allowed_words=200000,
             allowed_tests=300
         )
 
@@ -86,9 +86,7 @@ def create_initial_membership():
             monthly_price=11.67,
             stripe_plan_id="price_1NiP5SEIvcSmcyn9mwEJYLTG",
             allowed_question=60,
-            allowed_words=20000,
+            allowed_words=200000,
             allowed_tests=300
         )
     return
-
-# TODO Create the rest of the memberships
