@@ -112,7 +112,6 @@ def MembershipSelectView(request):
         current_membership = get_user_membership(request)
         user_stripe_subscription = get_stripe_subscriptions(user_membership.stripe_customer_id)
 
-        # TODO replace with a check on wether the user has existing subscribtions or not. Meaning wether he has subscription_id or not
         if user_stripe_subscription:
             return redirect(reverse("customer_portal"))
 

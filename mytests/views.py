@@ -54,7 +54,7 @@ def download_student_view_txt(request, id):
 
     # Create a response with the text content as a downloadable file
     response = HttpResponse(content, content_type='text/plain')
-    response['Content-Disposition'] = f'attachment; filename=student_view_{user_tests.id}.txt'
+    response['Content-Disposition'] = f'attachment; filename={user_tests.header}_student_view.txt'
 
     return response
 
@@ -96,7 +96,7 @@ def download_teacher_view_txt(request, id):
 
     # Create a response with the text content as a downloadable file
     response = HttpResponse(content, content_type='text/plain')
-    response['Content-Disposition'] = f'attachment; filename=teacher_view_{user_tests.id}.txt'
+    response['Content-Disposition'] = f'attachment; filename={user_tests.header}_teacher_view.txt'
 
     return response
 
@@ -108,7 +108,7 @@ def download_student_view_pdf(request, id):
     # Function to create the PDF document for teacher view
     def create_teacher_view_pdf(user_tests):
         response = HttpResponse(content_type='application/pdf')
-        filename = f'student_view_{user_tests.id}.pdf'
+        filename = f'{user_tests.header}_student_view.pdf'
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
         doc = SimpleDocTemplate(response, pagesize=letter)
@@ -178,7 +178,7 @@ def download_teacher_view_pdf(request, id):
     # Function to create the PDF document for teacher view
     def create_teacher_view_pdf(user_tests):
         response = HttpResponse(content_type='application/pdf')
-        filename = f'teacher_view_{user_tests.id}.pdf'
+        filename = f'{user_tests.header}_teacher_view.pdf'
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
         doc = SimpleDocTemplate(response, pagesize=letter)
@@ -316,7 +316,7 @@ def download_teacher_view(request, id):
 
     # Create a response with the Word document as a downloadable file
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    response['Content-Disposition'] = f'attachment; filename=teacher_view_{user_tests.id}.docx'
+    response['Content-Disposition'] = f'attachment; filename={user_tests.header}_teacher_view.docx'
 
     # Save the document to the response
     doc.save(response)
@@ -381,7 +381,7 @@ def download_student_view(request, id):
 
     # Create a response with the Word document as a downloadable file
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    response['Content-Disposition'] = f'attachment; filename=student_view_{user_tests.id}.docx'
+    response['Content-Disposition'] = f'attachment; filename={user_tests.header}_student_view.docx'
 
     # Save the document to the response
     doc.save(response)

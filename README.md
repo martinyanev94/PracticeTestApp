@@ -1,39 +1,43 @@
 # PracticeTestApp
 
-#Practice Test Generation Guidelines
-
-### Max Questions: 120
-### Min Teaching Material Words: 100
-### 1 question per 100 words
-### Max words per 
-
-#Examples: 
-
-###100 words - 120 questions
-Software Warns the user that it will be generating only 1 question
-
-### 1000 words 10 questions
-Ok
-
-### 12000words - 1 questions
-Ok
-
-###Question per chuck are selected regardless the questions type. Not acceptable two questions even from dofferent type to run on the same chunk
-
-### If the Text is bigger than the number of questions
-textWords/questions = words per text chunk
-words per chunk should be less than 2000
-1 question per chunk
-
-### If the text is smaller than the number of questions
-Every chink= 100 words
-More qestions per chunk than anticipated
-User gets a warning
+## How to run the project
 
 
+###Install python
 
-### Max tokens per minute is about 18000tokens/2.5min = 7200
-### 1 question should be on a text max 300 tokens
+###Create virtual environment in /PracticeTestApp
+>python -m venv venv_name
+> 
+> source venv/bin/activate    Mac
+> 
+> or
+> 
+> ./venv/Scripts/activate     Windows
+
+###Install the requirements
+>pip install -r requirements.txt
+
+###Migrate the project
+>python manage.py makemigrations
+> 
+> python manage.py migrate
+
+###Run the project
+>python manage.py runserver
+
+###Make pricing models:
+####Go to createtests/views.py and comment out line
+> create_initial_membership()
+####Go to the http://127.0.0.1:8000/create-tests/
+####Go to createtests/views.py and comment in line
+> create_initial_membership()
+
+
+
+
+
+
+
 
 
 
