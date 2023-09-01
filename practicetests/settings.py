@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'mytests',
     'homepage',
     'payment',
+    'captcha'
 
 ]
 
@@ -136,6 +137,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
+
+# Stripe keys
 if DEBUG:
     STRIPE_PUBLISHABLE_KEY = "pk_test_51MZ5ggEIvcSmcyn9LuHa58613iOsS5uuQsG0VRwDgfjBBQpjVCw7uomEy9y6MMDaRtJ1LC2UwBlDxy9I0lXSh6WP00RpILQewy"
     STRIPE_SECRET_KEY = "sk_test_51MZ5ggEIvcSmcyn9g9XQHOMrydvU4IYJB6punDJWwC3HjKNctvy6TzHOoKdqdgrlphM1rtKkyO1fv632mC0Sm5ak00a2lQ8CPX"
@@ -143,4 +146,9 @@ else:
     STRIPE_PUBLISHABLE_KEY = "pk_live_51MZ5ggEIvcSmcyn9W26qP1FWzOnp3fIADWpzkim1WGfpuybGKJVmDW0wWyiZo95xF4cM8v5ZInHEk6HqzaRE9A7700GzpO1Q0f"
     STRIPE_SECRET_KEY = "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"
 
+# Captcha keys
+RECAPTCHA_PUBLIC_KEY = "6LcIX_EnAAAAAHpV9vPofXRc8CzSfwKdWdp2lJY2"
+RECAPTCHA_PRIVATE_KEY = "6LcIX_EnAAAAAPAt1WRXgN8b9aWlClwgEhBadtJS"
 
+# OpenAI Keys
+OPENAI_API_KEY = "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"

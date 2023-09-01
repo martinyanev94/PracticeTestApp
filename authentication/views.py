@@ -2,6 +2,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+from captcha.fields import ReCaptchaField
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.views import View
@@ -15,6 +16,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from payment.models import UserMembership
+from .models import FormWithCaptcha
 from .utils import account_activation_token
 from django.urls import reverse
 from django.contrib import auth
@@ -125,7 +127,7 @@ class RegistrationView(View):
                 try:
                     user = User.objects.create_user(username=username, email=email)
                     user.set_password(password)
-                    user.is_active = True #TODO Make this false in production
+                    user.is_active = True  # TODO Make this false in production
                     user.save()
                     send_activation_email(user, request)
                     messages.success(request, f"Account successfully created. Now you need to verify your email. "
@@ -162,15 +164,20 @@ class VerificationView(View):
 
 class LoginView(View):
     def get(self, request):
-        return render(request, 'authentication/login.html')
+        form = FormWithCaptcha()
+        context = {"form": form}
+
+        return render(request, 'authentication/login.html', context)
 
     def post(self, request):
-        username = request.POST['username']
+        form = FormWithCaptcha(request.POST)
+        context = {"form": form}
+
+        username = request.POST['name']
         password = request.POST['password']
 
         if username and password:
             user = auth.authenticate(username=username, password=password)
-
             if user:
                 if user.is_active:
                     auth.login(request, user)
@@ -179,14 +186,14 @@ class LoginView(View):
                     return redirect('choose-create-speed')
                 messages.error(
                     request, 'Account is not active,please check your email')
-                return render(request, 'authentication/login.html')
+                return render(request, 'authentication/login.html', context)
             messages.error(
                 request, 'Invalid credentials,try again')
-            return render(request, 'authentication/login.html')
+            return render(request, 'authentication/login.html', context)
 
         messages.error(
             request, 'Please fill all fields')
-        return render(request, 'authentication/login.html')
+        return render(request, 'authentication/login.html', context)
 
 
 class LogoutView(View):
@@ -355,4 +362,3 @@ def edit_account_view(request):
                                     "'password?'")
 
     return render(request, 'authentication/edit_account.html', context)
-

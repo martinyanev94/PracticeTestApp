@@ -27,7 +27,6 @@ h1, h2, h3, h4, h5, h6 {
   transition: all;
 }
 
-
 .showPasswordToggle:hover {
   transform: scale(1.2);
 }
@@ -574,4 +573,15 @@ button:focus {
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #2B7A78;
+}
+
+/* Style form fields */
+.form-container input[type="text"],
+.form-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 16px;
 }

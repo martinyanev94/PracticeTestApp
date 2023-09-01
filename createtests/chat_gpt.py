@@ -12,9 +12,11 @@ from tenacity import (
     stop_after_attempt,
     wait_random_exponential,
 )  # for exponential backoff
+
+from practicetests.settings import OPENAI_API_KEY
 from .messages import preparation_prompt, multi_choice_prompt, multi_selection_prompt, open_answer_prompt
 
-openai.api_key = "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"
+openai.api_key = OPENAI_API_KEY
 
 
 # Retry function in case we reach open ai rate limits. stop_after_attempt can be increased
