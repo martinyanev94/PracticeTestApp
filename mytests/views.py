@@ -437,10 +437,12 @@ def my_tests(request):
 
 @login_required(login_url='/authentication/login')
 def home_view(request, id):
+    user_membership = UserMembership.objects.filter(user=request.user).first()
     user_tests = UserTest.objects.get(pk=id)
     context = {
         'user_tests': user_tests,
         'values': user_tests,
+        'user_membership': user_membership.membership,
     }
     if request.method == 'GET':
         return render(request, 'mytests/home-view.html', context)
