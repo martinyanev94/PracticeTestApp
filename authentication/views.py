@@ -1,8 +1,7 @@
 import smtplib
+import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
-from captcha.fields import ReCaptchaField
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.views import View
@@ -14,8 +13,8 @@ from django.contrib import messages
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-
 from payment.models import UserMembership
+from practicetests.settings import SENDER_EMAIL, EMAIL_PASSWORD, EMAIL_USERNAME, SMTP_SERVER, SMTP_PORT
 from .models import FormWithCaptcha
 from .utils import account_activation_token
 from django.urls import reverse
@@ -47,13 +46,7 @@ class UsernameValidationView(View):
         return JsonResponse({'username_valid': True})
 
 
-# Your email configuration
-smtp_server = 'smtp.gmail.com'
-smtp_port = 587
-username = 'mpyanev@gmail.com'
-password = 'zzntmppswidndcyv'
-# password = 'arggrupobdqxwpez'
-sender_email = 'mpyanev@gmail.com'
+
 
 
 def send_activation_email(user, request):
@@ -75,7 +68,7 @@ def send_activation_email(user, request):
 
     message = MIMEMultipart("alternative")
     message["Subject"] = 'Activate your account'
-    message["From"] = sender_email
+    message["From"] = SENDER_EMAIL
     message["To"] = user.email
 
     text = f"""\
@@ -90,11 +83,11 @@ def send_activation_email(user, request):
     # The email client will try to render the last part first
     message.attach(part1)
     try:
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
             server.ehlo()
             server.starttls()
-            server.login(username, password)
-            server.sendmail(from_addr=sender_email, to_addrs=user.email, msg=message.as_string())
+            server.login(EMAIL_USERNAME, EMAIL_PASSWORD)
+            server.sendmail(from_addr=SENDER_EMAIL, to_addrs=user.email, msg=message.as_string())
             print("Email sent successfully!")
     except Exception as e:
         print("Error sending email:", str(e))
@@ -173,8 +166,13 @@ class LoginView(View):
         form = FormWithCaptcha(request.POST)
         context = {"form": form}
 
-        username = request.POST['name']
+        username = request.POST['username']
         password = request.POST['password']
+        ssl._create_default_https_context = ssl._create_unverified_context
+        if not form.is_valid():
+            messages.error(
+                request, 'Please complete the captcha')
+            return render(request, 'authentication/login.html', context)
 
         if username and password:
             user = auth.authenticate(username=username, password=password)
@@ -239,7 +237,7 @@ class RequestPasswordResetEmail(View):
 
             message = MIMEMultipart("alternative")
             message["Subject"] = email_subject
-            message["From"] = sender_email
+            message["From"] = SENDER_EMAIL
             message["To"] = user.email
 
             text = f"""\
@@ -252,11 +250,11 @@ class RequestPasswordResetEmail(View):
 
             message.attach(part1)
             try:
-                with smtplib.SMTP(smtp_server, smtp_port) as server:
+                with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
                     server.ehlo()
                     server.starttls()
-                    server.login(username, password)
-                    server.sendmail(from_addr=sender_email, to_addrs=user.email, msg=message.as_string())
+                    server.login(EMAIL_USERNAME, EMAIL_PASSWORD)
+                    server.sendmail(from_addr=SENDER_EMAIL, to_addrs=user.email, msg=message.as_string())
                     print("Email sent successfully!")
             except Exception as e:
                 print("Error sending email:", str(e))

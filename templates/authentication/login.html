@@ -20,15 +20,13 @@
             {% csrf_token %}
           {% include 'partials/_messages.html' %}
           <labe>Username</labe>
-          {{ form.name }}
+          {{ form.username }}
           <labe>Password</labe>
           {{ form.password }}
           {{ form.captcha }}<br>
           <input type="submit" value="Login" class="btn btn-block btn-primary submit-btn" />
         </form>
             </div>
-
-
         <div class="container">
 
           <span>Dont have an account? </span><a href="{% url 'register' %}">Register</a><br>

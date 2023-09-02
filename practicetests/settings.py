@@ -152,3 +152,11 @@ RECAPTCHA_PRIVATE_KEY = "6LcIX_EnAAAAAPAt1WRXgN8b9aWlClwgEhBadtJS"
 
 # OpenAI Keys
 OPENAI_API_KEY = "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"
+
+
+#  Email configuration
+SMTP_SERVER = 'smtp.gmail.com'
+SMTP_PORT = 587
+EMAIL_USERNAME = 'mpyanev@gmail.com'
+EMAIL_PASSWORD = 'zzntmppswidndcyv'
+SENDER_EMAIL = 'mpyanev@gmail.com'

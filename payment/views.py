@@ -117,7 +117,7 @@ def MembershipSelectView(request):
 
         context = {
             "current_membership": str(current_membership.membership.membership_type),
-            'user_membership': user_membership,
+            'user_membership': user_membership.membership,
             'customer_id': stripe.Customer.retrieve(user_membership.stripe_customer_id),
             'user': request.user,
             'object_list': Membership.objects.all()
