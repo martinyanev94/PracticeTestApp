@@ -85,7 +85,7 @@ def create_initial_membership():
             price=139.99,
             monthly_price=11.67,
             stripe_plan_id="price_1NiP5SEIvcSmcyn9mwEJYLTG",
-            allowed_question=60,
+            allowed_question=120,
             allowed_words=200000,
             allowed_tests=300
         )

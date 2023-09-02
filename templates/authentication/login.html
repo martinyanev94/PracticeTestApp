@@ -1,18 +1,32 @@
 {% extends 'base_auth.html' %}
 {% load static %}
 
-
 {% block content %}
+
+<style>
+    body {
+    background-image: url('{% static "img/back.png" %}');
+    background-size: cover; /* Adjust as needed */
+    background-repeat: no-repeat; /* Adjust as needed */
+    /* Additional background styling if necessary */
+  }
+    .card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Adjust the shadow values as needed */
+  }
+
+</style>
 
 <div class="row">
   <div class="col-md-4"></div>
   <div class="col-md-4">
+    <h3><b>TestBox</b></h3>
     <div class="card mt-5">
 
 
       <div class="card-body">
         <div class="card-title py-3 form-container ">
-          <h4>Login to your  account</h4>
+          <h4>Login to your account</h4>
         </div>
         <div>
           <div class="form-container">
