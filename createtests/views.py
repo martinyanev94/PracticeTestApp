@@ -133,6 +133,7 @@ def quick_test(request):
                                             add_header_info=add_header_info,
                                             grades=grades, question_types=question_types, questions=question_data,
                                             footer=footer, notes=tag)
+        print(user_test.id)
 
         return redirect(my_tests)
 

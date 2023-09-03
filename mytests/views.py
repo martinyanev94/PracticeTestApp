@@ -26,7 +26,7 @@ from payment.models import UserMembership
 
 @login_required(login_url='/authentication/login')
 def download_student_view_txt(request, id):
-    user_tests = UserTest.objects.get(pk=id)
+    user_tests = UserTest.objects.get(owner=request.user, pk=id)
 
     # Function to create the text file for teacher view
     def create_teacher_view_txt(user_tests):
@@ -61,7 +61,7 @@ def download_student_view_txt(request, id):
 
 @login_required(login_url='/authentication/login')
 def download_teacher_view_txt(request, id):
-    user_tests = UserTest.objects.get(pk=id)
+    user_tests =UserTest.objects.get(owner=request.user, pk=id)
 
     # Function to create the text file for teacher view
     def create_teacher_view_txt(user_tests):
@@ -103,7 +103,7 @@ def download_teacher_view_txt(request, id):
 
 @login_required(login_url='/authentication/login')
 def download_student_view_pdf(request, id):
-    user_tests = UserTest.objects.get(pk=id)
+    user_tests =UserTest.objects.get(owner=request.user, pk=id)
 
     # Function to create the PDF document for teacher view
     def create_teacher_view_pdf(user_tests):
@@ -173,7 +173,7 @@ def download_student_view_pdf(request, id):
 
 @login_required(login_url='/authentication/login')
 def download_teacher_view_pdf(request, id):
-    user_tests = UserTest.objects.get(pk=id)
+    user_tests =UserTest.objects.get(owner=request.user, pk=id)
 
     # Function to create the PDF document for teacher view
     def create_teacher_view_pdf(user_tests):
@@ -253,7 +253,7 @@ def download_teacher_view_pdf(request, id):
 # -----------download pdf views---
 @login_required(login_url='/authentication/login')
 def download_teacher_view(request, id):
-    user_tests = UserTest.objects.get(pk=id)
+    user_tests =UserTest.objects.get(owner=request.user, pk=id)
 
     # Function to create the Word document for teacher view
     def create_teacher_view_docx(user_tests):
@@ -326,7 +326,7 @@ def download_teacher_view(request, id):
 
 @login_required(login_url='/authentication/login')
 def download_student_view(request, id):
-    user_tests = UserTest.objects.get(pk=id)
+    user_tests =UserTest.objects.get(owner=request.user, pk=id)
     header = user_tests.header
 
     # Function to create the Word document
@@ -436,9 +436,13 @@ def my_tests(request):
 
 
 @login_required(login_url='/authentication/login')
-def home_view(request, id):
+def home_view(request, id=None):
     user_membership = UserMembership.objects.filter(user=request.user).first()
-    user_tests = UserTest.objects.get(pk=id)
+    try:
+        user_tests = UserTest.objects.get(owner=request.user, pk=id)
+    except:
+        user_tests = UserTest.objects.filter(owner=request.user).latest('pk')
+
     context = {
         'user_tests': user_tests,
         'values': user_tests,
@@ -452,7 +456,7 @@ def home_view(request, id):
 
 @login_required(login_url='/authentication/login')
 def edit_pt(request, id):
-    user_tests = UserTest.objects.get(pk=id)
+    user_tests = UserTest.objects.get(owner=request.user, pk=id)
     context = {
         'user_tests': user_tests,
         'values': user_tests,
@@ -521,7 +525,7 @@ def edit_pt(request, id):
 
 
 def delete_pt(request, id):
-    user_test = UserTest.objects.get(pk=id)
+    user_test = UserTest.objects.get(owner=request.user, pk=id)
     header = user_test.header
     user_test.delete()
     messages.success(request, f'Test {header} removed')

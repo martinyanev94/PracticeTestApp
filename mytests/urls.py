@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.my_tests, name="my-tests"),
     path('edit-test/<int:id>', views.edit_pt, name="edit-test"),
     path('home-view/<int:id>', views.home_view, name="home-view"),
+    path('home-view/', views.home_view, name="home-view-clean"),
     path('delete-test/<int:id>', views.delete_pt, name="delete-test"),
     path('search-test', csrf_exempt(views.search_tests), name="search-test"),
     path('download-student-view/<int:id>/', views.download_student_view, name='download-student-view'),

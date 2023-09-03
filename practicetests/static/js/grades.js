@@ -113,6 +113,15 @@ $(document).ready(function() {
         return;
       }
 
+      var WQratio = wordCount / totalQuestions;
+
+      if (WQratio < 100) {
+        var userConfirmation = confirm('Too many question for a short text. There are more than 1 questions per 100 words. This might introduce repeated questions. Do you want to continue?');
+        if (!userConfirmation) {
+            return;
+        }
+        }
+
       // Show the overlay and loading animation
       $('#overlay').show();
       $('#loading-animation').show();
@@ -128,7 +137,7 @@ $(document).ready(function() {
           $('#loading-animation').hide();
 
           // Redirect to '/my-tests' only upon success and if Teaching Material has a value and total questions > 0
-          window.location.href = '/my-tests/';
+          window.location.href = '/my-tests/home-view/';
         },
         error: function(error) {
           // Handle error if needed
@@ -372,7 +381,7 @@ $(document).ready(function() {
           $('#loading-animation').hide();
 
           // Redirect to '/my-tests' only upon success and if Teaching Material has a value and total questions > 0
-          window.location.href = '/my-tests/';
+          window.location.href = '/my-tests/home-view/';
         },
         error: function(error) {
           // Handle error if needed
