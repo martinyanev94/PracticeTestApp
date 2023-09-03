@@ -1,5 +1,9 @@
 {% extends 'base.html' %} {% load static %}
  {% block content %}
+
+  <a class="back-btn" href="{% url 'my-tests' %}" onclick="return confirmExit();"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAV0lEQVR4nO3VsRFAQBAF0FeALhQmOYEKKFcjnFwi4hj/zWz8/2ywS0TEhwzoW4VP2LGiezp8xIaKOeG/W3u9YS6V1gXOJRaNlJR40yamlqf4Fc8oIsJdDmEuSwKiW3qxAAAAAElFTkSuQmCC">Back</a>
+
+
 <div class="mr-5">
   <div class="mt-4 question-header">
     <div>
@@ -118,7 +122,7 @@
         <!-- Grade -->
         <div>
           <div class="accordion-header">
-            Grade
+            Footer
           </div>
           <div class="accordion-content">
             {% for grade_info in values.grades %}
@@ -141,27 +145,12 @@
               </div>
             </div>
             {% endfor %}
-          </div>
-        </div>
-  
-        <!-- Footer -->
-        <div>
-          <div class="accordion-header">
-            Footer
-          </div>
-          <div class="accordion-content">
-            <div class="form-group">
-              <label for="">Test Footer</label>
+                        <div class="row">
+                          <label for="">Test Footer</label>
               <input type="text" class="form-control form-control-sm" name="footer" value="{{ values.footer }}" />
-            </div>
-          </div>
-
+                </div>
+                        </div>
         </div>
-  
-  
-  
-        <a href="{% url 'my-tests' %}" class="btn btn-primary btn-primary-sm mt-4" onclick="return confirmExit();">Back to My Exams</a>
-
         <input type="submit" value="Save" class="btn btn-primary btn-primary-sm mt-4" />
       </form>
     </div>

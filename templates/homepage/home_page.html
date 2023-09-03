@@ -3,6 +3,7 @@
 
 {% block content %}
   <style>
+
     .centered-container {
       display: flex;
       flex-direction: column;
@@ -37,6 +38,8 @@
       list-style-type: disc;
       margin-left: 20px;
     }
+
+
   </style>
 
   <div class="centered-container">
@@ -45,21 +48,21 @@
     </div>
     <br>
     <h2 class="box-heading">Welcome to TestBox</h2>
-    <p>Create exams and quizzes with the power of AI</p>
+    <h5>Create exams and quizzes with the power of AI</h5>
 
     <div class="columns-container">
       <div class="column">
         <h3><b>Manage your account</b></h3>
         <ul>
-            <li > <a href="{%url 'edit-account' %}">Edit Your Profile</a></li>
-            <li > <a href="{%url 'payment-plans' %}">Upgrade to Pro Edition</a></li>
+            <td > <a href="{%url 'edit-account' %}"><h5>Edit Your Profile</h5></a></td>
+            <td > <a href="{%url 'payment-plans' %}"><h5>Upgrade to Pro Edition</h5></a></td>
         </ul>
       </div>
       <div class="column">
         <h3><b>Generate exams and quizzes</b></h3>
         <ul>
-            <li > <a href="{%url 'choose-create-speed' %}">Create a new exam</a></li>
-            <li > <a href="{%url 'my-tests' %}">Access your exams</a></li>
+            <td > <a href="{%url 'choose-create-speed' %}"><h5>Create a new exam</h5></a></td>
+            <td > <a href="{%url 'my-tests' %}"><h5>Access your exams</h5></a></td>
         </ul>
       </div>
     </div>
