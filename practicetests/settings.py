@@ -59,6 +59,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'practicetests.custom_middleware.CustomMiddleware',  # Replace 'yourapp' with your app's name
+
 ]
 
 ROOT_URLCONF = 'practicetests.urls'

@@ -1,7 +1,5 @@
-import pdb
 import random
-import time
-from copy import copy, deepcopy
+from copy import copy
 import roman
 import openai
 import time
@@ -11,8 +9,7 @@ from tenacity import (
     retry,
     stop_after_attempt,
     wait_random_exponential,
-)  # for exponential backoff
-
+)
 from practicetests.settings import OPENAI_API_KEY
 from .messages import preparation_prompt, multi_choice_prompt, multi_selection_prompt, open_answer_prompt
 

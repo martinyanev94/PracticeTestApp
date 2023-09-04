@@ -1,18 +1,15 @@
 import json
-import pdb
 from datetime import timedelta
 
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.utils import timezone
 
 from mytests.views import my_tests
-from payment.models import UserMembership, Subscription, Membership
-from payment.signals import create_initial_membership
-from payment.views import get_stripe_subscriptions, manage_membership
-from .chat_gpt import gpt_engine, generate_header, generate_subtitle, \
+from payment.models import UserMembership
+from payment.views import manage_membership
+from .chat_gpt import generate_header, generate_subtitle, \
     generate_footer_info, generate_questions
 from .models import UserTest
 
@@ -22,6 +19,7 @@ from .models import UserTest
 @login_required(login_url='/authentication/login')
 def choose_create_speed(request):
     # create_initial_membership()
+    # You can make this global form the middleware on practicetests/custom_middleware
     manage_membership(request)
 
     user_membership = UserMembership.objects.filter(user=request.user).first()

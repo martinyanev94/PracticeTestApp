@@ -1,16 +1,16 @@
 import json
+import string
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 
 from createtests.models import UserTest
 from django.contrib import messages
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
 from django.shortcuts import render
-from django.http import HttpResponse
 import docx
 from django.http import HttpResponse
 from reportlab.lib.pagesizes import letter
@@ -27,9 +27,10 @@ from payment.models import UserMembership
 @login_required(login_url='/authentication/login')
 def download_student_view_txt(request, id):
     user_tests = UserTest.objects.get(owner=request.user, pk=id)
+    alphabet = string.ascii_uppercase
 
     # Function to create the text file for teacher view
-    def create_teacher_view_txt(user_tests):
+    def create_student_view_txt(user_tests):
         content = f"{user_tests.header}\n\n{user_tests.subtitle}\n\n{user_tests.institution}\n\n{user_tests.add_header_info}\n\n"
 
         for question_id, question_data in user_tests.questions.items():
@@ -37,7 +38,7 @@ def download_student_view_txt(request, id):
 
             if 'answers' in question_data:
                 for index, answer in enumerate(question_data['answers'], start=1):
-                    content += f"{index}. {answer}\n"
+                    content += f"{alphabet[index-1]}. {answer}\n"
 
             content += "\n"  # Adding a blank line between questions
 
@@ -50,7 +51,7 @@ def download_student_view_txt(request, id):
         return content
 
     # Create the text file content
-    content = create_teacher_view_txt(user_tests)
+    content = create_student_view_txt(user_tests)
 
     # Create a response with the text content as a downloadable file
     response = HttpResponse(content, content_type='text/plain')
@@ -62,6 +63,7 @@ def download_student_view_txt(request, id):
 @login_required(login_url='/authentication/login')
 def download_teacher_view_txt(request, id):
     user_tests =UserTest.objects.get(owner=request.user, pk=id)
+    alphabet = string.ascii_uppercase
 
     # Function to create the text file for teacher view
     def create_teacher_view_txt(user_tests):
@@ -72,11 +74,11 @@ def download_teacher_view_txt(request, id):
 
             if 'answers' in question_data:
                 for index, answer in enumerate(question_data['answers'], start=1):
-                    content += f"{index}. {answer}\n"
+                    content += f"{alphabet[index-1]}. {answer}\n"
             content += "\n"  # Adding a blank line between questions
 
             if 'correct_answer' in question_data:
-                content += f"Correct Answer: {', '.join(str(answer) for answer in question_data['correct_answer'])}\n"
+                content += f"Correct Answer: {', '.join(str(alphabet[answer-1]) for answer in question_data['correct_answer'])}\n"
 
             if question_data['explanation']:
                 content += f"Explanation: {question_data['explanation']}\n"
@@ -104,9 +106,10 @@ def download_teacher_view_txt(request, id):
 @login_required(login_url='/authentication/login')
 def download_student_view_pdf(request, id):
     user_tests =UserTest.objects.get(owner=request.user, pk=id)
+    alphabet = string.ascii_uppercase
 
     # Function to create the PDF document for teacher view
-    def create_teacher_view_pdf(user_tests):
+    def create_student_view_pdf(user_tests):
         response = HttpResponse(content_type='application/pdf')
         filename = f'{user_tests.header}_student_view.pdf'
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
@@ -138,7 +141,7 @@ def download_student_view_pdf(request, id):
 
             if 'answers' in question_data:
                 for index, answer in enumerate(question_data['answers'], start=1):
-                    elements.append(Paragraph(f"{index}. {answer}", styles['Normal']))
+                    elements.append(Paragraph(f"{str(alphabet[index-1])}. {answer}", styles['Normal']))
 
         elements.append(Paragraph("Grades", styles['Heading2']))
         # Add table with grades
@@ -168,12 +171,13 @@ def download_student_view_pdf(request, id):
         return response
 
     # Create the PDF document for teacher view
-    return create_teacher_view_pdf(user_tests)
+    return create_student_view_pdf(user_tests)
 
 
 @login_required(login_url='/authentication/login')
 def download_teacher_view_pdf(request, id):
     user_tests =UserTest.objects.get(owner=request.user, pk=id)
+    alphabet = string.ascii_uppercase
 
     # Function to create the PDF document for teacher view
     def create_teacher_view_pdf(user_tests):
@@ -208,12 +212,12 @@ def download_teacher_view_pdf(request, id):
 
             if 'answers' in question_data:
                 for index, answer in enumerate(question_data['answers'], start=1):
-                    elements.append(Paragraph(f"{index}. {answer}", styles['Normal']))
+                    elements.append(Paragraph(f"{str(alphabet[index-1])}. {answer}", styles['Normal']))
 
             if 'correct_answer' in question_data:
                 elements.append(Paragraph("Correct Answer:", styles['Heading4']))
                 correct_answer_list = question_data['correct_answer']
-                elements.append(Paragraph(", ".join(str(answer) for answer in correct_answer_list), styles['Normal']))
+                elements.append(Paragraph(", ".join(str(alphabet[answer-1]) for answer in correct_answer_list), styles['Normal']))
 
             if question_data['explanation']:
                 elements.append(Paragraph("Explanation:", styles['Heading4']))
@@ -254,6 +258,7 @@ def download_teacher_view_pdf(request, id):
 @login_required(login_url='/authentication/login')
 def download_teacher_view(request, id):
     user_tests =UserTest.objects.get(owner=request.user, pk=id)
+    alphabet = string.ascii_uppercase
 
     # Function to create the Word document for teacher view
     def create_teacher_view_docx(user_tests):
@@ -276,12 +281,12 @@ def download_teacher_view(request, id):
 
             if 'answers' in question_data:
                 for index, answer in enumerate(question_data['answers'], start=1):
-                    doc.add_paragraph(f"{index}. {answer}")
+                    doc.add_paragraph(f"{alphabet[index-1]}. {answer}")
 
             if 'correct_answer' in question_data:
                 doc.add_heading("Correct Answer:", level=3)
                 correct_answer_list = question_data['correct_answer']  # Assuming correct_answer is a list
-                doc.add_paragraph(", ".join(str(answer) for answer in correct_answer_list))
+                doc.add_paragraph(", ".join(str(alphabet[answer-1]) for answer in correct_answer_list))
 
             if question_data['explanation']:
                 doc.add_heading("Explanation:", level=3)
@@ -327,7 +332,7 @@ def download_teacher_view(request, id):
 @login_required(login_url='/authentication/login')
 def download_student_view(request, id):
     user_tests =UserTest.objects.get(owner=request.user, pk=id)
-    header = user_tests.header
+    alphabet = string.ascii_uppercase
 
     # Function to create the Word document
     def create_student_view_docx(user_tests):
@@ -350,7 +355,7 @@ def download_student_view(request, id):
 
             if 'answers' in question_data:
                 for index, answer in enumerate(question_data['answers'], start=1):
-                    doc.add_paragraph(f"{index}. {answer}")
+                    doc.add_paragraph(f"{alphabet[index-1]}. {answer}")
 
             doc.add_paragraph("")  # Adding a blank line between questions
 
@@ -443,10 +448,21 @@ def home_view(request, id=None):
     except:
         user_tests = UserTest.objects.filter(owner=request.user).latest('pk')
 
+    alphabet = string.ascii_uppercase
+    for key, question in user_tests.questions.items():
+        if 'answers' in question:
+            updated_answers = [f"{alphabet[i]}. {answer}" for i, answer in enumerate(question['answers'])]
+            question['answers'] = updated_answers
+
+        if 'correct_answer' in question:
+            updated_correct_answer = [alphabet[i-1] for i in question['correct_answer']]
+            question['correct_answer'] = updated_correct_answer
+
     context = {
         'user_tests': user_tests,
         'values': user_tests,
         'user_membership': user_membership.membership,
+        'alphabet': alphabet
     }
     if request.method == 'GET':
         return render(request, 'mytests/home-view.html', context)
