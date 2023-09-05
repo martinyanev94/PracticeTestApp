@@ -125,7 +125,9 @@ class RegistrationView(View):
                     send_activation_email(user, request)
                     messages.success(request, f"Account successfully created. Now you need to verify your email. "
                                               f"We've send you a verification message on {user.email}.")
-                    return render(request, 'authentication/login.html')
+                    form = FormWithCaptcha()
+                    context = {"form": form}
+                    return render(request, 'authentication/login.html', context)
                 except:
                     messages.error(request, "Please provide a username")
 

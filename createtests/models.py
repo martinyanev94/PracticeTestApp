@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -8,6 +9,7 @@ class StrippedCharField(models.CharField):
     def get_prep_value(self, value):
         value = super().get_prep_value(value)
         return value.strip() if value else ' '
+
 
 class StrippedTextField(models.TextField):
     def get_prep_value(self, value):
@@ -28,7 +30,6 @@ class StrippedJSONField(models.JSONField):
         elif isinstance(data, str):
             return data.strip()
         return data
-
 
 
 class UserTest(models.Model):
@@ -52,4 +53,6 @@ class UserTest(models.Model):
         # If add_header_info is empty or contains only spaces, set it to an empty string
         self.add_header_info = self.add_header_info.strip() or ' '
         super(UserTest, self).save(*args, **kwargs)
+
+
 

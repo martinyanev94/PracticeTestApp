@@ -123,7 +123,14 @@ def quick_test(request):
 # ===================BACKEND CHECKS========================================
 
         # Will use the generate_questions function
-        question_data = generate_questions(teaching_material, question_types)
+        question_data, usage = generate_questions(teaching_material, question_types)
+
+        # Update tokens
+        user_membership.used_tokens = usage[0] + user_membership.used_tokens
+        user_membership.cost = usage[1] + user_membership.cost
+
+        user_membership.save()
+
         footer = generate_footer_info(header)
 
         user_test = UserTest.objects.create(owner=request.user, header=header, subtitle=subtitle,
@@ -131,7 +138,6 @@ def quick_test(request):
                                             add_header_info=add_header_info,
                                             grades=grades, question_types=question_types, questions=question_data,
                                             footer=footer, notes=tag)
-        print(user_test.id)
 
         return redirect(my_tests)
 

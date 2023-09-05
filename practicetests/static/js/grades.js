@@ -92,12 +92,12 @@ $(document).ready(function() {
         alert('Teaching Material field cannot be empty.');
         return;
       }
-      // Check if the "Teaching Material" field has a length between 100 and 54000 characters
+      // Check if the "Teaching Material" field has a length between 50 and 54000 characters
         var splits = teachingMaterialValue.split(/(\s+)/);
         var words = splits.filter((x) => x.trim().length>0);
         var wordCount = words.length;
-      if (wordCount < 100) {
-        alert('Teaching Material must be more than 100 words.');
+      if (wordCount < 50) {
+        alert('Teaching Material must be more than 50 words.');
         return;
       }
       if (wordCount > userMembershipWords) {
@@ -115,8 +115,8 @@ $(document).ready(function() {
 
       var WQratio = wordCount / totalQuestions;
 
-      if (WQratio < 100) {
-        var userConfirmation = confirm('Too many question for a short text. There are more than 1 questions per 100 words. This might introduce repeated questions. Do you want to continue?');
+      if (WQratio < 50) {
+        var userConfirmation = confirm('There are more than 1 questions per 50 words. Less questions might be created. Do you want to continue?');
         if (!userConfirmation) {
             return;
         }
@@ -331,12 +331,12 @@ $(document).ready(function() {
         return;
       }
 
-      // Check if the "Teaching Material" field has a length between 100 and 54000 characters
+      // Check if the "Teaching Material" field has a length between 50 and 54000 characters
         var splits = teachingMaterialValue.split(/(\s+)/);
         var words = splits.filter((x) => x.trim().length>0);
         var wordCount = words.length;
-      if (wordCount < 100) {
-        alert('Teaching Material must be more than 100 words.');
+      if (wordCount < 50) {
+        alert('Teaching Material must be more than 50 words.');
         return;
       }
       if (wordCount > userMembershipWords) {
@@ -356,8 +356,8 @@ $(document).ready(function() {
 
       var WQratio = wordCount / totalQuestions;
 
-      if (WQratio < 100) {
-  var userConfirmation = confirm('Too many question for a short text. There are more than 1 questions per 100 words. This might introduce repeated questions. Do you want to continue?');
+      if (WQratio < 50) {
+  var userConfirmation = confirm('Too many question for a short text. There are more than 1 questions per 50 words. Less questions might be generated. Do you want to continue?');
   if (!userConfirmation) {
     return;
   }

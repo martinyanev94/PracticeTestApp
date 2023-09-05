@@ -54,6 +54,9 @@ class UserMembership(models.Model):
     stripe_customer_id = models.CharField(max_length=40)
     membership = models.ForeignKey(
         Membership, on_delete=models.SET_NULL, null=True)
+    used_tokens = models.IntegerField(null=True, default=0)
+    cost = models.FloatField(null=True, default=0)
+
 
     def __str__(self):
         return self.user.username

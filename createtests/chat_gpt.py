@@ -20,15 +20,15 @@ openai.api_key = OPENAI_API_KEY
 
 @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
 def completion_with_backoff(**kwargs):
-    print("RATE LIMIT")
     return openai.ChatCompletion.create(**kwargs)
 
 
 total_tokens = 0
-
+response_cost = 0
 
 def gpt_engine(prompt, n=1, max_tokens=200):
     global total_tokens
+    global response_cost
     gpt_35_turbo = {"type": "gpt-3.5-turbo", "prompt_cost": 0.0015, "completion_cost": 0.002}
     gpt_35_turbo_16k = {"type": "gpt-3.5-turbo-16k", "prompt_cost": 0.003, "completion_cost": 0.004}
     model = gpt_35_turbo
@@ -60,6 +60,7 @@ def gpt_engine(prompt, n=1, max_tokens=200):
 
     response_cost = response['usage']['prompt_tokens'] / 1000 * model['prompt_cost'] + \
                     response['usage']['completion_tokens'] / 1000 * model['completion_cost']
+
     return response_text
 
 
@@ -106,7 +107,7 @@ def generate_footer_info(header):
 
 # In Teaching material -> Out questions
 def generate_questions(teaching_material, number_of_questions):
-    desired_words_per_question = 100
+    desired_words_per_question = 50
     max_words_per_question = 2000
     sub_cut_words = 100
     a = time.time()
@@ -122,7 +123,6 @@ def generate_questions(teaching_material, number_of_questions):
         max_words_per_cut = WQRatio
 
     text_cuts = split_into_parts(teaching_material, max_words=max_words_per_cut)
-
     # TODO maybe ask users if they want to shuffle
     random.shuffle(text_cuts)
 
@@ -134,21 +134,26 @@ def generate_questions(teaching_material, number_of_questions):
 
     final_questions_list = []
 
+    # Creating one question per text cut. If too many questions for text size, we will
+    # Create les questions
     def process_mcq(cut):
         if mcq_cut[cut] != 0:
-            final_questions_list.extend(gpt_engine(multi_choice_prompt(text_cuts[cut]), mcq_cut[cut]))
+            # print(mcq_cut[cut])
+            final_questions_list.extend(gpt_engine(multi_choice_prompt(text_cuts[cut])))
 
     def process_msq(cut):
         if msq_cut[cut] != 0:
-            final_questions_list.extend(gpt_engine(multi_selection_prompt(text_cuts[cut]), msq_cut[cut]))
+            # print(msq_cut[cut])
+            final_questions_list.extend(gpt_engine(multi_selection_prompt(text_cuts[cut])))
 
     def process_oaq(cut):
         if oaq_cut[cut] != 0:
-            final_questions_list.extend(gpt_engine(open_answer_prompt(text_cuts[cut]), oaq_cut[cut]))
+            # print(oaq_cut[cut])
+            final_questions_list.extend(gpt_engine(open_answer_prompt(text_cuts[cut])))
 
     # Inner thread loop for each question type
     def process_cut(cut):
-        with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
             futures = []
             futures.append(executor.submit(process_mcq, cut))
             futures.append(executor.submit(process_msq, cut))
@@ -158,7 +163,7 @@ def generate_questions(teaching_material, number_of_questions):
                 pass  # We don't need to do anything here, but this waits for all futures to complete
 
     # Outer main thread loop for each cut iteration
-    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as main_executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as main_executor:
         futures = []
         for cut in range(len(text_cuts)):
             if len(text_cuts[cut].split()) > sub_cut_words:
@@ -189,8 +194,7 @@ def generate_questions(teaching_material, number_of_questions):
 
     b = time.time()
     print(f"TIME: {b - a}")
-    print(total_tokens)
-    return json_questions_list
+    return json_questions_list, [total_tokens, response_cost]
 
 
 def distribute_text_cuts(questions, num_elements):
