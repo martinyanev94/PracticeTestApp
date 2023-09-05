@@ -48,7 +48,8 @@
       {% for user_tests in page_obj%}
       <tr>
           <td>
-                    <a style="color: black"
+                    <a style="color: black "
+                        onmouseover="this.style.color='#1791b3'" onmouseout="this.style.color='black'"
             href="{% url 'home-view' user_tests.id  %}"
             >{{user_tests.header}}</a
           >

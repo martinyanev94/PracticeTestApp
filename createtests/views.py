@@ -221,7 +221,15 @@ def advanced_test(request):
             return render(request, 'createtests/quick-test.html', context)
         # ===================BACKEND CHECKS========================================
 
-        question_data = generate_questions(teaching_material, question_types)
+        # Will use the generate_questions function
+        question_data, usage = generate_questions(teaching_material, question_types)
+
+        # Update tokens
+        user_membership.used_tokens = usage[0] + user_membership.used_tokens
+        user_membership.cost = usage[1] + user_membership.cost
+
+        user_membership.save()
+
         footer = request.POST['footer']
 
         user_test = UserTest.objects.create(owner=request.user, header=header, subtitle=subtitle,

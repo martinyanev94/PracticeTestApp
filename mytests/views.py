@@ -475,7 +475,7 @@ def home_view(request, id=None):
         user_tests = UserTest.objects.get(owner=request.user, pk=id)
     except:
         user_tests = UserTest.objects.filter(owner=request.user).latest('pk')
-
+    print(user_tests.questions)
     custom_sort(user_tests)
     alphabet = string.ascii_uppercase
     for key, question in user_tests.questions.items():
@@ -501,10 +501,12 @@ def home_view(request, id=None):
 
 @login_required(login_url='/authentication/login')
 def edit_pt(request, id):
+    user_membership = UserMembership.objects.filter(user=request.user).first()
     user_tests = UserTest.objects.get(owner=request.user, pk=id)
     context = {
         'user_tests': user_tests,
         'values': user_tests,
+        'user_membership': user_membership.membership,
     }
     if request.method == 'GET':
         return render(request, 'mytests/edit_pt.html', context)

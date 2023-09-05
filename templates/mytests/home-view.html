@@ -1,4 +1,7 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+ {% load static %}
+
+{% block content %}
 <style>
     .form-control-scroll {
         height: 70vh;
@@ -120,6 +123,8 @@
 
   </div>
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+              <script src="{% static 'js/myTests.js' %}"></script>
+
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 
 </div>

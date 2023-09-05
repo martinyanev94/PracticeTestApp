@@ -114,8 +114,8 @@
             </label></label>
             <div class="appending_div">
               <div>
-                <input type="text" name="grade" value="{{values.grade}}">
-                <input type="text" name="score" value="{{values.score}}">
+                <input class="custom-form form-control-sm"  type="text" name="grade" value="{{values.grade}}">
+                <input class="custom-form form-control-sm"  type="text" name="score" value="{{values.score}}">
               </div>
             </div>
             <span class="fa fa-plus add"></span>
@@ -137,17 +137,17 @@
         <!-- Page 3 -->
 <div class="page" data-page="3">
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-9">
       <div class="form-group">
         <label for="">Teaching Material*               <label class="info-tooltip" for="">
               <span class="info-icon"></span>
                     <span class="info-text">Add the material based on which the exam will be generated. You can drag/drop, copy/paste or upload your material.
                         You can add multiple text files to the same test, just keep uploading.</span>
             </label></label>
-        <textarea class="form-control form-control-sm" id="teaching-material" name="teaching_material" style="height: 400px;">{{values.teaching_material}}</textarea>
+        <textarea class="form-control form-control-sm" id="teaching-material" name="teaching_material" placeholder="Type Your Content Here" style="height: 500px;">{{values.teaching_material}}</textarea>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="form-group">
         <label for="">Upload Text File</label><br>
         <div class="file-drop-area">
@@ -155,16 +155,7 @@
           <span class="file-drop-text">Drag and drop files here or select a file</span>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-        <!-- Page 4 -->
-<div class="page" data-page="4">
-   <h3>4. Questions </h3>
-  <div class="row">
-    <div class="col-md-6 p-3">
-      <div class="form-group">
+              <div class="form-group">
         <label for="" class="font-weight-bold">Question Types               <label class="info-tooltip" for="">
               <span class="info-icon"></span>
                     <span class="info-text">You can add up to 120 questions in total for your exam. Just write the
@@ -172,26 +163,26 @@
             </label></label>
         <div class="question_types">
           <div>
-            <label for="">Multiple Choice Questions:</label>&nbsp
-            <input type="text" name="mcq" class="question-type" pattern="[0-9]*" value="{{values.mcq}}" > <br>
-            <label for="">Multiple Selection Questions:</label>&nbsp
-            <input type="text" name="msq" class="question-type" pattern="[0-9]*" value="{{values.msq}}" ><br>
-            <label for="">Open Answer Questions:</label>&nbsp
-            <input type="text" name="oaq" class="question-type" pattern="[0-9]*" value="{{values.oaq}}" >
+            <label for="">Multiple Choice:</label>&nbsp
+            <input type="text" name="mcq" class="question-type form-control form-control-sm" pattern="[0-9]*" value="{{values.mcq}}" ><br>
+            <label for="">Multiple Selection:</label>&nbsp
+            <input type="text" name="msq" class="question-type form-control form-control-sm" pattern="[0-9]*" value="{{values.msq}}" ><br>
+            <label for="">Open Answer:</label>&nbsp
+            <input type="text" name="oaq" class="question-type form-control form-control-sm" pattern="[0-9]*" value="{{values.oaq}}" >
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="form-group">
-        <label for="">Total Questions</label>
+        </div>&nbsp
+                  <div class="form-group">
+        <label class="font-weight-bold">Total Questions</label>
         <div class="number_of_questions">
           <span id="total-questions">0</span>
         </div>
       </div>
+      </div>
     </div>
   </div>
 </div>
+
+        <!-- Page 4 -->
 
 <input type="hidden" id="current-page" value="1">
 

@@ -9,7 +9,7 @@ $(document).ready(function() {
 
     $('.add').on('click', function() {
         if (i < maxGrades) {
-            var field = '<div><br><input type="text" name="grade">&nbsp<input type="text" name="score">&nbsp<span class="fa fa-minus remove"></span></div>';
+            var field = '<div><br><input class="custom-form form-control-sm" type="text" name="grade">&nbsp<input class="custom-form form-control-sm" type="text" name="score">&nbsp<span class="fa fa-minus remove"></span></div>';
             $('.appending_div').append(field);
             i = i + 1;
 
