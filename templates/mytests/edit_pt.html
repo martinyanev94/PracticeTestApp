@@ -11,13 +11,15 @@
     </div>
   
     <div>
+      <input type="button" value="Save" class="btn btn-primary btn-primary-sm " onclick="submitForm();" />
     <a href="{% url 'delete-test' user_tests.id %}" class="btn btn-danger btn-sm" onclick="return confirmDelete();">Delete</a>
     </div>
   </div>
   
   <div>
     <div>
-      <form action="{% url 'edit-test' user_tests.id %}" method="post" class="mt-4">
+      <form id="editForm" action="{% url 'edit-test' user_tests.id %}" method="post" class="mt-4">
+
         {% include 'partials/_messages.html'%}
         {% csrf_token %}
   
@@ -52,79 +54,6 @@
                 value="{{ values.add_header_info }}"
               />
             </div>
-          </div>
-        </div>
-  
-        <!-- Accordion -->
-        <div>
-          <div class="accordion-header">
-            Questions
-          </div>
-          <div class="accordion-content">
-            {% for question_id, question_data in values.questions.items %}
-            <!-- Remove the previous "Answers" input field -->
-
-                                          <input
-                  type="hidden"
-                  class="form-control form-control-sm"
-                  name="questions_{{ question_id }}_type"
-                  value="{{ question_data.type }}"
-                />
-              <div class="form-group question">
-                <label for="">Question {{ forloop.counter }}</label>
-                <input
-                  type="text"
-                  class="form-control form-control-sm"
-                  name="questions_{{ question_id }}_question"
-                  value="{{ question_data.question }}"
-                />
-              </div>
-
-  
-            <!-- Loop to generate separate input fields for each answer -->
-            {% for answer in question_data.answers %}
-              <div class="form-group">
-                <label for="">Option {{ forloop.counter }}</label>
-                <input
-                  type="text"
-                  class="form-control form-control-sm"
-                  name="questions_{{ question_id }}_answers_{{ forloop.counter }}"
-                  value="{{ answer }}"
-                />
-              </div>
-            {% endfor %}
-  
-            {% if question_data.correct_answer %}
-              <div class="form-group">
-                <label for="">Correct Answer</label>
-                <input
-                  type="text"
-                  class="form-control form-control-sm"
-                  name="questions_{{ question_id }}_correct_answer"
-                  value="{{ question_data.correct_answer|join:', ' }}"
-                />
-              </div>
-            {% endif %}
-  
-            <div class="form-group">
-              <label for="">Explanation</label>
-              <input
-                type="text"
-                class="form-control form-control-sm"
-                name="questions_{{ question_id }}_explanation"
-                value="{{ question_data.explanation }}"
-              />
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-  
-        <!-- Grade -->
-        <div>
-          <div class="accordion-header">
-            Footer
-          </div>
-          <div class="accordion-content">
             {% for grade_info in values.grades %}
             <div class="row">
               <div class="col-md-6">
@@ -149,13 +78,94 @@
                           <label for="">Test Footer</label>
               <input type="text" class="form-control form-control-sm" name="footer" value="{{ values.footer }}" />
                 </div>
-                        </div>
+
+          </div>
         </div>
-        <input type="submit" value="Save" class="btn btn-primary btn-primary-sm mt-4" />
+  
+        <!-- Accordion -->
+        <div>
+          <div class="accordion-header">
+            Questions
+          </div>
+          <div class="accordion-content">
+            {% for question_id, question_data in values.questions.items %}
+                <div class="card mt-5">
+                        <div class="card-body">
+            <!-- Remove the previous "Answers" input field -->
+                                          <input
+                  type="hidden"
+                  class="form-control form-control-sm"
+                  name="questions_{{ question_id }}_type"
+                  value="{{ question_data.type }}"
+                />
+              <div class="form-group question">
+                <label for="">Question {{ forloop.counter }}</label>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  name="questions_{{ question_id }}_question"
+                  value="{{ question_data.question }}"
+                />
+              </div>
+
+            <!-- Loop to generate separate input fields for each answer -->
+            {% for answer in question_data.answers %}
+              <div class="form-group">
+                <div class="form-check">
+                      <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+                      <p class="form-check-label" for="optionsRadios1">
+                        <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  name="questions_{{ question_id }}_answers_{{ forloop.counter }}"
+                  value="{{ answer }}"
+                        />
+                      </p>
+                </div>
+
+              </div>
+            {% endfor %}
+  
+            {% if question_data.correct_answer %}
+              <div class="form-group">
+                <label for="">Correct Answer</label>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  name="questions_{{ question_id }}_correct_answer"
+                  value="{{ question_data.correct_answer|join:', ' }}"
+                />
+              </div>
+            {% endif %}
+  
+            <div class="form-group">
+              <label for="">Explanation</label>
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                name="questions_{{ question_id }}_explanation"
+                value="{{ question_data.explanation }}"
+              />
+            </div>
+                  </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
       </form>
     </div>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
               <script src="{% static 'js/myTests.js' %}"></script>
+<script>
+function submitForm() {
+    // Get a reference to the form by its ID
+    var form = document.getElementById('editForm');
+
+    // Submit the form
+    form.submit();
+}
+</script>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
   

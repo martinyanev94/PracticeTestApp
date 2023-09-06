@@ -442,7 +442,7 @@ button:focus {
 /* Accordion Questions */
 .accordion-content {
   display: none;
-  max-height: 40vh;
+
   overflow: scroll !important;
 }
 .active .accordion-content {

@@ -186,6 +186,7 @@
 
 <input type="hidden" id="current-page" value="1">
 
+<button type="button" class="btn btn-primary btn-primary-sm" id="prev-page">Previous</button>
 <button type="button" class="btn btn-primary btn-primary-sm" id="next-page">Continue</button>
 <input type="submit" value="Submit" class="btn btn-primary btn-primary-sm" id="submit-btn" style="display: none;" />
 </form>
@@ -211,25 +212,39 @@
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
   <script src="{% static 'js/grades.js' %}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-  const prevButton = document.getElementById('prev-page');
-  const currentPageInput = document.getElementById('current-page');
+ <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const prevButton = document.getElementById('prev-page');
+    const nextButton = document.getElementById('next-page');
+    const currentPageInput = document.getElementById('current-page');
 
-  // Define the target page to go back to if on the first page
-  const targetPage = '/create-tests/'; // Replace with the actual URL
+    // Define the target page to go back to if on the first page
+    const targetPage = '{% url "choose-create-speed" %}'; // Replace with the actual URL
 
-  prevButton.addEventListener('click', function () {
-    const currentPage = parseInt(currentPageInput.value);
+    prevButton.addEventListener('click', function () {
+      const currentPage = parseInt(currentPageInput.value);
 
-    if (currentPage === 0) {
-      window.location.href = targetPage;
-    } else {
-      currentPageInput.value = currentPage - 1;
-    }
+      if (currentPage === 0) {
+        // If on the first page, go to the target page
+        window.location.href = targetPage;
+      } else {
+        // Go to the previous page
+        currentPageInput.value = currentPage - 1;
+      }
+    });
+
+    // Add functionality to the "Continue" button (Next)
+    nextButton.addEventListener('click', function () {
+      const currentPage = parseInt(currentPageInput.value);
+
+      // You can add logic here to validate the current page's fields
+      // and prevent moving to the next page if there are errors.
+
+      // Go to the next page
+      currentPageInput.value = currentPage + 1;
+    });
   });
-});
-    </script>
+</script>
 
 </div>
 
