@@ -5,3 +5,4 @@ function confirmDelete() {
 function confirmExit() {
     return confirm("Are you sure you want to go back? Have you saved your changes?");
 }
+
