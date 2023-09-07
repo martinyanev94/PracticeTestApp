@@ -33,7 +33,14 @@
 > create_initial_membership()
 
 
+##Text processing
 
+1. The text is divided to a list[str]. Each str has predefined number of words(50)
+["bla bla", "bla bla", "bla bla", "bla bla"]
+2. We create a list of number of questions per question type mcqList[num]. 
+The number specifies the number of questions and the index specifies the ext cut we will use. 
+[0, 1, 0, 2]
+3. 
 
 
 

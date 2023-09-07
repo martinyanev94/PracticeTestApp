@@ -122,7 +122,8 @@ def generate_questions(teaching_material, number_of_questions):
     else:
         max_words_per_cut = WQRatio
 
-    text_cuts = split_into_parts(teaching_material, max_words=max_words_per_cut)
+    text_cuts = split_into_parts(teaching_material, max_words=max_words_per_cut) # List[str]
+    print(f"Text cut list: {text_cuts}")
     # TODO maybe ask users if they want to shuffle
     random.shuffle(text_cuts)
 
@@ -130,7 +131,18 @@ def generate_questions(teaching_material, number_of_questions):
 
     msq_cut = distribute_text_cuts(number_of_questions["msq"], len(text_cuts))
 
+
     oaq_cut = distribute_text_cuts(number_of_questions["oaq"], len(text_cuts))
+
+    # Remove questions from duplicated cuts:
+    msq_cut, msq_cut, oaq_cut = remove_duplicates(mcq_cut, msq_cut, oaq_cut)
+    print(f"Questions per cut MCQ: {mcq_cut}")
+    print(f"Questions per cut MSQ: {msq_cut}")
+    print(f"Questions per cut OAQ: {oaq_cut}")
+
+
+
+
 
     final_questions_list = []
 
@@ -138,17 +150,17 @@ def generate_questions(teaching_material, number_of_questions):
     # Create les questions
     def process_mcq(cut):
         if mcq_cut[cut] != 0:
-            # print(mcq_cut[cut])
+            print(f"Text Portion sent for MCQ generations:{mcq_cut[cut]}")
             final_questions_list.extend(gpt_engine(multi_choice_prompt(text_cuts[cut])))
 
     def process_msq(cut):
         if msq_cut[cut] != 0:
-            # print(msq_cut[cut])
+            print(f"Text Portion sent for MSQ generations:{msq_cut[cut]}")
             final_questions_list.extend(gpt_engine(multi_selection_prompt(text_cuts[cut])))
 
     def process_oaq(cut):
         if oaq_cut[cut] != 0:
-            # print(oaq_cut[cut])
+            print(f"Text Portion sent for OAQ generations:{oaq_cut[cut]}")
             final_questions_list.extend(gpt_engine(open_answer_prompt(text_cuts[cut])))
 
     # Inner thread loop for each question type
@@ -213,7 +225,6 @@ def distribute_text_cuts(questions, num_elements):
     for i in range(remaining):
         result[i] += 1
     random.shuffle(result)
-
     return result
 
 
@@ -295,3 +306,26 @@ def random_portion_of_words(input_string, num_words):
     selected_words = words[start_index: start_index + num_words]
 
     return ' '.join(selected_words)
+
+def remove_duplicates(list1, list2, list3):
+    # Make sure all three lists are of the same length
+    new_list1 = list1
+    new_list2 = list2
+    new_list3 = list3
+
+    for index, (item1, item2, item3) in enumerate(zip(list1, list2, list3)):        # Create a list to store the numbers
+        numbers = [item1, item2, item3]
+        # Filter the numbers that are greater than zero
+        positive_numbers = [num for num in numbers if num > 0]
+        # Check if more than one number is greater than zero
+        if len(positive_numbers) > 1:
+            # Randomly choose one number to remain non-zero
+            non_zero_index = random.randint(0, len(positive_numbers) - 1)
+            # Set all numbers to zero except the randomly chosen one
+            for i in range(len(numbers)):
+                if i != non_zero_index:
+                    numbers[i] = 0
+            new_list1[index] = numbers[0]
+            new_list2[index] = numbers[1]
+            new_list3[index] = numbers[2]
+    return new_list1, new_list2, new_list3
