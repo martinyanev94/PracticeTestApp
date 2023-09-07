@@ -118,7 +118,6 @@
             {% for answer in question_data.answers %}
               <div class="form-group">
 
-
                         <input
                   type="text"
                   class="form-control form-control-sm"
@@ -152,6 +151,16 @@
 </div>
             {% endfor %}
                               </div>
+                            {% if question_data.correct_answer %}
+              <div class="form-group">
+                <input
+                  type="hidden"
+                  class="form-control form-control-sm"
+                  name="questions_{{ question_id }}_correct_answer"
+                  value="{{ question_data.correct_answer|join:', ' }}"
+                />
+              </div>
+            {% endif %}
 
             <div class="form-group">
               <label for="">Explanation</label>
