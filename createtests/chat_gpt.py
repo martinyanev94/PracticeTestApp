@@ -58,8 +58,8 @@ def gpt_engine(prompt, n=1, max_tokens=200):
         for choice in response["choices"]:
             response_text.append({"type": prompt[0], "question": choice["message"]["content"]})
 
-    response_cost = response['usage']['prompt_tokens'] / 1000 * model['prompt_cost'] + \
-                    response['usage']['completion_tokens'] / 1000 * model['completion_cost']
+    response_cost = (response['usage']['prompt_tokens'] / 1000) * model['prompt_cost'] + \
+                    (response['usage']['completion_tokens'] / 1000) * model['completion_cost']
 
     return response_text
 
