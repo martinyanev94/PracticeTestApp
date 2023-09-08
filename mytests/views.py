@@ -475,7 +475,6 @@ def home_view(request, id=None):
         user_tests = UserTest.objects.get(owner=request.user, pk=id)
     except:
         user_tests = UserTest.objects.filter(owner=request.user).latest('pk')
-    print(user_tests.questions)
     custom_sort(user_tests)
     alphabet = string.ascii_uppercase
     for key, question in user_tests.questions.items():

@@ -107,9 +107,9 @@ def generate_footer_info(header):
 
 # In Teaching material -> Out questions
 def generate_questions(teaching_material, number_of_questions):
-    desired_words_per_question = 50
+    desired_words_per_question = 100
     max_words_per_question = 2000
-    sub_cut_words = 100
+    sub_cut_words = 130
     a = time.time()
     total_questions_record = number_of_questions["mcq"] + number_of_questions["msq"] + number_of_questions["oaq"]
     number_of_words = len(teaching_material.split())
@@ -123,7 +123,6 @@ def generate_questions(teaching_material, number_of_questions):
         max_words_per_cut = WQRatio
 
     text_cuts = split_into_parts(teaching_material, max_words=max_words_per_cut) # List[str]
-    print(f"Text cut list: {text_cuts}")
     # TODO maybe ask users if they want to shuffle
     random.shuffle(text_cuts)
 
@@ -135,14 +134,7 @@ def generate_questions(teaching_material, number_of_questions):
     oaq_cut = distribute_text_cuts(number_of_questions["oaq"], len(text_cuts))
 
     # Remove questions from duplicated cuts:
-    msq_cut, msq_cut, oaq_cut = remove_duplicates(mcq_cut, msq_cut, oaq_cut)
-    print(f"Questions per cut MCQ: {mcq_cut}")
-    print(f"Questions per cut MSQ: {msq_cut}")
-    print(f"Questions per cut OAQ: {oaq_cut}")
-
-
-
-
+    # msq_cut, msq_cut, oaq_cut = remove_duplicates(mcq_cut, msq_cut, oaq_cut)
 
     final_questions_list = []
 
@@ -150,17 +142,14 @@ def generate_questions(teaching_material, number_of_questions):
     # Create les questions
     def process_mcq(cut):
         if mcq_cut[cut] != 0:
-            print(f"Text Portion sent for MCQ generations:{mcq_cut[cut]}")
             final_questions_list.extend(gpt_engine(multi_choice_prompt(text_cuts[cut])))
 
     def process_msq(cut):
         if msq_cut[cut] != 0:
-            print(f"Text Portion sent for MSQ generations:{msq_cut[cut]}")
             final_questions_list.extend(gpt_engine(multi_selection_prompt(text_cuts[cut])))
 
     def process_oaq(cut):
         if oaq_cut[cut] != 0:
-            print(f"Text Portion sent for OAQ generations:{oaq_cut[cut]}")
             final_questions_list.extend(gpt_engine(open_answer_prompt(text_cuts[cut])))
 
     # Inner thread loop for each question type

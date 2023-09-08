@@ -40,7 +40,7 @@
 2. We create a list of number of questions per question type mcqList[num]. 
 The number specifies the number of questions and the index specifies the ext cut we will use. 
 [0, 1, 0, 2]
-3. 
+3. A function will automatically choose only one question type per text cut, so they are no repetitions
 
 
 
