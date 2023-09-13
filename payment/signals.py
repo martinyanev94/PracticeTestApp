@@ -9,8 +9,8 @@ def create_initial_membership():
             membership_name='Free',
             price=0,
             stripe_plan_id='free-plan',
-            allowed_question=3,
-            allowed_words=5000,
+            allowed_question=15,
+            allowed_words=200000,
             allowed_tests=7
         )
 
@@ -62,7 +62,7 @@ def create_initial_membership():
             stripe_plan_id="price_1NiP5SEIvcSmcyn9xnavMCLF",
             allowed_question=120,
             allowed_words=200000,
-            allowed_tests=300
+            allowed_tests=600
         )
 
     if not Membership.objects.filter(slug='premium-monthly').exists():
@@ -74,7 +74,7 @@ def create_initial_membership():
             stripe_plan_id="price_1NiP5SEIvcSmcyn9hpHMOwnC",
             allowed_question=120,
             allowed_words=200000,
-            allowed_tests=300
+            allowed_tests=600
         )
 
     if not Membership.objects.filter(slug='premium-yearly').exists():
@@ -87,6 +87,6 @@ def create_initial_membership():
             stripe_plan_id="price_1NiP5SEIvcSmcyn9mwEJYLTG",
             allowed_question=120,
             allowed_words=200000,
-            allowed_tests=300
+            allowed_tests=600
         )
     return

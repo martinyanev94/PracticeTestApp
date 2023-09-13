@@ -8,6 +8,7 @@ from django.utils import timezone
 
 from mytests.views import my_tests
 from payment.models import UserMembership
+from payment.signals import create_initial_membership
 from payment.views import manage_membership
 from .chat_gpt import generate_header, generate_subtitle, \
     generate_footer_info, generate_questions
@@ -18,7 +19,7 @@ from .models import UserTest
 
 @login_required(login_url='/authentication/login')
 def choose_create_speed(request):
-    # create_initial_membership()
+    create_initial_membership()
     # You can make this global form the middleware on practicetests/custom_middleware
     manage_membership(request)
 
