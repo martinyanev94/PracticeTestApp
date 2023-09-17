@@ -1,7 +1,32 @@
+languages = {
+    'English': "English",
+    "Bulgarian": "Bulgarian",
+    "Spanish": "Spanish",
+    "French": "French",
+    "German": "German",
+    "Italian": "Italian",
+    "Portuguese": "Portuguese",
+    "Dutch": "Dutch",
+    "Russian": "Russian",
+    "Arabic": "Arabic",
+    "Chinese": "Chinese",
+    "Japanese": "Japanese",
+    "Korean": "Korean",
+    "Turkish": "Turkish",
+    "Hindi": "Hindi",
+    "Urdu": "Urdu",
+    "Swahili": "Swahili",
+    "Greek": "Greek",
+    "Hebrew": "Hebrew",
+    "Polish": "Polish",
+    "Swedish": "Swedish"
+}
+
+
 preparation_prompt = f"I want to create a question from a content. " \
                      f"Below I will ask you to create a question. I will specify the question type," \
                      f" question format, template and content. \n" \
-                     f"Make sure the question is well explained and structured."
+                     f"Make sure the question is well explained and structured. "
 
 
 def multi_choice_prompt(teaching_material):

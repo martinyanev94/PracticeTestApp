@@ -26,7 +26,8 @@ def completion_with_backoff(**kwargs):
 total_tokens = 0
 response_cost = 0
 
-def gpt_engine(prompt, n=1, max_tokens=200):
+
+def gpt_engine(prompt, n=1, max_tokens=200, language="English"):
     global total_tokens
     global response_cost
     gpt_35_turbo = {"type": "gpt-3.5-turbo", "prompt_cost": 0.0015, "completion_cost": 0.002}
@@ -38,7 +39,7 @@ def gpt_engine(prompt, n=1, max_tokens=200):
         max_tokens=max_tokens,
         temperature=0.7,
         messages=[
-            {"role": "user", "content": f"{preparation_prompt}"},
+            {"role": "user", "content": f"{preparation_prompt}. Write it in {language}."},
             {"role": "assistant", "content": "Ok"},
             {"role": "user", "content": f" {prompt[1]}"}
         ]
@@ -87,13 +88,15 @@ def gpt_headers(prompt, n=1, max_tokens=200):
     return response_text
 
 
-def generate_header(teaching_material):
-    return gpt_headers(f"Generate a short title on the following text. Give me only the title without any quotes or "
-                       f"additional explanation: \n {teaching_material[:500]}")[0]
+def generate_header(teaching_material, language):
+    return gpt_headers(
+        f"Generate a short title on the following text. Generate it in {language}. Give me only the title without any quotes or "
+        f"additional explanation: \n {teaching_material[:500]}")[0]
 
 
-def generate_subtitle(header):
-    return gpt_headers(f"Generate a subtitle on the following text.  Give me only the subtitle without any quotes or "
+def generate_subtitle(header, language):
+    return gpt_headers(f"Generate a subtitle on the following text. Generate it in {language} Give me only the "
+                       f"subtitle without any quotes or"
                        f"additional explanation:: \n {header}")[0]
 
 
@@ -106,7 +109,7 @@ def generate_footer_info(header):
 
 
 # In Teaching material -> Out questions
-def generate_questions(teaching_material, number_of_questions):
+def generate_questions(teaching_material, number_of_questions, language):
     desired_words_per_question = 100
     max_words_per_question = 2000
     sub_cut_words = 130
@@ -122,7 +125,7 @@ def generate_questions(teaching_material, number_of_questions):
     else:
         max_words_per_cut = WQRatio
 
-    text_cuts = split_into_parts(teaching_material, max_words=max_words_per_cut) # List[str]
+    text_cuts = split_into_parts(teaching_material, max_words=max_words_per_cut)  # List[str]
     # TODO maybe ask users if they want to shuffle
     random.shuffle(text_cuts)
 
@@ -130,27 +133,25 @@ def generate_questions(teaching_material, number_of_questions):
 
     msq_cut = distribute_text_cuts(number_of_questions["msq"], len(text_cuts))
 
-
     oaq_cut = distribute_text_cuts(number_of_questions["oaq"], len(text_cuts))
 
     # Remove questions from duplicated cuts:
     # msq_cut, msq_cut, oaq_cut = remove_duplicates(mcq_cut, msq_cut, oaq_cut)
 
     final_questions_list = []
-
     # Creating one question per text cut. If too many questions for text size, we will
     # Create les questions
     def process_mcq(cut):
         if mcq_cut[cut] != 0:
-            final_questions_list.extend(gpt_engine(multi_choice_prompt(text_cuts[cut])))
+            final_questions_list.extend(gpt_engine(multi_choice_prompt(text_cuts[cut]), language=language))
 
     def process_msq(cut):
         if msq_cut[cut] != 0:
-            final_questions_list.extend(gpt_engine(multi_selection_prompt(text_cuts[cut])))
+            final_questions_list.extend(gpt_engine(multi_selection_prompt(text_cuts[cut]), language=language))
 
     def process_oaq(cut):
         if oaq_cut[cut] != 0:
-            final_questions_list.extend(gpt_engine(open_answer_prompt(text_cuts[cut])))
+            final_questions_list.extend(gpt_engine(open_answer_prompt(text_cuts[cut]), language=language))
 
     # Inner thread loop for each question type
     def process_cut(cut):
@@ -169,10 +170,11 @@ def generate_questions(teaching_material, number_of_questions):
         for cut in range(len(text_cuts)):
             if len(text_cuts[cut].split()) > sub_cut_words:
                 text_cuts[cut] = random_portion_of_words(text_cuts[cut], sub_cut_words)
-                text_cuts[cut] = text_cuts[cut][:sub_cut_words*10]   # Make sure too long words does not increase tokens size
+                text_cuts[cut] = text_cuts[cut][
+                                 :sub_cut_words * 10]  # Make sure too long words does not increase tokens size
             else:
 
-                text_cuts[cut] = text_cuts[cut][:max_words_per_cut*10]
+                text_cuts[cut] = text_cuts[cut][:max_words_per_cut * 10]
             futures.append(main_executor.submit(process_cut, cut))
 
         for future in concurrent.futures.as_completed(futures):
@@ -199,7 +201,6 @@ def generate_questions(teaching_material, number_of_questions):
 
 
 def distribute_text_cuts(questions, num_elements):
-
     if num_elements == 0:
         return []
 
@@ -296,13 +297,14 @@ def random_portion_of_words(input_string, num_words):
 
     return ' '.join(selected_words)
 
+
 def remove_duplicates(list1, list2, list3):
     # Make sure all three lists are of the same length
     new_list1 = list1
     new_list2 = list2
     new_list3 = list3
 
-    for index, (item1, item2, item3) in enumerate(zip(list1, list2, list3)):        # Create a list to store the numbers
+    for index, (item1, item2, item3) in enumerate(zip(list1, list2, list3)):  # Create a list to store the numbers
         numbers = [item1, item2, item3]
         # Filter the numbers that are greater than zero
         positive_numbers = [num for num in numbers if num > 0]

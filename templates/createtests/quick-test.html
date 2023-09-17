@@ -28,7 +28,14 @@
       <form action="{% url 'quick-test' %}" method="post" id="quick-test-form">
         {% include 'partials/_messages.html'%} {% csrf_token %}
         <!-- Add a loading animation to be displayed during the form submission -->
-
+<div class="form-group">
+    <label for="language">Exam Language:</label>
+    <select name="language" id="language" class="form-control form-control-sm">
+        {% for key, value in languages.items %}
+            <option value="{{ value }}">{{ value }}</option>
+        {% endfor %}
+    </select>
+</div>
 
 <div>
   <div class="row">

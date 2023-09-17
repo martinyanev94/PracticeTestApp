@@ -12,8 +12,8 @@ from payment.signals import create_initial_membership
 from payment.views import manage_membership
 from .chat_gpt import generate_header, generate_subtitle, \
     generate_footer_info, generate_questions
+from .messages import languages
 from .models import UserTest
-
 
 # Create your views here.
 
@@ -42,6 +42,7 @@ def quick_test(request):
         'values': request.POST,
         'user_membership': user_membership.membership,
         'user_test_count_last_month': user_test_count_last_month,
+        'languages': languages,
     }
 
     if request.method == 'GET':
@@ -49,8 +50,9 @@ def quick_test(request):
 
     if request.method == 'POST':
         teaching_material = request.POST['teaching_material']
+        language = request.POST['language']
 
-        header = generate_header(teaching_material)
+        header = generate_header(teaching_material, language)
 
 #===================BACKEND CHECKS========================================
         if not header or header.isspace():
@@ -62,7 +64,7 @@ def quick_test(request):
             return render(request, 'createtests/quick-test.html', context)
 # ===================BACKEND CHECKS========================================
 
-        subtitle = generate_subtitle(header)
+        subtitle = generate_subtitle(header, language)
         institution = " "
         tag = request.POST['tag']
 
@@ -124,7 +126,7 @@ def quick_test(request):
 # ===================BACKEND CHECKS========================================
 
         # Will use the generate_questions function
-        question_data, usage = generate_questions(teaching_material, question_types)
+        question_data, usage = generate_questions(teaching_material, question_types, language)
 
         # Update tokens
         user_membership.used_tokens = usage[0] + user_membership.used_tokens
@@ -153,6 +155,7 @@ def advanced_test(request):
         'values': request.POST,
         'user_membership': user_membership.membership,
         'user_test_count_last_month': user_test_count_last_month,
+        'languages': languages,
     }
 
     if request.method == 'GET':
@@ -161,6 +164,8 @@ def advanced_test(request):
     if request.method == 'POST':
         teaching_material = request.POST['teaching_material']
         header = request.POST['header']
+        language = request.POST['language']
+
 
 # ===================BACKEND CHECKS========================================
         if not header or header.isspace():
@@ -223,7 +228,7 @@ def advanced_test(request):
         # ===================BACKEND CHECKS========================================
 
         # Will use the generate_questions function
-        question_data, usage = generate_questions(teaching_material, question_types)
+        question_data, usage = generate_questions(teaching_material, question_types, language)
 
         # Update tokens
         user_membership.used_tokens = usage[0] + user_membership.used_tokens
