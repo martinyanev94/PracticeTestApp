@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-k+)h#sjch5*75o4n4!hhh482t%$)%m3mx$62c!e=545x30@-3d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']] if 'WEBSITE_HOSTNAME' in os.environ else []
 
 
 # Application definition
@@ -64,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'practicetests.custom_middleware.CustomMiddleware',  # Replace 'yourapp' with your app's name
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
 ]
 
