@@ -11,11 +11,13 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
+import socket
 from pathlib import Path
 
 from django.contrib import messages
 from dotenv import load_dotenv
-
+HOSTNAME = socket.gethostname()
+print(HOSTNAME)
 
 load_dotenv()
 
