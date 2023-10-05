@@ -47,9 +47,6 @@ class UsernameValidationView(View):
         return JsonResponse({'username_valid': True})
 
 
-
-
-
 def send_activation_email(user, request):
     current_site = get_current_site(request)
     email_body = {
@@ -96,7 +93,8 @@ def send_activation_email(user, request):
 
 class RegistrationView(View):
     def get(self, request):
-        create_initial_membership()
+        #TODO Enable when deploying the app
+        # create_initial_membership()
         return render(request, 'authentication/register.html')
 
     def post(self, request):
@@ -122,7 +120,7 @@ class RegistrationView(View):
                 try:
                     user = User.objects.create_user(username=username, email=email)
                     user.set_password(password)
-                    user.is_active = True  # TODO Make this false in production
+                    user.is_active = False
                     user.save()
                     send_activation_email(user, request)
                     messages.success(request, f"Account successfully created. Now you need to verify your email. "
@@ -162,7 +160,7 @@ class VerificationView(View):
 class LoginView(View):
     def get(self, request):
         form = FormWithCaptcha()
-        context = {"form": form}
+        context = {"form": form, "log": }
 
         return render(request, 'authentication/login.html', context)
 
