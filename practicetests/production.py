@@ -38,3 +38,26 @@ DATABASES = {
         'PASSWORD': conn_str_params['password'],
     }
 }
+
+# Stripe keys
+if DEBUG:
+    STRIPE_PUBLISHABLE_KEY = os.environ.get('TEST_STRIPE_PUBLISHABLE_KEY')
+    STRIPE_SECRET_KEY = os.environ.get('TEST_STRIPE_SECRET_KEY')
+else:
+    STRIPE_PUBLISHABLE_KEY = os.environ.get('DEBUG_STRIPE_PUBLISHABLE_KEY')
+    STRIPE_SECRET_KEY = os.environ.get('DEBUG_STRIPE_SECRET_KEY')
+
+# Captcha keys
+RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY')
+
+# OpenAI Keys
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+
+
+#  Email configuration
+SMTP_SERVER = os.environ.get('SMTP_SERVER')
+SMTP_PORT = os.environ.get('SMTP_PORT')
+EMAIL_USERNAME = os.environ.get('EMAIL_USERNAME')
+EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+SENDER_EMAIL = os.environ.get('SENDER_EMAIL')
