@@ -160,7 +160,7 @@ class VerificationView(View):
 class LoginView(View):
     def get(self, request):
         form = FormWithCaptcha()
-        context = {"form": form, "log": }
+        context = {"form": form}
 
         return render(request, 'authentication/login.html', context)
 
