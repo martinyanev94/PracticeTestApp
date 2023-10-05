@@ -128,8 +128,8 @@ class RegistrationView(View):
                     form = FormWithCaptcha()
                     context = {"form": form}
                     return render(request, 'authentication/login.html', context)
-                except:
-                    messages.error(request, "Please provide a username")
+                except Exception as e:
+                    messages.error(request, f"Please provide a username: {e} ")
 
         return render(request, 'authentication/register.html', context)
 
