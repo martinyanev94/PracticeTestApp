@@ -1,3 +1,5 @@
+
+
 """
 Django settings for practicetests project.
 
@@ -27,12 +29,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-k+)h#sjch5*75o4n4!hhh482t%$)%m3mx$62c!e=545x30@-3d'
+# SECRET_KEY = 'django-insecure-k+)h#sjch5*75o4n4!hhh482t%$)%m3mx$62c!e=545x30@-3d'
+SECRET_KEY = os.getenv('SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Configure the domain name using the environment variable
+# that Azure automatically creates for us.
 ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']] if 'WEBSITE_HOSTNAME' in os.environ else []
+CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']] if 'WEBSITE_HOSTNAME' in os.environ else []
 
 
 # Application definition
@@ -91,14 +98,15 @@ WSGI_APPLICATION = 'practicetests.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
+conn_str = os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
+conn_str_params = {pair.split('=')[0]: pair.split('=')[1] for pair in conn_str.split(' ')}
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DBNAME'),
-        'USER': os.environ.get('DBUSER'),
-        'PASSWORD': os.environ.get('DBPASS'),
-        'HOST': os.environ.get('DBHOST'),
+        'NAME': conn_str_params['dbname'],
+        'HOST': conn_str_params['host'],
+        'USER': conn_str_params['user'],
+        'PASSWORD': conn_str_params['password'],
     }
 }
 
@@ -154,8 +162,8 @@ else:
     STRIPE_SECRET_KEY = os.environ.get('DEBUG_STRIPE_SECRET_KEY')
 
 # Captcha keys
-RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY')
-RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY')
+RECAPTCHA_PUBLIC_KEY = os.environ['RECAPTCHA_PUBLIC_KEY']
+RECAPTCHA_PRIVATE_KEY = os.environ['RECAPTCHA_PRIVATE_KEY']
 
 # OpenAI Keys
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
