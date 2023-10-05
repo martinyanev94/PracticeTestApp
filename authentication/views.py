@@ -14,6 +14,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from payment.models import UserMembership
+from payment.signals import create_initial_membership
 from practicetests.settings import SENDER_EMAIL, EMAIL_PASSWORD, EMAIL_USERNAME, SMTP_SERVER, SMTP_PORT
 from .models import FormWithCaptcha
 from .utils import account_activation_token
@@ -95,6 +96,7 @@ def send_activation_email(user, request):
 
 class RegistrationView(View):
     def get(self, request):
+        create_initial_membership()
         return render(request, 'authentication/register.html')
 
     def post(self, request):

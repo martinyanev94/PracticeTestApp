@@ -19,7 +19,6 @@ from .models import UserTest
 
 @login_required(login_url='/authentication/login')
 def choose_create_speed(request):
-    create_initial_membership()
     # You can make this global form the middleware on practicetests/custom_middleware
     manage_membership(request)
 
