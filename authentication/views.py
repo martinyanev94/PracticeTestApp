@@ -106,9 +106,10 @@ class RegistrationView(View):
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
-
+        form = FormWithCaptcha()
         context = {
-            'fieldValues': request.POST
+            'fieldValues': request.POST,
+            "form": form
         }
 
         if not User.objects.filter(username=username).exists():
@@ -125,8 +126,6 @@ class RegistrationView(View):
                     send_activation_email(user, request)
                     messages.success(request, f"Account successfully created. Now you need to verify your email. "
                                               f"We've send you a verification message on {user.email}.")
-                    form = FormWithCaptcha()
-                    context = {"form": form}
                     return render(request, 'authentication/login.html', context)
                 except Exception as e:
                     messages.error(request, f"Please provide a username: {e} ")
@@ -144,6 +143,7 @@ class VerificationView(View):
                 return redirect('login' + '?message=' + 'User already activated')
 
             if user.is_active:
+                messages.success(request, 'Account activated successfully')
                 return redirect('login')
             user.is_active = True
             user.save()
