@@ -1,24 +1,20 @@
 {% extends 'base_auth.html' %}
 {% load static %}
 
-
 {% block content %}
 
 <style>
     body {
-    background-image: url('{% static "img/back.png" %}');
-    background-size: cover; /* Adjust as needed */
-    background-repeat: no-repeat; /* Adjust as needed */
-    /* Additional background styling if necessary */
-  }
-
+        background-image: url('{% static "img/back.png" %}');
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
 </style>
-
 
 <div class="row">
   <div class="col-md-4"></div>
   <div class="col-md-4">
-      <img  src="{% static '/img/7.png' %}" class="" width="100" >
+      <img src="{% static '/img/7.png' %}" class="" width="100">
     <div class="card mt-5">
 
       <div class="card-body">
@@ -33,14 +29,13 @@
             <input
               type="text"
               name="username"
-              placeholder="username"
+              placeholder="Username"
               id="usernameField"
-              value="{{fieldValues.username}}"
+              value="{{ fieldValues.username }}"
               class="form-control form-control-sm"
             />
           </div>
-          <div class="invalid_feedback invalid-feedback" style="display:none">
-          </div>
+          <div class="invalid_feedback invalid-feedback" style="display:none"></div>
           <p class="text-sm text-success usernameSuccessOutput"></p>
           <div class="form-group">
             <input
@@ -49,13 +44,10 @@
               placeholder="Email"
               class="form-control form-control-sm"
               id="emailField"
-
-              value="{{fieldValues.email}}"
+              value="{{ fieldValues.email }}"
             />
           </div>
-
-          <div class="emailFeedBackArea invalid-feedback" style="display:none">
-          </div>
+          <div class="emailFeedBackArea invalid-feedback" style="display:none"></div>
           <div class="form-group">
             <input
               type="password"
@@ -66,6 +58,12 @@
             />
             <small class="float-right py-3 showPasswordToggle">SHOW</small>
           </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" name="agree_to_terms" required>
+              I agree to the <a href="https://testboxai.com/privacy-policy/">Privacy Policy</a> and <a href="https://testboxai.com/terms-of-use/">Terms of Service</a>
+            </label>
+          </div>
           <input type="submit" value="Register" class="btn btn-block btn-primary submit-btn" />
         </form>
 
@@ -73,9 +71,6 @@
           <span>Have an account? </span><a href="{% url 'login' %}">Log In</a><br>
           <span>Forgot password? </span><a href="{% url 'request-password' %}">Reset it</a><br>
         </div>
-
-      </div>
-
       </div>
     </div>
   </div>
