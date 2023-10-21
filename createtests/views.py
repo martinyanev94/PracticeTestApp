@@ -275,6 +275,16 @@ def demo_test(request):
         if not teaching_material or teaching_material.isspace():
             messages.error(request, 'Please provide teaching material')
             return render(request, 'createtests/demo.html', context)
+
+        if len(teaching_material.split()) > 3000:
+            messages.error(request, 'Text is longer than 3000 words. Please reduce the words or login for unlimited words for FREE')
+            return render(request, 'createtests/demo.html', context)
+
+        if len(teaching_material.split()) < 50:
+            messages.error(request, 'Text is shorter than 50 words. Please more context')
+            return render(request, 'createtests/demo.html', context)
+
+
 # ===================BACKEND CHECKS========================================
 
         subtitle = generate_subtitle(header, language)

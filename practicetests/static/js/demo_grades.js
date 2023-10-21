@@ -339,6 +339,10 @@ $(document).ready(function() {
         alert('Teaching Material must be more than 50 words.');
         return;
       }
+            if (wordCount > 3000) {
+        alert('Teaching Material must be more than 50 words.');
+        return;
+      }
       if (wordCount > userMembershipWords) {
         alert('Teaching Material must be less than 200,000 words.');
         return;
