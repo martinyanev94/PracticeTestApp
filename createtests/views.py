@@ -250,18 +250,28 @@ def advanced_test(request):
 
 
 def demo_test(request):
+    submission_count = request.session.get('submission_count', 0)
+
+    if submission_count >= 3:
+        # User has reached the submission limit, show an error message or redirect
+        messages.success(request, 'Sign Up to TestBox AI to continue building FREE exams. Advanced features such as Exam Downloads and Management included')
+        return redirect('register')  # Redirect to another view or page
+
     mcq = 3
     context = {
         'values': request.POST,
         'languages': languages,
         'mcq': mcq
-
     }
 
     if request.method == 'GET':
         return render(request, 'createtests/demo.html', context)
 
     if request.method == 'POST':
+        # Increment the submission count and store it in the session
+        submission_count += 1
+        request.session['submission_count'] = submission_count
+
         teaching_material = request.POST['teaching_material']
         language = request.POST['language']
 
