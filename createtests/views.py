@@ -1,4 +1,5 @@
 import json
+import string
 from datetime import timedelta
 
 from django.contrib.auth.decorators import login_required
@@ -249,9 +250,12 @@ def advanced_test(request):
 
 
 def demo_test(request):
+    mcq = 3
     context = {
         'values': request.POST,
         'languages': languages,
+        'mcq': mcq
+
     }
 
     if request.method == 'GET':
@@ -266,73 +270,50 @@ def demo_test(request):
 #===================BACKEND CHECKS========================================
         if not header or header.isspace():
             messages.error(request, 'Header is required')
-            return render(request, 'createtests/quick-test.html', context)
+            return render(request, 'createtests/demo.html', context)
 
         if not teaching_material or teaching_material.isspace():
             messages.error(request, 'Please provide teaching material')
-            return render(request, 'createtests/quick-test.html', context)
+            return render(request, 'createtests/demo.html', context)
 # ===================BACKEND CHECKS========================================
 
         subtitle = generate_subtitle(header, language)
-        institution = " "
-        tag = request.POST['tag']
-
-        add_header_info = " "
-
-        grades = [
-            {
-                "percentage": 49,
-                "grade": "F"
-            },
-            {
-                "percentage": 65,
-                "grade": "C"
-            },
-            {
-                "percentage": 75,
-                "grade": "B"
-            },
-            {
-                "percentage": 100,
-                "grade": "A"
-            }
-        ]
 
         # Questions Data
-        mcq = request.POST['mcq']
         if mcq != "":
             mcq = int(mcq)
         else:
             mcq = 0
-
-        msq = request.POST['msq']
-        if msq != "":
-            msq = int(msq)
-        else:
-            msq = 0
-
-        oaq = request.POST['oaq']
-        if oaq != "":
-            oaq = int(oaq)
-        else:
-            oaq = 0
-        question_types = {"mcq": mcq, "msq": msq, "oaq": oaq}
-
-        total_questions = mcq + msq + oaq
-
-        if total_questions < 1:
+        if mcq < 1:
             messages.error(request, 'Total questions are 0. Please add more questions')
-            return render(request, 'createtests/quick-test.html', context)
+            return render(request, 'createtests/demo-test.html', context)
 
-        # Will use the generate_questions function
+        question_types = {"mcq": mcq, "msq": 0, "oaq": 0}
+
         question_data, usage = generate_questions(teaching_material, question_types, language)
 
-        footer = generate_footer_info(header)
+        alphabet = string.ascii_uppercase
+        for key, question in question_data.items():
+            if 'answers' in question:
+                updated_answers = [f"{alphabet[i]}. {answer}" for i, answer in enumerate(question['answers'])]
+                question['answers'] = updated_answers
 
-        # user_test = UserTest.objects.create(owner=request.user, header=header, subtitle=subtitle,
-        #                                     institution=institution,
-        #                                     add_header_info=add_header_info,
-        #                                     grades=grades, question_types=question_types, questions=question_data,
-        #                                     footer=footer, notes=tag)
+            if 'correct_answer' in question:
+                updated_correct_answer = [alphabet[i - 1] for i in question['correct_answer']]
+                question['correct_answer'] = updated_correct_answer
 
-        return redirect(my_tests)
+
+        context = {
+            'header': header,
+            'subtitle': subtitle,
+            'questions': question_data,
+            'alphabet': alphabet,
+            'values': request.POST,
+            'languages': languages,
+            'mcq':mcq,
+
+        }
+        return render(request, 'createtests/demo-home.html', context)
+
+
+
