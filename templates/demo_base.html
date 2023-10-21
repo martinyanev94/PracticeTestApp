@@ -1,0 +1,123 @@
+{% load static %}
+<style>
+  .header-with-background {
+  background-image: url({% static '/img/purple_background.jpg' %});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.signup-button {
+  background-color: white;
+  border: none;
+  border-radius: 5px;
+  color: black;
+  padding: 10px 20px; /* Adjust padding as needed */
+  cursor: pointer;
+}
+
+.logo-container {
+    text-align: center;
+}
+
+.logo-container a {
+    display: block;
+}
+.logo-container img {
+    max-width: 30%;
+    height: auto;
+}
+    </style>
+
+</style>
+
+<head>
+      <link rel="icon" type="image/x-icon" href="{% static '/img/logo.png' %}">
+
+</head>
+<html lang="en" data-bs-theme="auto">
+  <head><script src="/docs/5.3/assets/js/color-modes.js"></script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TestBox {% block title %}
+    {% endblock %}  </title>
+
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet" />
+    <link href="{% static 'css/main.css'%}" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <!-- usually ssets instead of static -->
+    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@100;200;300;400;500;600;700;800;900&family=M+PLUS+1p:wght@100;300;400;500;700;800;900&family=Montserrat&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+  </head>
+  <body>
+
+<header class="navbar sticky-top bg-light flex-md-nowrap p-0 shadow header-with-background" style="width: 100%;">
+  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+              <div class="logo-container" >
+            <a href="https://testboxai.com/">
+                <img src="{% static 'img/7_shadow.png' %}" alt="Your Logo" />
+            </a>
+        </div>
+  <div class="navbar-nav">
+
+    <div class="nav-item text-nowrap">
+  <li class="nav-item text-nowrap">
+    <a href="https://testboxai.com/all-courses/" class="nav-item-text" style="color: white;">Upcoming Features</a>
+  </li>
+</div>
+
+    <div class="nav-item text-nowrap">
+  <li class="nav-item text-nowrap">
+    <a href="https://testboxai.com/pricing/" class="nav-item-text" style="color: white;">Pricing</a>
+  </li>
+</div>
+        <div class="nav-item text-nowrap">
+  <li class="nav-item text-nowrap">
+    <a href="https://testboxai.com/about/" class="nav-item-text" style="color: white;">How it works?</a>
+  </li>
+</div>
+  <div class="nav-item text-nowrap">
+    <li class="nav-item text-nowrap">
+      <a href="{% url 'register' %}" class="signup-button"><b>Sign Up</b></a>
+    </li>
+  </div>
+
+            <div class="nav-item text-nowrap">
+  <li class="nav-item text-nowrap">
+    <a href="https://testboxai.com/about/" class="text text-capitalize log-out" style="color: white;"></a>
+  </li>
+</div>
+
+  </div>
+
+
+
+</header>
+
+
+
+<div>
+  <br>
+
+      {% block content %} {% endblock %}
+
+</div>
+
+
+    <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js" integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG" crossorigin="anonymous"></script>
+      <script src="{% static 'js/main.js' %}"></script>
+  </body>
+</html>
+
+
+
