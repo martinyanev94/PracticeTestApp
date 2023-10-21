@@ -1,3 +1,4 @@
+{% extends 'demo_base.html' %}
 {% load static %}
 {% block content %}
 
@@ -15,6 +16,7 @@
   }
 
 </style>
+
 <script src="/docs/5.3/assets/js/color-modes.js"></script>
 
     <!-- Bootstrap CSS -->
@@ -30,8 +32,12 @@
 
 
 <div class="container">
-
+    <br>
+            <nav aria-label="Exam Info">
+    <h2>TestBox Demo</h2>
+  </nav>
   <div class="card mb-5">
+
     <div class="card-body">
       <form action="{% url 'demo-test' %}" method="post" id="quick-test-form">
         {% include 'partials/_messages.html'%} {% csrf_token %}

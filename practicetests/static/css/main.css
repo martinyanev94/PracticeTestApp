@@ -156,6 +156,14 @@ header {
   font-size: 20px;
   font-weight: 500;
 }
+.nav-item-text {
+  background: unset;
+  border: 0;
+  padding-right: 30px;
+  margin-left: 15px;
+  font-size: 16px;
+  font-weight: 400;
+}
 .navbar-nav .nav-item {
   transition: opacity .3s ease-in-out;
 }
