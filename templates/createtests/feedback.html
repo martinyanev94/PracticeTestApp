@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+
+    .info-icon {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    cursor: pointer;
+  }
+
+
+.star {
+    font-size: 5vh;
+    cursor: pointer;
+
+}
+
+.one {
+    color: rgb(255, 0, 0);
+}
+
+.two {
+    color: rgb(255, 106, 0);
+}
+
+.three {
+    color: rgb(251, 255, 120);
+}
+
+.four {
+    color: rgb(255, 255, 0);
+}
+
+.five {
+    color: rgb(24, 159, 14);
+}
+
+
+</style>
+
+<div class="container">
+  <a class="back-btn" href="{% url 'choose-create-speed' %}" class=""><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAV0lEQVR4nO3VsRFAQBAF0FeALhQmOYEKKFcjnFwi4hj/zWz8/2ywS0TEhwzoW4VP2LGiezp8xIaKOeG/W3u9YS6V1gXOJRaNlJR40yamlqf4Fc8oIsJdDmEuSwKiW3qxAAAAAElFTkSuQmCC">Back</a>
+  <nav aria-label="Exam Info">
+    <h2>Feedback</h2>
+  </nav>
+
+  <div class="card mb-5">
+    <div class="card-body">
+      <form action="{% url 'feedback' %}" method="post" id="feedback-form">
+        {% include 'partials/_messages.html'%} {% csrf_token %}
+        <!-- Add a loading animation to be displayed during the form submission -->
+<!--Here was the languages-->
+
+<div>
+  <div class="row">
+    <div class="col-md">
+                                  <div class="form-group">
+  <div class="banner">
+    Leave Feedback and Win <span style="color: #ff0000; font-weight: bold;">$50</span>!
+    <br>
+    Your Opinion Matters – Share your thoughts for a chance to win!
+  </div>
+                                      <br>
+            <label for="">Title</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              name="title"
+              value="{{values.title}}"
+            />
+          </div>
+      <div class="form-group">
+        <label for="">Feedback</label>
+        <textarea class="form-control form-control-sm" id="feedback" name="feedback"  placeholder="Type Your Feedback Here" style="height: 500px;">{{values.feedback}}</textarea>
+      </div>
+    </div>
+      <input type="hidden" id="ranking" name="ranking" value="0">
+
+
+      <div class="col-md-3">
+        <h4>Rating</h4>
+<span onclick="gfg(1)" class="star" data-rating="1">★</span>
+<span onclick="gfg(2)" class="star" data-rating="2">★</span>
+<span onclick="gfg(3)" class="star" data-rating="3">★</span>
+<span onclick="gfg(4)" class="star" data-rating="4">★</span>
+<span onclick="gfg(5)" class="star" data-rating="5">★</span>
+        <h5 id="output">
+              Rating is: 0/5
+          </h5>
+    </div>
+
+  </div>
+</div>
+
+<input type="submit" value="Submit" class="btn btn-primary btn-primary-sm"  />
+</form>
+
+</div>
+        <input type="hidden" id="user_membership" value="{{ user_membership.membership_type }}">
+</div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script>
+        // To access the stars
+ let stars = document.getElementsByClassName("star");
+    let output = document.getElementById("output");
+    let rankingInput = document.getElementById("ranking");
+
+    // Function to update rating
+    function gfg(n) {
+        remove();
+        for (let i = 0; i < n; i++) {
+            if (n == 1) cls = "one";
+            else if (n == 2) cls = "two";
+            else if (n == 3) cls = "three";
+            else if (n == 4) cls = "four";
+            else if (n == 5) cls = "five";
+            stars[i].className = "star " + cls;
+        }
+        output.innerText = "Rating is: " + n + "/5";
+
+        // Update the ranking input field
+        rankingInput.value = n;
+    }
+
+    // To remove the pre-applied styling
+    function remove() {
+        let i = 0;
+        while (i < 5) {
+            stars[i].className = "star";
+            i++;
+        }
+    }
+    </script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+</div>
+
+
+{% endblock %}

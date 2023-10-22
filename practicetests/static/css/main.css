@@ -156,6 +156,14 @@ header {
   font-size: 20px;
   font-weight: 500;
 }
+
+.banner {
+  color: #333; /* Text color */
+  text-align: center;
+  padding: 20px;
+  font-family: 'Arial', sans-serif; /* Eye-catching font family */
+  font-size: 24px; /* Font size */
+}
 .nav-item-text {
   background: unset;
   border: 0;
