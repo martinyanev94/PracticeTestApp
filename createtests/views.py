@@ -337,6 +337,7 @@ def demo_test(request):
         }
         return render(request, 'createtests/demo-home.html', context)
 
+@login_required(login_url='/authentication/login')
 def feedback(request):
     user_membership = UserMembership.objects.filter(user=request.user).first()
     context = {
