@@ -346,16 +346,13 @@ def feedback(request):
 
     if request.method == 'GET':
         user_feedback = UserFeedback.objects.filter(owner=request.user)
-        print(user_feedback)
 
         return render(request, 'createtests/feedback.html', context)
 
     if request.method == 'POST':
-        print(f"HZI: {request.POST}")
         title = request.POST['title']
         feedback = request.POST['feedback']
         ranking = request.POST['ranking']
-        print(ranking)
         context = {
             'values': request.POST,
             'user_membership': user_membership.membership,
