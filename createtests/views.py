@@ -14,7 +14,8 @@ from payment.views import manage_membership
 from .chat_gpt import generate_header, generate_subtitle, \
     generate_footer_info, generate_questions
 from .messages import languages
-from .models import UserTest
+from .models import UserTest, UserFeedback
+
 
 # Create your views here.
 
@@ -247,6 +248,7 @@ def advanced_test(request):
         return redirect(my_tests)
 
 
+# =================== AFTER DEPLOYMENT VIEWS ===========================
 
 
 def demo_test(request):
@@ -335,5 +337,31 @@ def demo_test(request):
         }
         return render(request, 'createtests/demo-home.html', context)
 
+def feedback(request):
+    user_membership = UserMembership.objects.filter(user=request.user).first()
+    context = {
+        'values': request.POST,
+        'user_membership': user_membership.membership,
+    }
 
+    if request.method == 'GET':
+        user_feedback = UserFeedback.objects.filter(owner=request.user)
+        print(user_feedback)
+
+        return render(request, 'createtests/feedback.html', context)
+
+    if request.method == 'POST':
+        print(f"HZI: {request.POST}")
+        title = request.POST['title']
+        feedback = request.POST['feedback']
+        ranking = request.POST['ranking']
+        print(ranking)
+        context = {
+            'values': request.POST,
+            'user_membership': user_membership.membership,
+        }
+
+        user_feedback = UserFeedback.objects.create(owner=request.user, title=title, feedback=feedback, ranking=ranking)
+        messages.success(request, 'Your feedback has been sent successfully!')
+        return render(request, 'createtests/feedback.html', context)
 

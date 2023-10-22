@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 
 
 # Create your models here.
@@ -54,5 +56,9 @@ class UserTest(models.Model):
         self.add_header_info = self.add_header_info.strip() or ' '
         super(UserTest, self).save(*args, **kwargs)
 
-
-
+class UserFeedback(models.Model):
+    owner = models.ForeignKey(to=User, on_delete=models.CASCADE, null=True)
+    title = StrippedCharField(max_length=266)
+    feedback = StrippedTextField(max_length=3000)
+    ranking = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
