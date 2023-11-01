@@ -2,8 +2,12 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.templatetags.static import static
 from django.views import View
+from django.contrib.auth.models import User
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from payment.models import UserMembership
+from .signals import create_initial_membership
 
 
 @login_required(login_url='/authentication/login')
@@ -108,6 +112,8 @@ def get_selected_membership(request):
 @login_required(login_url='/authentication/login')
 def MembershipSelectView(request):
     if request.method == 'GET':
+        if request.user.is_superuser:
+            create_initial_membership()
         user_membership = get_user_membership(request)
         current_membership = get_user_membership(request)
         user_stripe_subscription = get_stripe_subscriptions(user_membership.stripe_customer_id)
