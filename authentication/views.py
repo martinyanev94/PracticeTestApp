@@ -94,7 +94,7 @@ def send_activation_email(user, request):
 class RegistrationView(View):
     def get(self, request):
         #TODO Enable when deploying the app
-        # create_initial_membership()
+        create_initial_membership()
         return render(request, 'authentication/register.html')
 
     def post(self, request):

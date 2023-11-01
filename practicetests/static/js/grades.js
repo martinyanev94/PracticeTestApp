@@ -83,7 +83,7 @@ $(document).ready(function() {
         return;
       }
         if (userTestsCountLastMonth > userMembershipTests) {
-            alert('You exceeded the maximum number of tests per month for your plan. Please upgrade.');
+            alert('You exceeded the maximum number of tests per month for your plan. Go to Account to see your membership details or go to Plans to upgrade.");
         return;
       }
        // Check if the "Teaching Material" field has a value
@@ -109,7 +109,7 @@ $(document).ready(function() {
         return;
       }
        if (totalQuestions > userMembershipQuestions) {
-            alert('You exceeded the maximum number of questions per test for your membership');
+            alert('You exceeded the maximum number of questions per test for your plan. Go to Account to see your membership details or go to Plans to upgrade.");
         return;
       }
 
@@ -320,7 +320,7 @@ $(document).ready(function() {
 //====================== Test eligibility alerts =========================================
 
         if (userTestsCountLastMonth > userMembershipTests) {
-            alert('You exceeded the maximum number of tests per month for your plan. Please upgrade.');
+            alert('You exceeded the maximum number of tests per month for your plan. Go to Account to see your membership details or go to Plans to upgrade.");
         return;
       }
 
@@ -350,7 +350,7 @@ $(document).ready(function() {
       }
 
        if (totalQuestions > userMembershipQuestions) {
-            alert('You exceeded the maximum number of questions per test for your membership');
+            alert('You exceeded the maximum number of questions per test for your plan. Go to Account to see your membership details or go to Plans to upgrade.");
         return;
       }
 

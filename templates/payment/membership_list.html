@@ -5,7 +5,7 @@
 
 <style>
 
-#monthly-plans {
+#yearly-plans {
   display: none;
 }
 
@@ -252,8 +252,8 @@
 
 <h1>Payment Plans</h1><br>
   <div class="switch-wrapper">
-    <input id="monthly" type="radio" name="switch" >
-    <input id="yearly" type="radio" name="switch" checked>
+    <input id="monthly" type="radio" name="switch" checked>
+    <input id="yearly" type="radio" name="switch" >
     <label for="monthly">Monthly</label>
     <label for="yearly">Yearly - 40%</label>
     <span class="highlighter"></span>
@@ -272,7 +272,22 @@
     <h3 class="plan-title">
       {{ object.membership_name }}
     </h3>
+  	  {% if "enterprise" in object.slug%}
+	      <div class="plan-cost"><span class="plan-price" ><b>Contact Us</b></span>	<p>support@testboxai.com</p>
+</div>
+	  <ul class="plan-features">
+	      <li><i class="ion-checkmark"> </i>Multiple Team Users</li>
+	      <li><i class="ion-checkmark"> </i>Perfect for Teaching Organizations</li>
+	      <li><i class="ion-checkmark"> </i>Premium Features</li>
+		  <li><i class="ion-checkmark"> </i>Unlimited Content Words Per Test</li>
+		  <li><i class="ion-checkmark"> </i>Unlimited PDF, Word and Txt Downloads</li>
+		  <li><i class="ion-checkmark"> </i>Unlimited Tests for Your Team</li>
+
+
+    </ul>
+	  {% else %}
     <div class="plan-cost"><span class="plan-price">${{ object.price }}</span><span class="plan-type">/ Monthly</span></div>
+
     <ul class="plan-features">
 		{% if object.allowed_tests > 150 %}
               <li><i class="ion-checkmark"> </i>Unlimited Tests Monthly</li>
@@ -285,7 +300,7 @@
 		{% else %}
 				<li><i class="ion-checkmark"> </i>{{ object.allowed_words }} Content Words Per Test</li>
 		{% endif %}
-      <li><i class="ion-checkmark"> </i>20 Seconds Test Processing Time</li>
+      <li><i class="ion-checkmark"> </i>Low Test Processing Time</li>
       <li><i class="ion-checkmark"> </i>Unlimited PDF, Word and Txt Downloads</li>
     </ul>
 	  <form method="POST" action="{% url 'payment-plans' %}">
@@ -303,9 +318,12 @@
 	            <div class="plan-current"><a>Current</a></div>
 		    {% endif %}
 	  {% endif %}
+		  	     	{% endif %}
+
 		  <input type="hidden" name="membership_type" value="{{ object.membership_type }}">
 
 	  </form>
+
   </div>
 		{% endif %}
 
@@ -329,6 +347,22 @@
     <h3 class="plan-title">
       {{ object.membership_name }}
     </h3>
+	  	  {% if "enterprise" in object.slug%}
+	      <div class="plan-cost"><span class="plan-price" ><b>Contact Us</b></span>	<p>support@testboxai.com</p>
+</div>
+	  <ul class="plan-features">
+	      <li><i class="ion-checkmark"> </i>Multiple Team Users</li>
+	      <li><i class="ion-checkmark"> </i>Perfect for Teaching Organizations</li>
+	      <li><i class="ion-checkmark"> </i>Premium Features</li>
+		  <li><i class="ion-checkmark"> </i>Unlimited Content Words Per Test</li>
+		  <li><i class="ion-checkmark"> </i>Unlimited PDF, Word and Txt Downloads</li>
+		  <li><i class="ion-checkmark"> </i>Unlimited Tests for Your Team</li>
+
+
+    </ul>
+
+
+	  {% else %}
     <div class="plan-cost"><span class="plan-price">${{ object.monthly_price }}</span><span class="plan-type">/ Monthly</span></div>
 	                <p>${{ object.price }} billed annually</p>
 
@@ -344,7 +378,7 @@
 		{% else %}
 				<li><i class="ion-checkmark"> </i>{{ object.allowed_words }} Content Words per Test</li>
 		{% endif %}
-      <li><i class="ion-checkmark"> </i>20 Seconds Test Processing Time</li>
+      <li><i class="ion-checkmark"> </i>Low Test Processing Time</li>
       <li><i class="ion-checkmark"> </i>Unlimited PDF, Word and Txt Downloads</li>
     </ul>
 	  <form method="POST" action="{% url 'payment-plans' %}">
@@ -364,6 +398,8 @@
 
 	  	      {% endif %}
 	{% endif %}
+		  	{% endif %}
+
 		  		  <input type="hidden" name="membership_type" value="{{ object.membership_type }}">
 
 		  </form>
