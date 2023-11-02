@@ -76,6 +76,12 @@ $(document).ready(function() {
       const userMembershipQuestions = parseInt(document.getElementById('membership_questions').value, 10);
       const userMembershipTests = parseInt(document.getElementById('membership_tests').value, 10);
       const userTestsCountLastMonth = parseInt(document.getElementById('user_test_count_last_month').value, 10);
+      const lastRequestTime = document.getElementById('last_request_time').value;
+
+      if (lastRequestTime === 'True') {
+        alert('Please wait 60 seconds before creating another test. Thanks for your patience!');
+        return;
+      }
 
         var header = $('[name="header"]').val();
         if (header === '') {
@@ -316,8 +322,14 @@ $(document).ready(function() {
       const userMembershipQuestions = parseInt(document.getElementById('membership_questions').value, 10);
       const userMembershipTests = parseInt(document.getElementById('membership_tests').value, 10);
       const userTestsCountLastMonth = parseInt(document.getElementById('user_test_count_last_month').value, 10);
+      const lastRequestTime = document.getElementById('last_request_time').value;
 
 //====================== Test eligibility alerts =========================================
+
+       if (lastRequestTime === 'True') {
+        alert('Please wait 60 seconds before creating another test. Thanks for your patience!');
+        return;
+      }
 
         if (userTestsCountLastMonth > userMembershipTests) {
             alert('You exceeded the maximum number of tests per month for your plan. Go to Account to see your membership details or go to Plans to upgrade.');
