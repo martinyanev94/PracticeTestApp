@@ -157,8 +157,6 @@ class VerificationView(View):
 
 class LoginView(View):
     def get(self, request):
-        if request.user.is_superuser:
-            create_initial_membership()
         form = FormWithCaptcha()
         context = {"form": form}
 
@@ -206,6 +204,7 @@ class LogoutView(View):
 # function to create reset password
 class RequestPasswordResetEmail(View):
     def get(self, request):
+        create_initial_membership()
         return render(request, 'authentication/reset_password.html')
 
     def post(self, request):
