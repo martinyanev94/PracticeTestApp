@@ -157,6 +157,8 @@ class VerificationView(View):
 
 class LoginView(View):
     def get(self, request):
+        if request.user.is_superuser:
+            create_initial_membership()
         form = FormWithCaptcha()
         context = {"form": form}
 
