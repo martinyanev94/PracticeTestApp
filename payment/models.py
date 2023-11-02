@@ -55,6 +55,8 @@ class UserMembership(models.Model):
     membership = models.ForeignKey(
         Membership, on_delete=models.SET_NULL, null=True)
     used_tokens = models.IntegerField(null=True, default=0)
+    requests = models.IntegerField(null=True, default=0)
+    last_request_time = models.IntegerField(null=True, default=0)
     cost = models.FloatField(null=True, default=0)
 
 

@@ -1,5 +1,6 @@
 import json
 import string
+import time
 from datetime import timedelta
 
 from django.contrib.auth.decorators import login_required
@@ -37,19 +38,28 @@ def choose_create_speed(request):
 def quick_test(request):
     user_membership = UserMembership.objects.filter(user=request.user).first()
     one_month_ago = timezone.now() - timedelta(days=30)
-    user_test_count_last_month = UserTest.objects.filter(owner=request.user, created_at__gte=one_month_ago).count()
+    user_test_count_last_month = 1
 
     context = {
         'values': request.POST,
         'user_membership': user_membership.membership,
         'user_test_count_last_month': user_test_count_last_month,
         'languages': languages,
+        'last_request_time': (user_membership.requests > user_membership.membership.allowed_question and time.time() - user_membership.last_request_time < 60),
+
     }
+    print(user_membership.requests)
+    print(time.time()  - user_membership.last_request_time)
 
     if request.method == 'GET':
         return render(request, 'createtests/quick-test.html', context)
 
     if request.method == 'POST':
+
+        if user_membership.requests > user_membership.membership.allowed_question and time.time() - user_membership.last_request_time < 60:
+            messages.error(request, 'Please wait 60 seconds before creating another test. Thanks for your patience!')
+            return render(request, 'createtests/quick-test.html', context)
+
         teaching_material = request.POST['teaching_material']
         language = request.POST['language']
 
@@ -130,6 +140,12 @@ def quick_test(request):
         question_data, usage = generate_questions(teaching_material, question_types, language)
 
         # Update tokens
+        if time.time() - user_membership.last_request_time < 60:
+            user_membership.requests += len(question_data)
+        else:
+            user_membership.requests = len(question_data)
+
+        user_membership.last_request_time = time.time()
         user_membership.used_tokens = usage[0] + user_membership.used_tokens
         user_membership.cost = usage[1] + user_membership.cost
 
@@ -157,12 +173,18 @@ def advanced_test(request):
         'user_membership': user_membership.membership,
         'user_test_count_last_month': user_test_count_last_month,
         'languages': languages,
+        'last_request_time': (user_membership.requests > user_membership.membership.allowed_question and time.time() - user_membership.last_request_time < 60),
     }
+
 
     if request.method == 'GET':
         return render(request, 'createtests/advanced-test.html', context)
 
     if request.method == 'POST':
+        if user_membership.requests > user_membership.membership.allowed_question and time.time() - user_membership.last_request_time < 60:
+            messages.error(request, 'Please wait 60 seconds before creating another test. Thanks for your patience!')
+            return render(request, 'createtests/quick-test.html', context)
+
         teaching_material = request.POST['teaching_material']
         header = request.POST['header']
         language = request.POST['language']
@@ -232,6 +254,10 @@ def advanced_test(request):
         question_data, usage = generate_questions(teaching_material, question_types, language)
 
         # Update tokens
+        if time.time() - user_membership.last_request_time < 60:
+            user_membership.requests += len(question_data)
+        else:
+            user_membership.requests = len(question_data)
         user_membership.used_tokens = usage[0] + user_membership.used_tokens
         user_membership.cost = usage[1] + user_membership.cost
 
