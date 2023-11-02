@@ -38,7 +38,7 @@ def choose_create_speed(request):
 def quick_test(request):
     user_membership = UserMembership.objects.filter(user=request.user).first()
     one_month_ago = timezone.now() - timedelta(days=30)
-    user_test_count_last_month = 1
+    user_test_count_last_month = UserTest.objects.filter(owner=request.user, created_at__gte=one_month_ago).count()
 
     context = {
         'values': request.POST,
