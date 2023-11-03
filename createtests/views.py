@@ -45,18 +45,16 @@ def quick_test(request):
         'user_membership': user_membership.membership,
         'user_test_count_last_month': user_test_count_last_month,
         'languages': languages,
-        'last_request_time': (user_membership.requests > user_membership.membership.allowed_question and time.time() - user_membership.last_request_time < 60),
+        'last_request_time': (user_membership.requests >= user_membership.membership.allowed_question and time.time() - user_membership.last_request_time < 60),
 
     }
-    print(user_membership.requests)
-    print(time.time()  - user_membership.last_request_time)
 
     if request.method == 'GET':
         return render(request, 'createtests/quick-test.html', context)
 
     if request.method == 'POST':
 
-        if user_membership.requests > user_membership.membership.allowed_question and time.time() - user_membership.last_request_time < 60:
+        if user_membership.requests >= user_membership.membership.allowed_question and time.time() - user_membership.last_request_time < 60:
             messages.error(request, 'Please wait 60 seconds before creating another test. Thanks for your patience!')
             return render(request, 'createtests/quick-test.html', context)
 
@@ -173,7 +171,7 @@ def advanced_test(request):
         'user_membership': user_membership.membership,
         'user_test_count_last_month': user_test_count_last_month,
         'languages': languages,
-        'last_request_time': (user_membership.requests > user_membership.membership.allowed_question and time.time() - user_membership.last_request_time < 60),
+        'last_request_time': (user_membership.requests >= user_membership.membership.allowed_question and time.time() - user_membership.last_request_time < 60),
     }
 
 
@@ -181,7 +179,7 @@ def advanced_test(request):
         return render(request, 'createtests/advanced-test.html', context)
 
     if request.method == 'POST':
-        if user_membership.requests > user_membership.membership.allowed_question and time.time() - user_membership.last_request_time < 60:
+        if user_membership.requests >= user_membership.membership.allowed_question and time.time() - user_membership.last_request_time < 60:
             messages.error(request, 'Please wait 60 seconds before creating another test. Thanks for your patience!')
             return render(request, 'createtests/quick-test.html', context)
 
