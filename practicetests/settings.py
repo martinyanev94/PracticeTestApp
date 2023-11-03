@@ -129,25 +129,23 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'azure_application_insights': {
-            'level': 'ERROR',
-            'class': 'applicationinsights.django.ApplicationInsightsHandler',
-        },
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['azure_application_insights', 'console'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    },
-}
+       'version': 1,
+       'disable_existing_loggers': False,
+       'handlers': {
+           # The application insights handler is here
+           'appinsights': {
+               'class': 'applicationinsights.django.LoggingHandler',
+               'level': 'WARNING'
+           }
+       },
+       'loggers': {
+           'django': {
+               'handlers': ['appinsights'],
+               'level': 'WARNING',
+               'propagate': True,
+           }
+       }
+   }
 
 
 # Internationalization
