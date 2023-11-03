@@ -128,27 +128,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'azure_application_insights': {
-            'level': 'ERROR',
-            'class': 'applicationinsights.django.ApplicationInsightsHandler',
-        },
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['azure_application_insights', 'console'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    },
-}
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
