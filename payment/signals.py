@@ -8,6 +8,7 @@ def create_initial_membership():
             membership_type='Free',
             membership_name='Free',
             price=0,
+            monthly_price=0,
             stripe_plan_id='free-plan',
             allowed_question=15,
             allowed_words=200000,
