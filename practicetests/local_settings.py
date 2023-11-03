@@ -39,9 +39,6 @@ ALLOWED_HOSTS = [
 
 # Application definition
 
-
-# Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -151,8 +148,8 @@ if DEBUG:
     STRIPE_PUBLISHABLE_KEY = os.environ.get('TEST_STRIPE_PUBLISHABLE_KEY')
     STRIPE_SECRET_KEY = os.environ.get('TEST_STRIPE_SECRET_KEY')
 else:
-    STRIPE_PUBLISHABLE_KEY = os.environ.get('DEBUG_STRIPE_PUBLISHABLE_KEY')
-    STRIPE_SECRET_KEY = os.environ.get('DEBUG_STRIPE_SECRET_KEY')
+    STRIPE_PUBLISHABLE_KEY = os.environ.get('REAL_STRIPE_PUBLISHABLE_KEY')
+    STRIPE_SECRET_KEY = os.environ.get('REAL_STRIPE_SECRET_KEY')
 
 # Captcha keys
 RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY')
