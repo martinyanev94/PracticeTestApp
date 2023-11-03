@@ -1,14 +1,14 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from django.templatetags.static import static
-from django.views import View
-from django.contrib.auth.models import User
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-
-from payment.models import UserMembership
 from .signals import create_initial_membership
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.urls import reverse
 
+from .models import Membership, UserMembership, Subscription
+
+import stripe
 
 @login_required(login_url='/authentication/login')
 # Create your views here.
@@ -23,18 +23,7 @@ def payment_plans(request):
     return render(request, 'payment/payment_plans.html', context)
 
 
-from django.conf import settings
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
-from django.views.generic import ListView
-from django.urls import reverse
 
-from .models import Membership, UserMembership, Subscription
-
-import stripe
 
 
 def manage_membership(request):
