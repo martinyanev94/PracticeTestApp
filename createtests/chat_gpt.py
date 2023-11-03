@@ -10,6 +10,10 @@ from tenacity import (
     stop_after_attempt,
     wait_random_exponential,
 )
+import logging
+
+logger = logging.getLogger(__name__)
+
 from practicetests.settings import OPENAI_API_KEY
 from .messages import preparation_prompt, multi_choice_prompt, multi_selection_prompt, open_answer_prompt
 
@@ -48,7 +52,7 @@ def gpt_engine(prompt, n=1, max_tokens=200, language="English"):
     # print("============================")
     # print(prompt[1])
     # print("****************************")
-    # print(response)
+    logger.debug(response)
     # print("============================")
     total_tokens += response['usage']['total_tokens']
     response_text = []
@@ -196,7 +200,7 @@ def generate_questions(teaching_material, number_of_questions, language):
             question.pop('answers', None)
 
     b = time.time()
-    print(f"TIME: {b - a}")
+    logger.debug(f"TIME: {b - a}")
     return json_questions_list, [total_tokens, response_cost]
 
 
