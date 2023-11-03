@@ -289,11 +289,7 @@
     <div class="plan-cost"><span class="plan-price">${{ object.price }}</span><span class="plan-type">/ Monthly</span></div>
 
     <ul class="plan-features">
-		{% if object.allowed_tests > 150 %}
-              <li><i class="ion-checkmark"> </i>Unlimited Tests Monthly</li>
-		{% else %}
-		      <li><i class="ion-checkmark"> </i>{{ object.allowed_tests }} Tests Monthly</li>
-		{% endif %}
+		<li><i class="ion-checkmark"> </i>{{ object.allowed_tests }} Tests Monthly</li>
       <li><i class="ion-checkmark"> </i>{{ object.allowed_question }} Questions per Test</li>
 		{% if object.allowed_words > 150000 %}
               <li><i class="ion-checkmark"> </i>Unlimited Content Words Per Test</li>
@@ -367,11 +363,8 @@
 	                <p>${{ object.price }} billed annually</p>
 
     <ul class="plan-features">
-		{% if object.allowed_tests > 150 %}
-              <li><i class="ion-checkmark"> </i>Unlimited Tests Monthly</li>
-		{% else %}
-		      <li><i class="ion-checkmark"> </i>{{ object.allowed_tests }} Tests Monthly</li>
-		{% endif %}
+		<li><i class="ion-checkmark"> </i>{{ object.allowed_tests }} Tests Monthly</li>
+
       <li><i class="ion-checkmark"> </i>{{ object.allowed_question }} Questions Per Test</li>
 		{% if object.allowed_words > 150000 %}
               <li><i class="ion-checkmark"> </i>Unlimited Content Words Per Test</li>
