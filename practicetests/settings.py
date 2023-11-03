@@ -128,25 +128,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LOGGING = {
-       'version': 1,
-       'disable_existing_loggers': False,
-       'handlers': {
-           # The application insights handler is here
-           'appinsights': {
-               'class': 'applicationinsights.django.LoggingHandler',
-               'level': 'WARNING'
-           }
-       },
-       'loggers': {
-           'django': {
-               'handlers': ['appinsights'],
-               'level': 'WARNING',
-               'propagate': True,
-           }
-       }
-   }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
