@@ -53,6 +53,7 @@ def gpt_engine(prompt, n=1, max_tokens=200, language="English"):
     # print(prompt[1])
     # print("****************************")
     logger.debug(response)
+    print(response)
     # print("============================")
     total_tokens += response['usage']['total_tokens']
     response_text = []
@@ -159,7 +160,7 @@ def generate_questions(teaching_material, number_of_questions, language):
 
     # Inner thread loop for each question type
     def process_cut(cut):
-        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
             futures = []
             futures.append(executor.submit(process_mcq, cut))
             futures.append(executor.submit(process_msq, cut))
@@ -169,7 +170,7 @@ def generate_questions(teaching_material, number_of_questions, language):
                 pass  # We don't need to do anything here, but this waits for all futures to complete
 
     # Outer main thread loop for each cut iteration
-    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as main_executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as main_executor:
         futures = []
         for cut in range(len(text_cuts)):
             if len(text_cuts[cut].split()) > sub_cut_words:
