@@ -52,8 +52,6 @@ def gpt_engine(prompt, n=1, max_tokens=200, language="English"):
     # print("============================")
     # print(prompt[1])
     # print("****************************")
-    logger.debug(response)
-    print(response)
     # print("============================")
     total_tokens += response['usage']['total_tokens']
     response_text = []
@@ -201,7 +199,7 @@ def generate_questions(teaching_material, number_of_questions, language):
             question.pop('answers', None)
 
     b = time.time()
-    logger.debug(f"TIME: {b - a}")
+    # logger.debug(f"TIME: {b - a}")
     return json_questions_list, [total_tokens, response_cost]
 
 
