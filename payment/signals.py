@@ -10,7 +10,7 @@ def create_initial_membership():
             price=0,
             monthly_price=0,
             stripe_plan_id='free-plan',
-            allowed_question=15,
+            allowed_question=10,
             allowed_words=200000,
             allowed_tests=7
         )
@@ -23,9 +23,9 @@ def create_initial_membership():
             price=24.99,
             monthly_price=8.33,
             stripe_plan_id="price_1NiOu8EIvcSmcyn9HzAWo6c1",
-            allowed_question=40,
+            allowed_question=30,
             allowed_words=200000,
-            allowed_tests=300
+            allowed_tests=100
         )
 
     if not Membership.objects.filter(slug='pro-monthly').exists():
@@ -35,9 +35,9 @@ def create_initial_membership():
             membership_name='Professional',
             price=12.99,
             stripe_plan_id="price_1NiOu8EIvcSmcyn9rOUPSipU",
-            allowed_question=40,
+            allowed_question=30,
             allowed_words=200000,
-            allowed_tests=300
+            allowed_tests=100
         )
 
     if not Membership.objects.filter(slug='pro-yearly').exists():
@@ -48,9 +48,9 @@ def create_initial_membership():
             price=89.99,
             monthly_price=7.49,
             stripe_plan_id="price_1NiOu8EIvcSmcyn9QEJcmFEh",
-            allowed_question=40,
+            allowed_question=30,
             allowed_words=200000,
-            allowed_tests=300
+            allowed_tests=100
         )
 
     if not Membership.objects.filter(slug='premium-quarterly').exists():
@@ -61,9 +61,9 @@ def create_initial_membership():
             price=39.99,
             monthly_price=13.33,
             stripe_plan_id="price_1NiP2bEIvcSmcyn9Ug0OwhrF",
-            allowed_question=80,
+            allowed_question=60,
             allowed_words=200000,
-            allowed_tests=600
+            allowed_tests=200
         )
 
     if not Membership.objects.filter(slug='premium-monthly').exists():
@@ -73,9 +73,9 @@ def create_initial_membership():
             membership_name='Premium',
             price=19.99,
             stripe_plan_id="price_1NiP2bEIvcSmcyn9lPj7EilS",
-            allowed_question=80,
+            allowed_question=60,
             allowed_words=200000,
-            allowed_tests=600
+            allowed_tests=200
         )
 
     if not Membership.objects.filter(slug='premium-yearly').exists():
@@ -86,9 +86,9 @@ def create_initial_membership():
             price=139.99,
             monthly_price=11.67,
             stripe_plan_id="price_1NiP2bEIvcSmcyn94dq1U03a",
-            allowed_question=80,
+            allowed_question=60,
             allowed_words=200000,
-            allowed_tests=600
+            allowed_tests=200
         )
     if not Membership.objects.filter(slug='enterprise-yearly').exists():
         Membership.objects.create(
@@ -98,9 +98,9 @@ def create_initial_membership():
             price=10,
             monthly_price=11.67,
             stripe_plan_id="XXX",
-            allowed_question=80,
+            allowed_question=60,
             allowed_words=200000,
-            allowed_tests=600
+            allowed_tests=200
         )
         if not Membership.objects.filter(slug='enterprise-monthly').exists():
             Membership.objects.create(
@@ -110,9 +110,9 @@ def create_initial_membership():
                 price=10,
                 monthly_price=11.67,
                 stripe_plan_id="XXX",
-                allowed_question=80,
+                allowed_question=60,
                 allowed_words=200000,
-                allowed_tests=600
+                allowed_tests=200
             )
         if not Membership.objects.filter(slug='enterprise-quarterly').exists():
             Membership.objects.create(
@@ -122,8 +122,8 @@ def create_initial_membership():
                 price=10,
                 monthly_price=11.67,
                 stripe_plan_id="XXX",
-                allowed_question=80,
+                allowed_question=60,
                 allowed_words=200000,
-                allowed_tests=600
+                allowed_tests=200
             )
     return
