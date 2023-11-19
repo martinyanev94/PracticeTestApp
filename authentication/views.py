@@ -119,11 +119,12 @@ class RegistrationView(View):
                 try:
                     user = User.objects.create_user(username=username, email=email)
                     user.set_password(password)
-                    user.is_active = False
+                    user.is_active = True  # True for now because of email send issues
                     user.save()
                     send_activation_email(user, request)
                     messages.success(request, f"Account successfully created. Now you need to verify your email. "
-                                              f"We've send you a verification message on {user.email}.")
+                                              f"We've send you a verification message on {user.email}. If no email has been send,"
+                                              f"your account is automatically activated")
                     return render(request, 'authentication/login.html', context)
                 except Exception as e:
                     messages.error(request, f"Please provide a username: {e} ")
