@@ -14,3 +14,14 @@ def home_page_view(request):
     }
 
     return render(request, 'homepage/home_page.html', context)
+
+@login_required(login_url='/authentication/login')
+# Create your views here.
+def tutorials_view(request):
+    user_membership = UserMembership.objects.filter(user=request.user).first()
+
+    context = {
+        'user_membership': user_membership.membership,
+    }
+
+    return render(request, 'homepage/tutorials.html', context)
