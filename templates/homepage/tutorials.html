@@ -1,0 +1,150 @@
+{% extends 'base.html' %} {% load static %}
+ {% block content %}
+
+  <a class="back-btn" href="{% url 'home-page-view' %}"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAV0lEQVR4nO3VsRFAQBAF0FeALhQmOYEKKFcjnFwi4hj/zWz8/2ywS0TEhwzoW4VP2LGiezp8xIaKOeG/W3u9YS6V1gXOJRaNlJR40yamlqf4Fc8oIsJdDmEuSwKiW3qxAAAAAElFTkSuQmCC">Back</a>
+
+
+<div class="mr-5">
+  <div class="mt-4 question-header">
+
+  </div>
+  
+  <div>
+    <div>
+      <form id="editForm"  method="post" class="mt-4">
+
+        {% include 'partials/_messages.html'%}
+        {% csrf_token %}
+  
+        <!-- Register -->
+        <div>
+          <div class="accordion-header">
+            How to register to TestBoxAI?
+          </div>
+          <div class="accordion-content">
+    <div class="video-container" id="player1"></div>
+
+
+          </div>
+        </div>
+  
+        <div>
+          <div class="accordion-header">
+            How to manage my account?
+          </div>
+          <div class="accordion-content">
+    <div class="video-container" id="player2"></div>
+
+          </div>
+        </div>
+
+                  <div>
+          <div class="accordion-header">
+            How to leave feedback?
+          </div>
+          <div class="accordion-content">
+    <div class="video-container" id="player3"></div>
+
+          </div>
+        </div>
+
+                  <div>
+          <div class="accordion-header">
+            <b>How to create an exam with TestBoxAI?</b>
+          </div>
+          <div class="accordion-content">
+    <div class="video-container" id="player4"></div>
+
+          </div>
+        </div>
+
+                  <div>
+          <div class="accordion-header">
+            <b>How to manage my exams?</b>
+          </div>
+          <div class="accordion-content">
+    <div class="video-container" id="player5"></div>
+
+          </div>
+        </div>
+
+                  <div>
+          <div class="accordion-header">
+            How to edit an exam?
+          </div>
+          <div class="accordion-content">
+    <div class="video-container" id="player6"></div>
+
+          </div>
+        </div>
+
+                  <div>
+          <div class="accordion-header">
+            How to upgrade and manage my TestBoxAI plan?
+          </div>
+          <div class="accordion-content">
+    <div class="video-container" id="player7"></div>
+
+          </div>
+        </div>
+
+      </form>
+    </div>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+              <script src="{% static 'js/myTests.js' %}"></script>
+<script>
+function submitForm() {
+    // Get a reference to the form by its ID
+    var form = document.getElementById('editForm');
+
+    // Submit the form
+    form.submit();
+}
+
+   // Replace 'VIDEO_ID_1', 'VIDEO_ID_2', etc., with the actual IDs of your YouTube videos
+        var videoIds = ['Zm8YXhnuVwc', '3UabIoWsb0g', 'i1roUaZX4_I', '4J8EX8wQduo', 'UJdNIMbgHvI', 'T0VFywvwf-4', '_sgT9_RyXec', 'VIDEO_ID_8', 'VIDEO_ID_9', 'VIDEO_ID_10'];
+
+        // Load the YouTube IFrame Player API asynchronously
+        var tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var players = [];
+
+        function onYouTubeIframeAPIReady() {
+            for (var i = 0; i < videoIds.length; i++) {
+                createPlayer('player' + (i + 1), videoIds[i]);
+            }
+        }
+
+        function createPlayer(containerId, videoId) {
+            players.push(new YT.Player(containerId, {
+                height: '400',
+                width: '66%',
+                videoId: videoId,
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 1,
+                    'rel': 0,
+                    'showinfo': 0
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            }));
+        }
+
+        function onPlayerReady(event) {
+            // You can do additional customization here if needed
+        }
+</script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  
+  </div>
+
+
+</div>
+
+{% endblock %}
